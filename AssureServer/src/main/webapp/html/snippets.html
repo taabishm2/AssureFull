@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="page_head">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="baseUrl" th:attr="content=${baseUrl}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/static/app.css}">
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #00295F; font-weight: 400;"
+     th:fragment="navbar">
+    <nav class="navbar navbar-light">
+        <a class="navbar-brand" href="@{/html/index}" style="color:#FFFFFF; font-weight: 500;">
+            <img th:src="@{/static/Images/logo.png}" class="d-inline-block align-top" width="30" height="30" alt="">
+            Increff
+        </a>
+    </nav>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/ui/index}" style="color:#FFFFFF;">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false" style="color:#FFFFFF;">
+                    Assure
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" th:href="@{/ui/consumer}">Consumer Page</a>
+                    <a class="dropdown-item" th:href="@{/ui/product}">Product Page</a>
+                    <a class="dropdown-item" th:href="@{/ui/bin}">Bin Page</a>
+                    <a class="dropdown-item" th:href="@{/ui/bininventory}">Bin Inventory Page</a>
+                    <a class="dropdown-item" th:href="@{/ui/inventory}">Inventory Page</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" th:href="@{/html/channel}">Channel Page</a>
+                    <a class="dropdown-item" th:href="@{/html/channellisting}">Channel Listing Page</a>
+                    <a class="dropdown-item" th:href="@{/html/order}">Order Page</a>
+                    <a class="dropdown-item" th:href="@{/html/orderitem}">Order Item Page</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/swagger-ui.html}" tabindex="-1" aria-disabled="true"
+                   style="color:#FFFFFF;">Swagger</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <ul class="navbar-nav mr-sm-2">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/ui/about}" style="color:#FFFFFF;">About</a>
+                </li>
+            </ul>
+        </form>
+    </div>
+</nav>
+
+
+<div class="main-header" th:fragment="main_header">
+    <p class="page-header">
+        <span style="font-size: 40px">Page Title</span>
+        <br/>
+        <span class="text-muted" style="font-size:0.9em;">We'll never share your email with anyone else.</span>
+    </p>
+</div>
+
+<footer class="footer" th:fragment="footer">
+    <div class="container">
+        <span class="text-muted">&copyIncreff 2019</span>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script th:src="@{/static/app.js}"></script>
+    <script th:src="@{/static/papaparse.min.js}"></script>
+</footer>

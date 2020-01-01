@@ -1,0 +1,153 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="snippets.html :: page_head"></head>
+
+<body>
+<nav th:replace="snippets.html :: navbar"></nav>
+
+<div class="parent-container">
+    <div class="main-header">
+        <p class="page-header">
+            <span style="font-size: 20px">Products Page</span>
+            <br/>
+            <span class="text-muted" style="font-size:0.9em;">Add, Display & Edit Product Details.</span>
+        </p>
+        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
+            Add Product
+        </button>
+    </div>
+    <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add a Product</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="product-form">
+                        <div class="form-group" id="client-dropdown">
+                            <label for="clientId">Client:</label>
+                            <select class="form-control" id="clientId" name="clientId">
+                                <option disabled hidden selected value="none">
+                                    Select an Option
+                                </option>
+                            </select>
+
+                            <div class="" role="document">
+                                <div class="">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Upload Product Master</h5>
+                                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="product-file">
+                                            <input class="custom-file-input" id="productFile" type="file">
+                                            <label class="custom-file-label" for="productFile" id="productFileName">Choose
+                                                CSV
+                                                File</label>
+                                        </div>
+                                        <a target="_blank" th:href="@{/resources/productSample.csv}">Download Sample</a>
+                                        <br>
+                                        Rows: <span id="rowCount">0</span>,
+                                        Processed: <span id="processCount">0</span>,
+                                        Errors: <span id="errorCount">0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary" id="process-data" type="button">Upload</button>
+                    <button class="btn btn-warning" id="download-errors" type="button">Download Errors
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="body-content">
+        <div class="table-display">
+            <table class="table table-sm table-striped" id="product-table">
+                <thead>
+                <tr>
+                    <th colspan="8">Product List</th>
+                </tr>
+                <tr>
+                    <th scope="col" style="text-align:center">ID</th>
+                    <th scope="col" style="text-align:center">ClientID</th>
+                    <th scope="col">ClientSKU</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">BrandID</th>
+                    <th scope="col">MRP</th>
+                    <th scope="col">Desc.</th>
+                    <th scope="col" style="text-align:right">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- product Edit Modal -->
+    <div class="modal" id="edit-product-modal" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Employee</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline" id="product-edit-form">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" name="name" placeholder="Enter Name" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-form-label">Brand ID</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" name="brandId" placeholder="Enter Brand ID" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-form-label">MRP</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" name="mrp" placeholder="Enter MRP" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-form-label">Brand ID</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" name="description" placeholder="Enter Description"
+                                       type="text">
+                            </div>
+                        </div>
+                        <input name="clientId" type="hidden">
+                        <input name="clientSkuId" type="hidden">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Cancel</button>
+                    <button class="btn btn-primary" id="update-product" type="button">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="snippets.html :: footer"></footer>
+<script th:src="@{/static/product.js}"></script>
+</body>
+</html>

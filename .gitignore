@@ -1,0 +1,4 @@
+# Project exclude paths
+/AssureCommons/target/
+/AssureServer/target/
+/ChannelApp/target/

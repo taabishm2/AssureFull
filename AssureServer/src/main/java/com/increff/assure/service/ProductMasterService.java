@@ -1,0 +1,53 @@
+package com.increff.assure.service;
+
+import com.increff.assure.dao.ProductMasterDao;
+import com.increff.assure.pojo.ProductMasterPojo;
+import model.form.ProductUpdateForm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
+@Service
+public class ProductMasterService extends AbstractService {
+    @Autowired
+    private ProductMasterDao productMasterDao;
+
+    @Transactional(rollbackOn = ApiException.class)
+    public void insert(ProductMasterPojo product) throws ApiException {
+        checkIfProductExists(product.getClientId(), product.getClientSkuId());
+        productMasterDao.insert(product);
+    }
+
+    private void checkIfProductExists(Long clientId, String clientSkuId) throws ApiException {
+        ProductMasterPojo exists = productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId);
+        checkNull(exists, "ClientId:" + clientId + ", ClientSKU:" + clientSkuId + " already exists");
+    }
+
+    public ProductMasterPojo getCheckId(Long id) throws ApiException {
+        ProductMasterPojo product = productMasterDao.select(id);
+        checkNotNull(product, "Product (ID:" + id + ") does not exist.");
+        return product;
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public void addList(List<ProductMasterPojo> product) throws ApiException {
+        for (ProductMasterPojo pojo : product)
+            insert(pojo);
+    }
+
+    public List<ProductMasterPojo> getAll() {
+        return productMasterDao.selectAll();
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public void update(Long clientId, String clientSkuId, ProductUpdateForm productForm) throws ApiException {
+        ProductMasterPojo productMaster = productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId);
+        copySourceToDestination(productMaster, productForm);
+    }
+
+    public Long getClientIdOfProduct(Long globalSkuId) throws ApiException {
+        return getCheckId(globalSkuId).getClientId();
+    }
+}
