@@ -15,7 +15,7 @@ public class ProductMasterService extends AbstractService {
     private ProductMasterDao productMasterDao;
 
     @Transactional(rollbackOn = ApiException.class)
-    public void insert(ProductMasterPojo product) throws ApiException {
+    public void add(ProductMasterPojo product) throws ApiException {
         checkIfProductExists(product.getClientId(), product.getClientSkuId());
         productMasterDao.insert(product);
     }
@@ -34,7 +34,7 @@ public class ProductMasterService extends AbstractService {
     @Transactional(rollbackOn = ApiException.class)
     public void addList(List<ProductMasterPojo> product) throws ApiException {
         for (ProductMasterPojo pojo : product)
-            insert(pojo);
+            add(pojo);
     }
 
     public List<ProductMasterPojo> getAll() {

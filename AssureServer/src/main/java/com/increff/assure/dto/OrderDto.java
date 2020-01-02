@@ -1,10 +1,13 @@
 package com.increff.assure.dto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.increff.assure.pojo.*;
 import com.increff.assure.service.*;
 import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
+import com.mysql.cj.xdevapi.Client;
 import model.ConsumerType;
+import model.InvoiceType;
 import model.OrderStatus;
 import model.data.OrderData;
 import model.data.OrderItemReceiptData;
@@ -42,9 +45,7 @@ public class OrderDto extends AbstractService {
     @Autowired
     private ChannelListingService channelListingService;
 
-    @Transactional
     public void add(OrderForm orderForm) throws ApiException {
-
         OrderPojo orderPojo = convert(orderForm, OrderPojo.class);
         validateOrder(orderPojo);
         orderService.add(orderPojo);
@@ -60,11 +61,12 @@ public class OrderDto extends AbstractService {
     private List<OrderItemPojo> getOrderItemPojoList(List<OrderItemForm> orderItemList, Long orderId) throws ApiException {
         List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
 
-        for(OrderItemForm orderItemForm:orderItemList){
+        for (OrderItemForm orderItemForm : orderItemList) {
             OrderItemPojo orderItemPojo = convert(orderItemForm, OrderItemPojo.class);
             orderItemPojo.setOrderId(orderId);
             orderItemPojoList.add(orderItemPojo);
         }
+
         return orderItemPojoList;
     }
 
@@ -76,12 +78,11 @@ public class OrderDto extends AbstractService {
     }
 
     public OrderData get(Long id) throws ApiException {
-        OrderPojo orderPojo = orderService.getCheckId(id);
-        return convert(orderPojo, OrderData.class);
+        return convertOrderPojoToOrderData(orderService.getCheckId(id));
     }
 
     public List<OrderData> getAll() throws ApiException {
-        return convert(orderService.getAll(), OrderData.class);
+        return convertOrderPojoToOrderData(orderService.getAll());
     }
 
     private void validateOrder(OrderPojo orderPojo) throws ApiException {
@@ -138,15 +139,36 @@ public class OrderDto extends AbstractService {
         return quantityToAllocate - remainingQuantityToAllocate;
     }
 
-    public void fulfillOrder(Long orderId) throws ApiException {
+    public void fulfillOrder(Long orderId) throws ApiException, JsonProcessingException {
         OrderPojo order = orderService.getCheckId(orderId);
         if (!order.getStatus().equals(OrderStatus.ALLOCATED))
             throw new ApiException("Order is not Allocated");
 
-        generateInvoicePdf(order);
-        fulfillOrderItems(orderId);
+        if (channelService.getCheckId(order.getChannelId()).getInvoiceType().equals(InvoiceType.SELF)) {
+            generateInvoicePdf(order);
+            fulfillOrderItems(orderId);
+        } else {
+            ClientWrapper.fetchInvoiceFromChannel(createOrderInvoice(order));
+        }
 
         order.setStatus(OrderStatus.FULFILLED);
+    }
+
+    private OrderData convertOrderPojoToOrderData(OrderPojo order) throws ApiException {
+        OrderData orderData = convert(order, OrderData.class);
+        orderData.setOrderItemList(convert(orderItemService.getByOrderId(order.getId()), OrderItemForm.class));
+        return orderData;
+    }
+
+    private List<OrderData> convertOrderPojoToOrderData(List<OrderPojo> orderPojoList) throws ApiException {
+        List<OrderData> orderDataList = new ArrayList<>();
+        for(OrderPojo pojo:orderPojoList)
+            orderDataList.add(convertOrderPojoToOrderData(pojo));
+        return orderDataList;
+    }
+
+    private void fetchInvoiceFromChannel(OrderPojo order) {
+
     }
 
     private void fulfillOrderItems(Long orderId) {

@@ -24,7 +24,6 @@ public class OrderService extends AbstractService {
     private void checkDuplicateOrders(OrderPojo order) throws ApiException {
         OrderPojo matchedPojo = orderDao.selectByChannelAndChannelOrderId(order.getChannelId(), order.getChannelOrderId());
         checkNull(matchedPojo, "Order with ChannelID & ChannelOrderID pair already exist.");
-
     }
 
     public List<OrderPojo> getAll() {

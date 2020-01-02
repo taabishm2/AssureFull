@@ -23,7 +23,7 @@ public class ClientWrapper {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<String> request = new HttpEntity<String>(jsonStr, headers);
-        String personResultAsJsonStr = restTemplate.postForObject("http://localhost:6060/assure/api/order", request, String.class);
+        String response = restTemplate.postForObject("http://localhost:6060/assure/api/order", request, String.class);
     }
 
     public static ChannelSideOrderData hitGetOrderApi(Long id) {

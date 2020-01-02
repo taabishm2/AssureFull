@@ -30,7 +30,7 @@ public class ProductMasterDto {
     public void add(ProductMasterForm productForm) throws ApiException {
         ProductMasterPojo productPojo = convert(productForm, ProductMasterPojo.class);
         validateClient(productPojo.getClientId());
-        productService.insert(productPojo);
+        productService.add(productPojo);
     }
 
     private void validateClient(Long clientId) throws ApiException {

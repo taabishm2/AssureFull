@@ -1,5 +1,6 @@
 package com.increff.assure.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.increff.assure.dto.OrderDto;
 import com.increff.assure.service.ApiException;
 import io.swagger.annotations.Api;
@@ -46,7 +47,7 @@ public class OrderApiController {
 
     @ApiOperation(value = "Generate Order Invoice")
     @RequestMapping(path = "/api/order/invoice/{id}", method = RequestMethod.POST)
-    public void generateReceipt(@PathVariable Long id) throws ApiException {
+    public void generateReceipt(@PathVariable Long id) throws ApiException, JsonProcessingException {
         orderDto.fulfillOrder(id);
     }
 }

@@ -25,13 +25,4 @@ public class BinDto {
         List<BinPojo> pojoList = binService.getAll();
         return pojoList.stream().map(BinPojo::getId).collect(Collectors.toList());
     }
-
-    public String httpTest() {
-        RestTemplate restTemplate = new RestTemplate();
-        String fooResourceUrl
-                = "http://localhost:7070/channel";
-        ResponseEntity<String> response
-                = restTemplate.getForEntity(fooResourceUrl + "/1", String.class);
-        return response.toString();
-    }
 }

@@ -28,10 +28,4 @@ public class BinApiController {
     public List<Long> getAll() throws ApiException {
         return binDto.getAll();
     }
-
-    @ApiOperation(value = "Get list of all Bin IDs")
-    @RequestMapping(path = "/api/bin/test", method = RequestMethod.GET)
-    public String test() throws ApiException {
-        return binDto.httpTest()+"<h2>Test is working</h2>";
-    }
 }

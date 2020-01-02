@@ -26,23 +26,7 @@ public class OrderApiController {
 
     @ApiOperation(value = "Adds an Order")
     @RequestMapping(path = "/api/order", method = RequestMethod.POST)
-    //public void add(@Valid @RequestBody ChannelSideOrderForm form) throws ApiException {
-    public void add() throws ApiException, JsonProcessingException {
-
-        ChannelSideOrderForm form = new ChannelSideOrderData();
-        form.setChannelId(1L);
-        form.setChannelOrderId("ChannelOrder ID-2");
-        form.setClientId(3L);
-        form.setCustomerId(4L);
-
-        List<OrderItemForm> itemFormList = new ArrayList<>();
-        OrderItemForm itemForm1 = new OrderItemForm();
-        itemForm1.setGlobalSkuId(1L);
-        itemForm1.setOrderedQuantity(5L);
-        itemFormList.add((itemForm1));
-
-        form.setOrderItemList(itemFormList);
-
+    public void add(@Valid @RequestBody ChannelSideOrderForm form) throws ApiException, JsonProcessingException {
         orderDto.add(form);
     }
 
