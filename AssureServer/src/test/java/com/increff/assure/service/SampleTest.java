@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class ConsumerServiceTest extends AbstractUnitTest {
+public class SampleTest extends AbstractUnitTest {
     @Autowired
     private static ConsumerService consumerService;
     @Autowired
