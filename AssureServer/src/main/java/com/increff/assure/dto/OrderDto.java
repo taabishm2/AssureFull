@@ -44,6 +44,8 @@ public class OrderDto extends AbstractService {
     private ProductMasterService productService;
     @Autowired
     private ChannelListingService channelListingService;
+    @Autowired
+    private ClientWrapper clientWrapper;
 
     public void add(OrderForm orderForm) throws ApiException {
         OrderPojo orderPojo = convert(orderForm, OrderPojo.class);
@@ -148,7 +150,7 @@ public class OrderDto extends AbstractService {
             generateInvoicePdf(order);
             fulfillOrderItems(orderId);
         } else {
-            ClientWrapper.fetchInvoiceFromChannel(createOrderInvoice(order));
+            clientWrapper.fetchInvoiceFromChannel(createOrderInvoice(order));
         }
 
         order.setStatus(OrderStatus.FULFILLED);

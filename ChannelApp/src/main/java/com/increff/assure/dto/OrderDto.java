@@ -21,6 +21,7 @@ public class OrderDto {
 
     public void add(@RequestBody ChannelSideOrderForm orderForm) throws ApiException, JsonProcessingException {
         OrderForm serverSideOrderForm = ClientWrapper.convert(orderForm);
+        //Autowire ClientWrapper
         ClientWrapper.hitAddOrderApi(serverSideOrderForm);
     }
 

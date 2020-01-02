@@ -9,7 +9,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class AbstractDao<T> {
     private final Class<T> clazz;
@@ -53,7 +55,10 @@ public abstract class AbstractDao<T> {
         Root<T> root = criteriaQuery.from(this.clazz);
         criteriaQuery.select(root);
         TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
+        List<T> resultList = query.getResultList();
+        if(Objects.isNull(resultList))
+            return new ArrayList<>();
+        return resultList;
     }
 
     @Transactional

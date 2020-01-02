@@ -3,6 +3,7 @@ package com.increff.assure.service;
 import com.increff.assure.dao.ConsumerDao;
 import com.increff.assure.pojo.ConsumerPojo;
 import model.ConsumerType;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,40 +12,31 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class ConsumerServiceTest extends AbstractUnitTest {
-    @Autowired
-    private static ConsumerService consumerService;
-    @Autowired
-    private static ConsumerDao consumerDao;
-    @Autowired
-    private static TestDataInitializer testDataInitializer;
 
-    @BeforeClass
-    public static void init() {
-        testDataInitializer.init();
-        testDataInitializer.populate();
+    @Autowired
+    ConsumerService consumerService;
+    @Autowired
+    ConsumerDao consumerDao;
+
+    @Before
+    public void init() {
     }
 
     @Test
     public void testAdd() throws ApiException {
-        ConsumerPojo pojo = new ConsumerPojo();
-        pojo.setName(" Test Name  ");
-        pojo.setType(ConsumerType.CUSTOMER);
+        int consumerCount = consumerDao.selectAll().size();
 
-        int initialSize = consumerDao.selectAll().size();
+        ConsumerPojo pojo = PojoConstructor.getConstructConsumer("TEST NAME", ConsumerType.CUSTOMER);
         consumerService.add(pojo);
-        int finalSize = consumerDao.selectAll().size();
 
-        ConsumerPojo testPojo = consumerDao.selectByNameAndType("TEST NAME", ConsumerType.CUSTOMER);
-        assertEquals(1, finalSize - initialSize);
+        assertEquals(1, consumerDao.selectAll().size() - consumerCount);
 
-        ConsumerPojo duplicatePojo = new ConsumerPojo();
-        pojo.setName("  tEsT NaMe  ");
-        pojo.setType(ConsumerType.CUSTOMER);
+        ConsumerPojo duplicatePojo = PojoConstructor.getConstructConsumer("TEST NAME", ConsumerType.CUSTOMER);
         try {
             consumerService.add(duplicatePojo);
-            fail("Duplicate Consumer POJO was inserted.");
+            fail("Duplicate Consumer was inserted");
         } catch (ApiException e) {
-            assertEquals("TEST NAME already exists.", e.getMessage());
+            assertEquals(e.getMessage(), "TEST NAME already exists.");
         }
     }
 }

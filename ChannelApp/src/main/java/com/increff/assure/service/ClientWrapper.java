@@ -11,8 +11,10 @@ import model.form.OrderForm;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+@Component
 public class ClientWrapper {
     public static void hitAddOrderApi(OrderForm serverSideOrderForm) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
