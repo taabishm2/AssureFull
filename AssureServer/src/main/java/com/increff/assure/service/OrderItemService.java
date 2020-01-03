@@ -32,11 +32,6 @@ public class OrderItemService extends AbstractService {
         checkNull(matchedOrderItem, "GlobalSKU, OrderID pair already exists.");
     }
 
-    public OrderItemPojo get(Long id) throws ApiException {
-        getCheckId(id);
-        return orderItemDao.select(id);
-    }
-
     public List<OrderItemPojo> getAll() {
         return orderItemDao.selectAll();
     }

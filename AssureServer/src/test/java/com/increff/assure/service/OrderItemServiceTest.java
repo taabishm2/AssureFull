@@ -1,15 +1,7 @@
 package com.increff.assure.service;
 
-import com.increff.assure.dao.ChannelDao;
-import com.increff.assure.dao.ChannelListingDao;
-import com.increff.assure.dao.ConsumerDao;
-import com.increff.assure.dao.OrderDao;
-import com.increff.assure.pojo.ChannelPojo;
-import com.increff.assure.pojo.ConsumerPojo;
-import com.increff.assure.pojo.OrderPojo;
-import model.ConsumerType;
-import model.InvoiceType;
-import model.OrderStatus;
+import com.increff.assure.dao.OrderItemDao;
+import com.increff.assure.pojo.OrderItemPojo;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,70 +12,79 @@ import static org.junit.Assert.fail;
 public class OrderItemServiceTest extends AbstractUnitTest {
 
     @Autowired
-    OrderService orderService;
+    OrderItemService orderItemService;
     @Autowired
-    OrderDao orderDao;
-    @Autowired
-    ConsumerDao consumerDao;
-    @Autowired
-    ChannelDao channelDao;
-    @Autowired
-    ChannelListingDao channelListingDao;
+    OrderItemDao orderItemDao;
 
-    private ConsumerPojo clientPojo;
-    private ConsumerPojo customerPojo;
-    private ChannelPojo channel;
-    private OrderPojo orderPojo;
+    private OrderItemPojo orderItemPojo;
 
     @Before
     public void init() {
-        clientPojo = PojoConstructor.getConstructConsumer("Puma", ConsumerType.CLIENT);
-        customerPojo = PojoConstructor.getConstructConsumer("User Name", ConsumerType.CUSTOMER);
-        channel = PojoConstructor.getConstructChannel("FLIPKART", InvoiceType.CHANNEL);
-
-        consumerDao.insert(clientPojo);
-        consumerDao.insert(customerPojo);
-        channelDao.insert(channel);
-
-        orderPojo = PojoConstructor.getConstructOrder(customerPojo.getId(), clientPojo.getId(), channel.getId(), "FLIPoID");
+        orderItemPojo = PojoConstructor.getConstructOrderItem(123L, 100L, 10L, 0L, 0L);
     }
 
     @Test
     public void testAdd() throws ApiException {
-        int initialCount = orderService.getAll().size();
-        orderService.add(orderPojo);
-        assertEquals(1, orderService.getAll().size() - initialCount);
-
-        assertEquals(OrderStatus.CREATED, orderPojo.getStatus());
+        int initialCount = orderItemDao.selectAll().size();
+        orderItemService.add(orderItemPojo);
+        assertEquals(1, orderItemService.getAll().size() - initialCount);
 
         try {
-            orderService.add(orderPojo);
-            fail("Duplicate Order Inserted");
+            orderItemService.add(orderItemPojo);
+            fail("Duplicate Order Item Inserted");
         } catch (ApiException e) {
-            assertEquals("Order with ChannelID & ChannelOrderID pair already exist.", e.getMessage());
+            assertEquals("GlobalSKU, OrderID pair already exists.", e.getMessage());
         }
-    }
 
-    public void testGetCheckId() throws ApiException {
-        orderService.add(orderPojo);
-        assertEquals(orderService.getCheckId(orderPojo.getId()),orderPojo);
-    }
-
-    public void testUpdateOrderStatus() throws ApiException {
-        orderService.add(orderPojo);
-        orderService.updateStatus(orderPojo.getId(), OrderStatus.ALLOCATED);
-        assertEquals(OrderStatus.ALLOCATED, orderPojo.getStatus());
-
-        orderService.updateStatus(orderPojo.getId(), OrderStatus.FULFILLED);
-        assertEquals(OrderStatus.FULFILLED, orderPojo.getStatus());
-
-        orderService.updateStatus(orderPojo.getId(), OrderStatus.CREATED);
-        assertEquals(OrderStatus.CREATED, orderPojo.getStatus());
+        assertEquals(0, (long) orderItemPojo.getAllocatedQuantity());
+        assertEquals(0, (long) orderItemPojo.getFulfilledQuantity());
     }
 
     @Test
-    public void testGetOrderClient() throws ApiException {
-        orderService.add(orderPojo);
-        assertEquals(clientPojo.getId(), orderService.getOrderClient(orderPojo.getId()));
+    public void testGetCheckOrderAndGlobalSku() throws ApiException {
+        orderItemDao.insert(orderItemPojo);
+
+        assertEquals(orderItemService.getCheckOrderAndGlobalSku(orderItemPojo.getOrderId(), orderItemPojo.getGlobalSkuId()), orderItemPojo);
+        try {
+            orderItemService.getCheckOrderAndGlobalSku(999L, 666L);
+            fail("Invalid OrderID, GlobalSKU matched");
+        } catch (ApiException e) {
+            assertEquals("Order Item with OrderID:999 GSKU:666 does not exist.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGetByOrderId() {
+        orderItemDao.insert(PojoConstructor.getConstructOrderItem(123L, 100L, 10L, 0L, 0L));
+        orderItemDao.insert(PojoConstructor.getConstructOrderItem(456L, 100L, 10L, 0L, 0L));
+        orderItemDao.insert(PojoConstructor.getConstructOrderItem(789L, 200L, 10L, 0L, 0L));
+
+        int countClientId100 = 0;
+        for (OrderItemPojo orderItem : orderItemService.getByOrderId(100L)) {
+            assertEquals(100L, (long) orderItem.getOrderId());
+            countClientId100++;
+        }
+        assertEquals(2, countClientId100);
+
+        int countClientId200 = 0;
+        for (OrderItemPojo orderItem : orderItemService.getByOrderId(200L)) {
+            assertEquals(200L, (long) orderItem.getOrderId());
+            countClientId200++;
+        }
+        assertEquals(1, countClientId200);
+    }
+
+    @Test
+    public void testAllocateOrderItems() throws ApiException {
+        orderItemDao.insert(orderItemPojo);
+        orderItemService.allocateOrderItems(orderItemPojo, 8L);
+        assertEquals(10L, (long) orderItemPojo.getOrderedQuantity());
+        assertEquals(8L, (long) orderItemPojo.getAllocatedQuantity());
+        assertEquals(0L, (long) orderItemPojo.getFulfilledQuantity());
+
+        orderItemService.allocateOrderItems(orderItemPojo, 2L);
+        assertEquals(10L, (long) orderItemPojo.getAllocatedQuantity());
+        assertEquals(10L, (long) orderItemPojo.getAllocatedQuantity());
+        assertEquals(0L, (long) orderItemPojo.getFulfilledQuantity());
     }
 }

@@ -3,6 +3,7 @@ package com.increff.assure.dto;
 import com.increff.assure.pojo.BinSkuPojo;
 import com.increff.assure.pojo.InventoryPojo;
 import com.increff.assure.service.*;
+import com.increff.assure.util.FormValidateUtil;
 import model.data.BinSkuData;
 import model.form.BinSkuForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,16 @@ public class BinSkuDto {
     @Autowired
     private ProductMasterService productService;
 
+    @Transactional(rollbackFor = ApiException.class)
+    public void add(BinSkuForm binSkuForm) throws ApiException {
+        validateProductAndBin(binSkuForm);
+        FormValidateUtil.validate(binSkuForm);
+        BinSkuPojo binSkuPojo = convert(binSkuForm, BinSkuPojo.class);
+        binSkuService.addOrUpdate(binSkuPojo);
+
+        addOrUpdateInventory(binSkuPojo);
+    }
+
     @Transactional(readOnly = true)
     public BinSkuData get(Long id) throws ApiException {
         BinSkuPojo binSkuPojo = binSkuService.getCheckId(id);
@@ -36,17 +47,8 @@ public class BinSkuDto {
         return convert(allBinSkuPojo, BinSkuData.class);
     }
 
-    @Transactional(rollbackFor = ApiException.class)
-    public void add(BinSkuForm binSkuForm) throws ApiException {
-        validate(binSkuForm);
-        BinSkuPojo binSkuPojo = convert(binSkuForm, BinSkuPojo.class);
-        binSkuService.addOrUpdate(binSkuPojo);
-
-        addOrUpdateInventory(binSkuPojo);
-    }
-
     @Transactional(readOnly = true)
-    public void validate(BinSkuForm binSkuPojo) throws ApiException {
+    public void validateProductAndBin(BinSkuForm binSkuPojo) throws ApiException {
         productService.getCheckId(binSkuPojo.getGlobalSkuId());
         binService.getCheckId(binSkuPojo.getBinId());
     }
@@ -55,6 +57,8 @@ public class BinSkuDto {
     private void addOrUpdateInventory(BinSkuPojo binSkuPojo) {
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setAvailableQuantity(binSkuPojo.getAvailableQuantity());
+        inventoryPojo.setAllocatedQuantity(0L);
+        inventoryPojo.setFulfilledQuantity(0L);
         inventoryPojo.setGlobalSkuId(binSkuPojo.getGlobalSkuId());
 
         inventoryService.addOrUpdate(inventoryPojo);

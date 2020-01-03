@@ -3,8 +3,8 @@ package com.increff.assure.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.increff.assure.model.data.ChannelOrderReceiptData;
-import com.increff.assure.model.data.ChannelSideOrderData;
-import com.increff.assure.model.form.ChannelSideOrderForm;
+import com.increff.assure.model.data.ChannelAppOrderData;
+import com.increff.assure.model.form.ChannelAppOrderForm;
 import com.increff.assure.util.ConvertUtil;
 import model.data.OrderReceiptData;
 import model.form.OrderForm;
@@ -16,9 +16,9 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class ClientWrapper {
-    public static void hitAddOrderApi(OrderForm serverSideOrderForm) throws JsonProcessingException {
+    public static void hitAddOrderApi(OrderForm orderForm) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        String jsonStr = mapper.writeValueAsString(serverSideOrderForm);
+        String jsonStr = mapper.writeValueAsString(orderForm);
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -28,16 +28,16 @@ public class ClientWrapper {
         String response = restTemplate.postForObject("http://localhost:6060/assure/api/order", request, String.class);
     }
 
-    public static ChannelSideOrderData hitGetOrderApi(Long id) {
+    public static ChannelAppOrderData hitGetOrderApi(Long id) {
         RestTemplate restTemplate = new RestTemplate();
         String fooResourceUrl = "http://localhost:6060/assure/api/order";
-        return restTemplate.getForEntity(fooResourceUrl + "/" + id, ChannelSideOrderData.class).getBody();
+        return restTemplate.getForEntity(fooResourceUrl + "/" + id, ChannelAppOrderData.class).getBody();
     }
 
     public static void sendOrderInvoice(Long orderId) {
     }
 
-    public static OrderForm convert(ChannelSideOrderForm channelOrderForm) throws ApiException {
+    public static OrderForm convert(ChannelAppOrderForm channelOrderForm) throws ApiException {
         return ConvertUtil.convert(channelOrderForm, OrderForm.class);
     }
 

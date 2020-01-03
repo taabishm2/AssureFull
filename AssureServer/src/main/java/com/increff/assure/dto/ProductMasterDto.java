@@ -4,12 +4,14 @@ import com.increff.assure.pojo.ProductMasterPojo;
 import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ConsumerService;
 import com.increff.assure.service.ProductMasterService;
+import com.increff.assure.util.FormValidateUtil;
 import model.ConsumerType;
 import model.data.ProductMasterData;
 import model.form.ProductMasterForm;
 import model.form.ProductUpdateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,9 +29,12 @@ public class ProductMasterDto {
         return convert(productPojo, ProductMasterData.class);
     }
 
+    @Transactional(rollbackFor = ApiException.class)
     public void add(ProductMasterForm productForm) throws ApiException {
         ProductMasterPojo productPojo = convert(productForm, ProductMasterPojo.class);
+        FormValidateUtil.validate((productForm));
         validateClient(productPojo.getClientId());
+
         productService.add(productPojo);
     }
 
@@ -43,6 +48,7 @@ public class ProductMasterDto {
         return convert(allProductMasterPojo, ProductMasterData.class);
     }
 
+    @Transactional(rollbackFor = ApiException.class)
     public void addList(List<ProductMasterForm> formList) throws ApiException {
         List<ProductMasterPojo> productMasterPojoList = convert(formList, ProductMasterPojo.class);
         productService.addList(productMasterPojoList);

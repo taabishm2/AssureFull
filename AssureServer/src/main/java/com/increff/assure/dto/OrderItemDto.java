@@ -32,7 +32,7 @@ public class OrderItemDto {
     }
 
     public OrderItemData get(Long id) throws ApiException {
-        OrderItemPojo orderItemPojo = orderItemService.get(id);
+        OrderItemPojo orderItemPojo = orderItemService.getCheckId(id);
         return convert(orderItemPojo, OrderItemData.class);
     }
 

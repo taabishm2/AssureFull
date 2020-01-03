@@ -5,8 +5,8 @@ import com.increff.assure.pojo.ProductMasterPojo;
 import model.form.ProductUpdateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -14,7 +14,7 @@ public class ProductMasterService extends AbstractService {
     @Autowired
     private ProductMasterDao productMasterDao;
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void add(ProductMasterPojo product) throws ApiException {
         checkIfProductExists(product.getClientId(), product.getClientSkuId());
         productMasterDao.insert(product);
@@ -31,9 +31,9 @@ public class ProductMasterService extends AbstractService {
         return product;
     }
 
-    @Transactional(rollbackOn = ApiException.class)
-    public void addList(List<ProductMasterPojo> product) throws ApiException {
-        for (ProductMasterPojo pojo : product)
+    @Transactional(rollbackFor = ApiException.class)
+    public void addList(List<ProductMasterPojo> productList) throws ApiException {
+        for (ProductMasterPojo pojo : productList)
             add(pojo);
     }
 
@@ -41,7 +41,7 @@ public class ProductMasterService extends AbstractService {
         return productMasterDao.selectAll();
     }
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void update(Long clientId, String clientSkuId, ProductUpdateForm productForm) throws ApiException {
         ProductMasterPojo productMaster = productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId);
         copySourceToDestination(productMaster, productForm);

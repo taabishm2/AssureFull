@@ -8,6 +8,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -38,5 +40,19 @@ public class ConsumerServiceTest extends AbstractUnitTest {
         } catch (ApiException e) {
             assertEquals(e.getMessage(), "TEST NAME already exists.");
         }
+    }
+
+    public void testGetCheckId() throws ApiException {
+        ConsumerPojo pojo = PojoConstructor.getConstructConsumer("TEST NAME", ConsumerType.CUSTOMER);
+        consumerService.add(pojo);
+
+        assertEquals(pojo, consumerService.getCheckId(pojo.getId()));
+    }
+
+    public void testGetAll() throws ApiException {
+        assertEquals(0, consumerService.getAll().size());
+        ConsumerPojo pojo = PojoConstructor.getConstructConsumer("TEST NAME", ConsumerType.CUSTOMER);
+        consumerService.add(pojo);
+        assertEquals(1, consumerService.getAll().size());
     }
 }
