@@ -68,7 +68,7 @@ public class BinSkuServiceTest extends AbstractUnitTest {
     @Test
     public void testGetCheckId() throws ApiException {
         binSkuDao.insert(binSkuPojo);
-        binSkuService.getCheckId(binSkuPojo.getId());
+        assertEquals(binSkuService.getCheckId(binSkuPojo.getId()), binSkuPojo);
 
         try {
             binSkuService.getCheckId(1234L);

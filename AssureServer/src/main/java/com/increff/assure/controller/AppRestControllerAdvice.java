@@ -16,7 +16,6 @@ public class AppRestControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public MessageData handle(ApiException e) {
-        System.out.println("ERROR ENCOUNTERED "+e.getMessage());
         MessageData data = new MessageData();
         data.setMessage(e.getMessage());
         return data;

@@ -32,7 +32,7 @@ public class OrderService extends AbstractService {
 
     public OrderPojo getCheckId(Long id) throws ApiException {
         OrderPojo orderPojo = orderDao.select(id);
-        checkNotNull(orderPojo, "Order (ID:" + id + ") already exists.");
+        checkNotNull(orderPojo, "Order (ID:" + id + ") does not exist.");
         return orderPojo;
     }
 

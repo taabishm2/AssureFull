@@ -40,20 +40,20 @@ public class ChannelListingDao extends AbstractDao<ChannelListingPojo> {
     }
 
     @Transactional(readOnly = true)
-    public ChannelListingPojo selectByChannelAndChannelSku(Long channelId, String channelOrderId) {
+    public ChannelListingPojo selectByChannelAndChannelSku(Long channelId, String channelSkuId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<ChannelListingPojo> q = cb.createQuery(ChannelListingPojo.class);
         Root<ChannelListingPojo> c = q.from(ChannelListingPojo.class);
         q.select(c);
         ParameterExpression<Long> channelIdParam = cb.parameter(Long.class);
-        ParameterExpression<String> channelOrderIdParam = cb.parameter(String.class);
+        ParameterExpression<String> channelSkuIdParam = cb.parameter(String.class);
         q.where(
                 cb.equal(c.get("channelId"), channelIdParam),
-                cb.equal(c.get("channelOrderId"), channelOrderIdParam)
+                cb.equal(c.get("channelSkuId"), channelSkuIdParam)
         );
         TypedQuery<ChannelListingPojo> typedQuery = entityManager.createQuery(q);
         typedQuery.setParameter(channelIdParam, channelId);
-        typedQuery.setParameter(channelOrderIdParam, channelOrderId);
+        typedQuery.setParameter(channelSkuIdParam, channelSkuId);
         return getSingle(typedQuery);
     }
 }

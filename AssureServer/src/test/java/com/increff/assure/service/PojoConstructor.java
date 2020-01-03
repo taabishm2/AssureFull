@@ -18,11 +18,11 @@ public class PojoConstructor {
         return binSkuPojo;
     }
 
-    public static ChannelListingPojo getConstructChannelListing(Long globalSku, Long channelId, String channelOrderId) {
+    public static ChannelListingPojo getConstructChannelListing(Long globalSku, Long channelId, String channelSkuId) {
         ChannelListingPojo channelListing = new ChannelListingPojo();
         channelListing.setGlobalSkuId(globalSku);
         channelListing.setChannelId(channelId);
-        channelListing.setChannelOrderId(channelOrderId);
+        channelListing.setChannelSkuId(channelSkuId);
         return channelListing;
     }
 
@@ -59,13 +59,12 @@ public class PojoConstructor {
         return orderItemPojo;
     }
 
-    public static OrderPojo getConstructOrder(Long customerId, Long clientId, Long channelId, String channelOrderId, OrderStatus status) {
+    public static OrderPojo getConstructOrder(Long customerId, Long clientId, Long channelId, String channelOrderId) {
         OrderPojo order = new OrderPojo();
         order.setCustomerId(customerId);
         order.setClientId(clientId);
         order.setChannelId(channelId);
         order.setChannelOrderId(channelOrderId);
-        order.setStatus(status);
         return order;
     }
 

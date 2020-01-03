@@ -21,16 +21,15 @@ public class ChannelDto {
     private ChannelService channelService;
 
     @Transactional(rollbackFor = ApiException.class)
-    public void init() throws ApiException {
+    public void init() {
+        ChannelPojo internalChannel = new ChannelPojo();
+        internalChannel.setName("INTERNAL");
+        internalChannel.setInvoiceType(InvoiceType.SELF);
+
         try {
             channelService.checkDuplicateChannelName("INTERNAL");
-        } catch (ApiException e) {
-            assert e.getMessage().equals("Channel (NAME:INTERNAL) already exists.") : e.getMessage();
-
-            ChannelPojo internalChannel = new ChannelPojo();
-            internalChannel.setName("INTERNAL");
-            internalChannel.setInvoiceType(InvoiceType.SELF);
             channelService.add(internalChannel);
+        } catch (ApiException ignored) {
         }
     }
 

@@ -211,7 +211,7 @@ public class OrderDto extends AbstractService {
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(order.getId())) {
             OrderItemReceiptData orderItemReceipt = new OrderItemReceiptData();
 
-            orderItemReceipt.setClientSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(), orderItem.getGlobalSkuId()).getChannelOrderId());
+            orderItemReceipt.setClientSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(), orderItem.getGlobalSkuId()).getChannelSkuId());
             orderItemReceipt.setOrderItemId(orderItem.getId());
             orderItemReceipt.setQuantity(orderItem.getAllocatedQuantity());
 
