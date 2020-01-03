@@ -5,7 +5,6 @@ import com.increff.assure.pojo.*;
 import com.increff.assure.service.*;
 import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
-import com.mysql.cj.xdevapi.Client;
 import model.ConsumerType;
 import model.InvoiceType;
 import model.OrderStatus;
@@ -16,8 +15,8 @@ import model.form.OrderForm;
 import model.form.OrderItemForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,44 +46,14 @@ public class OrderDto extends AbstractService {
     @Autowired
     private ClientWrapper clientWrapper;
 
+    @Transactional(rollbackFor = ApiException.class)
     public void add(OrderForm orderForm) throws ApiException {
         OrderPojo orderPojo = convert(orderForm, OrderPojo.class);
         validateOrder(orderPojo);
+
         orderService.add(orderPojo);
 
-        List<OrderItemPojo> orderItemList = getOrderItemPojoList(orderForm.getOrderItemList(), orderPojo.getId());
-        Long clientId = orderPojo.getClientId();
-        for (OrderItemPojo orderItem : orderItemList)
-            validateOrderItem(orderItem, clientId);
-
-        orderItemService.addList(orderItemList);
-    }
-
-    private List<OrderItemPojo> getOrderItemPojoList(List<OrderItemForm> orderItemList, Long orderId) throws ApiException {
-        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
-
-        for (OrderItemForm orderItemForm : orderItemList) {
-            OrderItemPojo orderItemPojo = convert(orderItemForm, OrderItemPojo.class);
-            orderItemPojo.setOrderId(orderId);
-            orderItemPojoList.add(orderItemPojo);
-        }
-
-        return orderItemPojoList;
-    }
-
-    private void validateOrderItem(OrderItemPojo orderItemPojo, Long clientId) throws ApiException {
-        productService.getCheckId(orderItemPojo.getGlobalSkuId());
-
-        if (!clientId.equals(productService.getClientIdOfProduct(orderItemPojo.getGlobalSkuId())))
-            throw new ApiException("Invalid Client for Product(ID: " + orderItemPojo.getGlobalSkuId() + ").");
-    }
-
-    public OrderData get(Long id) throws ApiException {
-        return convertOrderPojoToOrderData(orderService.getCheckId(id));
-    }
-
-    public List<OrderData> getAll() throws ApiException {
-        return convertOrderPojoToOrderData(orderService.getAll());
+        addOrderItemsForOrder(orderForm.getOrderItemList(), orderPojo.getId(), orderPojo.getClientId());
     }
 
     private void validateOrder(OrderPojo orderPojo) throws ApiException {
@@ -97,6 +66,59 @@ public class OrderDto extends AbstractService {
         checkNotNull(channelService.getCheckId(orderPojo.getChannelId()), "Channel does not exist");
     }
 
+    @Transactional(rollbackFor = ApiException.class)
+    private void addOrderItemsForOrder(List<OrderItemForm> orderItemFormList, Long orderId, Long clientId) throws ApiException {
+        List<OrderItemPojo> orderItemList = getCreateOrderItemPojoList(orderItemFormList, orderId);
+        for (OrderItemPojo orderItem : orderItemList)
+            validateOrderItem(orderItem, clientId);
+
+        orderItemService.addList(orderItemList);
+    }
+
+    @Transactional(rollbackFor = ApiException.class)
+    private List<OrderItemPojo> getCreateOrderItemPojoList(List<OrderItemForm> orderItemList, Long orderId) throws ApiException {
+        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
+
+        for (OrderItemForm orderItemForm : orderItemList) {
+            OrderItemPojo orderItemPojo = convert(orderItemForm, OrderItemPojo.class);
+            orderItemPojo.setOrderId(orderId);
+            orderItemPojoList.add(orderItemPojo);
+        }
+
+        return orderItemPojoList;
+    }
+
+    @Transactional(readOnly = true)
+    private void validateOrderItem(OrderItemPojo orderItemPojo, Long clientId) throws ApiException {
+        productService.getCheckId(orderItemPojo.getGlobalSkuId());
+
+        if (!clientId.equals(productService.getClientIdOfProduct(orderItemPojo.getGlobalSkuId())))
+            throw new ApiException("Invalid Client for Product(ID: " + orderItemPojo.getGlobalSkuId() + ").");
+    }
+
+    @Transactional(readOnly = true)
+    public OrderData get(Long id) throws ApiException {
+        return convertOrderPojoToOrderData(orderService.getCheckId(id));
+    }
+
+    private OrderData convertOrderPojoToOrderData(OrderPojo order) throws ApiException {
+        OrderData orderData = convert(order, OrderData.class);
+        orderData.setOrderItemList(convert(orderItemService.getByOrderId(order.getId()), OrderItemForm.class));
+        return orderData;
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderData> getAll() throws ApiException {
+        return convertOrderPojoToOrderData(orderService.getAll());
+    }
+
+    private List<OrderData> convertOrderPojoToOrderData(List<OrderPojo> orderPojoList) throws ApiException {
+        List<OrderData> orderDataList = new ArrayList<>();
+        for (OrderPojo pojo : orderPojoList)
+            orderDataList.add(convertOrderPojoToOrderData(pojo));
+        return orderDataList;
+    }
+
     public boolean isOrderAllocated(Long orderId) {
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(orderId)) {
             if (orderItem.getOrderedQuantity().equals(orderItem.getAllocatedQuantity()))
@@ -105,7 +127,7 @@ public class OrderDto extends AbstractService {
         return true;
     }
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void runAllocation(Long orderId) throws ApiException {
         Long globalSkuOfOrderItem, orderedQuantity, allocatedOrderItemQuantity;
 
@@ -124,11 +146,13 @@ public class OrderDto extends AbstractService {
         updateOrderStatusToAllocated(orderId);
     }
 
+    @Transactional(rollbackFor = ApiException.class)
     public void updateOrderStatusToAllocated(Long orderId) throws ApiException {
         if (isOrderAllocated(orderId))
             orderService.updateStatus(orderId, OrderStatus.ALLOCATED);
     }
 
+    @Transactional(rollbackFor = ApiException.class)
     public Long allocateFromAllBins(Long globalSku, Long quantityToAllocate) throws ApiException {
         Long remainingQuantityToAllocate = quantityToAllocate;
         List<BinSkuPojo> allBinSkus = binSkuService.selectBinsByGlobalSku(globalSku);
@@ -141,6 +165,7 @@ public class OrderDto extends AbstractService {
         return quantityToAllocate - remainingQuantityToAllocate;
     }
 
+    @Transactional(rollbackFor = ApiException.class)
     public void fulfillOrder(Long orderId) throws ApiException, JsonProcessingException {
         OrderPojo order = orderService.getCheckId(orderId);
         if (!order.getStatus().equals(OrderStatus.ALLOCATED))
@@ -156,23 +181,6 @@ public class OrderDto extends AbstractService {
         order.setStatus(OrderStatus.FULFILLED);
     }
 
-    private OrderData convertOrderPojoToOrderData(OrderPojo order) throws ApiException {
-        OrderData orderData = convert(order, OrderData.class);
-        orderData.setOrderItemList(convert(orderItemService.getByOrderId(order.getId()), OrderItemForm.class));
-        return orderData;
-    }
-
-    private List<OrderData> convertOrderPojoToOrderData(List<OrderPojo> orderPojoList) throws ApiException {
-        List<OrderData> orderDataList = new ArrayList<>();
-        for(OrderPojo pojo:orderPojoList)
-            orderDataList.add(convertOrderPojoToOrderData(pojo));
-        return orderDataList;
-    }
-
-    private void fetchInvoiceFromChannel(OrderPojo order) {
-
-    }
-
     private void fulfillOrderItems(Long orderId) {
         Long allocatedOrderItemQuantity = 0L;
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(orderId)) {
@@ -180,14 +188,8 @@ public class OrderDto extends AbstractService {
             orderItem.setFulfilledQuantity(orderItem.getFulfilledQuantity() + allocatedOrderItemQuantity);
             orderItem.setAllocatedQuantity(0L);
 
-            fulfillInInventory(orderItem.getGlobalSkuId(), allocatedOrderItemQuantity);
+            inventoryService.fulfillInInventory(orderItem.getGlobalSkuId(), allocatedOrderItemQuantity);
         }
-    }
-
-    private void fulfillInInventory(Long globalSkuId, Long allocatedOrderItemQuantity) {
-        InventoryPojo inventoryPojo = inventoryService.getByGlobalSku(globalSkuId);
-        inventoryPojo.setAllocatedQuantity(inventoryPojo.getAvailableQuantity() - allocatedOrderItemQuantity);
-        inventoryPojo.setFulfilledQuantity(inventoryPojo.getFulfilledQuantity() + allocatedOrderItemQuantity);
     }
 
     private void generateInvoicePdf(OrderPojo order) throws ApiException {

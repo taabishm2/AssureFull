@@ -11,7 +11,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class OrderItemDao extends AbstractDao<OrderItemPojo> {
@@ -34,7 +36,10 @@ public class OrderItemDao extends AbstractDao<OrderItemPojo> {
         );
         TypedQuery<OrderItemPojo> typedQuery = entityManager.createQuery(q);
         typedQuery.setParameter(orderIdParam, orderId);
-        return typedQuery.getResultList();
+        List<OrderItemPojo> resultList = typedQuery.getResultList();
+        if (Objects.isNull(resultList))
+            return new ArrayList<>();
+        return resultList;
     }
 
     @Transactional(readOnly = true)

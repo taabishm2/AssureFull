@@ -56,7 +56,7 @@ public abstract class AbstractDao<T> {
         criteriaQuery.select(root);
         TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
         List<T> resultList = query.getResultList();
-        if(Objects.isNull(resultList))
+        if (Objects.isNull(resultList))
             return new ArrayList<>();
         return resultList;
     }

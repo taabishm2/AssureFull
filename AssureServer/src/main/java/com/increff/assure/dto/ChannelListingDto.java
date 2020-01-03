@@ -9,6 +9,7 @@ import model.data.ChannelListingData;
 import model.form.ChannelListingForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,11 +24,13 @@ public class ChannelListingDto {
     @Autowired
     private ChannelListingService channelListingService;
 
+    @Transactional(readOnly = true)
     public ChannelListingData get(Long id) throws ApiException {
         ChannelListingPojo channelListingPojo = channelListingService.getCheckId(id);
         return convert(channelListingPojo, ChannelListingData.class);
     }
 
+    @Transactional(rollbackFor = ApiException.class)
     public void add(ChannelListingForm channelListingForm) throws ApiException {
         ChannelListingPojo channelListingPojo = convert(channelListingForm, ChannelListingPojo.class);
         validateChannelListing(channelListingPojo);
@@ -35,20 +38,14 @@ public class ChannelListingDto {
         channelListingService.add(channelListingPojo);
     }
 
+    @Transactional(readOnly = true)
     public List<ChannelListingData> getAll() throws ApiException {
         return convert(channelListingService.getAll(), ChannelListingData.class);
     }
 
+    @Transactional(readOnly = true)
     private void validateChannelListing(ChannelListingPojo listingPojo) throws ApiException {
-        validateChannel(listingPojo.getChannelId());
-        validateProduct(listingPojo.getGlobalSkuId());
-    }
-
-    private void validateProduct(Long globalSkuId) throws ApiException {
-        productService.getCheckId(globalSkuId);
-    }
-
-    private void validateChannel(Long channelId) throws ApiException {
-        channelService.getCheckId(channelId);
+        channelService.getCheckId(listingPojo.getChannelId());
+        productService.getCheckId(listingPojo.getGlobalSkuId());
     }
 }

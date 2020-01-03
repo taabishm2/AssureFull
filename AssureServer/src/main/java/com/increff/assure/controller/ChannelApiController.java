@@ -20,7 +20,7 @@ public class ChannelApiController {
     private ChannelDto channelDto;
 
     @PostConstruct
-    public void init() {
+    public void init() throws ApiException {
         channelDto.init();
     }
 

@@ -6,12 +6,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public abstract class AbstractUiController {
-	@Value("${app.baseUrl}")
-	private String baseUrl;
+    @Value("${app.baseUrl}")
+    private String baseUrl;
 
-	protected ModelAndView mav(String page) {
-		ModelAndView mav = new ModelAndView(page);
-		mav.addObject("baseUrl", baseUrl);
-		return mav;
-	}
+    protected ModelAndView mav(String page) {
+        ModelAndView mav = new ModelAndView(page);
+        mav.addObject("baseUrl", baseUrl);
+        return mav;
+    }
 }

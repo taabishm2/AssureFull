@@ -16,11 +16,16 @@ public class InventoryService extends AbstractService {
 
     @Transactional(rollbackOn = ApiException.class)
     public void addOrUpdate(InventoryPojo inventoryPojo) {
-        InventoryPojo matchedPojo = getByGlobalSku(inventoryPojo.getGlobalSkuId());
-        if (Objects.nonNull(matchedPojo))
-            matchedPojo.setAvailableQuantity(inventoryPojo.getAvailableQuantity() + matchedPojo.getAvailableQuantity());
-        else
+        InventoryPojo duplicateSkuPojo = getByGlobalSku(inventoryPojo.getGlobalSkuId());
+        if (Objects.nonNull(duplicateSkuPojo)) {
+            duplicateSkuPojo.setAvailableQuantity(inventoryPojo.getAvailableQuantity() + duplicateSkuPojo.getAvailableQuantity());
+            duplicateSkuPojo.setAllocatedQuantity(inventoryPojo.getAllocatedQuantity() + duplicateSkuPojo.getAllocatedQuantity());
+            duplicateSkuPojo.setFulfilledQuantity(inventoryPojo.getFulfilledQuantity() + duplicateSkuPojo.getFulfilledQuantity());
+        } else {
+            inventoryPojo.setAllocatedQuantity(0L);
+            inventoryPojo.setFulfilledQuantity(0L);
             inventoryDao.insert(inventoryPojo);
+        }
     }
 
     public InventoryPojo getByGlobalSku(Long globalSkuId) {
@@ -41,9 +46,15 @@ public class InventoryService extends AbstractService {
     //Deduct from availableQuantity, add to allocatedQuantity for given globalSkuId
     public void allocateAvailableItems(Long globalSkuId, Long allocatedQuantity) throws ApiException {
         InventoryPojo inventoryItem = getByGlobalSku(globalSkuId);
-        checkNotNull(inventoryItem,"Couldn't find Product in Inventory, GlobalSkuID:" + globalSkuId);
+        checkNotNull(inventoryItem, "Couldn't find Product in Inventory, GlobalSkuID:" + globalSkuId);
 
         inventoryItem.setAvailableQuantity(inventoryItem.getAvailableQuantity() - allocatedQuantity);
         inventoryItem.setAllocatedQuantity(inventoryItem.getAllocatedQuantity() + allocatedQuantity);
+    }
+
+    public void fulfillInInventory(Long globalSkuId, Long allocatedOrderItemQuantity) {
+        InventoryPojo inventoryPojo = getByGlobalSku(globalSkuId);
+        inventoryPojo.setAllocatedQuantity(inventoryPojo.getAvailableQuantity() - allocatedOrderItemQuantity);
+        inventoryPojo.setFulfilledQuantity(inventoryPojo.getFulfilledQuantity() + allocatedOrderItemQuantity);
     }
 }

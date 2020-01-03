@@ -4,9 +4,8 @@ import com.increff.assure.pojo.BinPojo;
 import com.increff.assure.service.ApiException;
 import com.increff.assure.service.BinService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +16,14 @@ public class BinDto {
     @Autowired
     private BinService binService;
 
+    @Transactional(rollbackFor = ApiException.class)
     public ArrayList<Long> add(int numberOfBins) throws ApiException {
         return binService.addBins(numberOfBins);
     }
 
+    @Transactional(readOnly = true)
     public List<Long> getAll() throws ApiException {
-        List<BinPojo> pojoList = binService.getAll();
-        return pojoList.stream().map(BinPojo::getId).collect(Collectors.toList());
+        List<BinPojo> binPojoList = binService.getAll();
+        return binPojoList.stream().map(BinPojo::getId).collect(Collectors.toList());
     }
 }

@@ -9,8 +9,8 @@ import model.data.ChannelData;
 import model.form.ChannelForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 import static com.increff.assure.util.ConvertUtil.convert;
@@ -20,24 +20,27 @@ public class ChannelDto {
     @Autowired
     private ChannelService channelService;
 
-    @Transactional(rollbackOn = ApiException.class)
-    public void init() {
-        ChannelPojo internalChannel = new ChannelPojo();
-        internalChannel.setName("INTERNAL");
-        internalChannel.setInvoiceType(InvoiceType.SELF);
-
+    @Transactional(rollbackFor = ApiException.class)
+    public void init() throws ApiException {
         try {
             channelService.checkDuplicateChannelName("INTERNAL");
+        } catch (ApiException e) {
+            assert e.getMessage().equals("Channel (NAME:INTERNAL) already exists.") : e.getMessage();
+
+            ChannelPojo internalChannel = new ChannelPojo();
+            internalChannel.setName("INTERNAL");
+            internalChannel.setInvoiceType(InvoiceType.SELF);
             channelService.add(internalChannel);
-        } catch (ApiException ignored) {
         }
     }
 
+    @Transactional(readOnly = true)
     public ChannelData get(Long id) throws ApiException {
         ChannelPojo channelPojo = channelService.getCheckId(id);
         return convert(channelPojo, ChannelData.class);
     }
 
+    @Transactional(rollbackFor = ApiException.class)
     public void add(ChannelForm channelForm) throws ApiException {
         ChannelPojo channelPojo = convert(channelForm, ChannelPojo.class);
         NormalizeUtil.normalize(channelPojo);
@@ -45,6 +48,7 @@ public class ChannelDto {
         channelService.add(channelPojo);
     }
 
+    @Transactional(readOnly = true)
     public List<ChannelData> getAll() throws ApiException {
         return convert(channelService.getAll(), ChannelData.class);
     }

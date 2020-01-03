@@ -16,7 +16,7 @@ public class BinService extends AbstractService {
 
     //Returns List of IDs of newly created Bins
     @Transactional(rollbackOn = ApiException.class)
-    public ArrayList<Long> addBins(int numberOfBins) throws ApiException {
+    public ArrayList<Long> addBins(int numberOfBins) {
         ArrayList<Long> newBinIds = new ArrayList<>();
         for (int i = 0; i < numberOfBins; i++) {
             BinPojo newBinPojo = new BinPojo();

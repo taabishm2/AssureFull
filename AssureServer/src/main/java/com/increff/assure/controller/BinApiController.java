@@ -5,7 +5,10 @@ import com.increff.assure.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +19,6 @@ public class BinApiController {
     @Autowired
     private BinDto binDto;
 
-    //TODO: Fix Sample CSV Download resource reference
     @ApiOperation(value = "Create specified number of Bins")
     @RequestMapping(path = "/api/bin", method = RequestMethod.POST)
     public ArrayList<Long> add(@RequestBody int numberOfBins) throws ApiException {

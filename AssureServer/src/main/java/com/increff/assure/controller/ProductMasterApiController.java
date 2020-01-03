@@ -43,7 +43,6 @@ public class ProductMasterApiController {
         return productMasterDto.getAll();
     }
 
-    //TODO: Fix Product Edit UI to include ClientId & ClientSKU
     @ApiOperation(value = "Update a product entry")
     @RequestMapping(path = "/api/product/{clientId}/{clientSku}", method = RequestMethod.PUT)
     public void update(@PathVariable Long clientId, @PathVariable String clientSku, @Valid @RequestBody ProductUpdateForm form) throws ApiException {

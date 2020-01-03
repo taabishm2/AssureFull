@@ -11,7 +11,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class BinSkuDao extends AbstractDao<BinSkuPojo> {
@@ -52,6 +54,9 @@ public class BinSkuDao extends AbstractDao<BinSkuPojo> {
         );
         TypedQuery<BinSkuPojo> typedQuery = entityManager.createQuery(q);
         typedQuery.setParameter(globalSkuIdParam, globalSkuId);
-        return typedQuery.getResultList();
+        List<BinSkuPojo> resultList = typedQuery.getResultList();
+        if (Objects.isNull(resultList))
+            return new ArrayList<>();
+        return resultList;
     }
 }
