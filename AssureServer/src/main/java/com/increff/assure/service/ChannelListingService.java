@@ -23,10 +23,10 @@ public class ChannelListingService extends AbstractService {
     private void checkDuplicateChannelListing(ChannelListingPojo listingPojo) throws ApiException {
         Long channelId = listingPojo.getChannelId();
         Long globalSkuId = listingPojo.getGlobalSkuId();
-        String channelSkuId = listingPojo.getChannelSkuId();
+        String channelOrderId = listingPojo.getChannelOrderId();
 
-        ChannelListingPojo duplicateByChannelAndChannelSku = channelListingDao.selectByChannelAndChannelSku(channelId, channelSkuId);
-        checkNull(duplicateByChannelAndChannelSku, "Channel has already registered the Channel-Order-ID: " + listingPojo.getChannelSkuId());
+        ChannelListingPojo duplicateByChannelAndChannelSku = channelListingDao.selectByChannelAndChannelSku(channelId, channelOrderId);
+        checkNull(duplicateByChannelAndChannelSku, "Channel has already registered the Channel-Order-ID: " + listingPojo.getChannelOrderId());
 
         ChannelListingPojo duplicateByChannelAndProduct = channelListingDao.selectByChannelAndGlobalSku(channelId, globalSkuId);
         checkNull(duplicateByChannelAndProduct, "ChannelID " + channelId + "and GSKU " + globalSkuId + " pair already exists");

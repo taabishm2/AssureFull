@@ -16,5 +16,5 @@ public class ChannelListingForm {
     private Long globalSkuId;
 
     @NotEmpty
-    private String channelSkuId;
+    private String channelOrderId;
 }
