@@ -3,9 +3,9 @@ package com.increff.assure.dto;
 import com.increff.assure.pojo.*;
 import model.ConsumerType;
 import model.InvoiceType;
-import model.form.BinSkuForm;
-import model.form.ConsumerForm;
-import model.form.ProductMasterForm;
+import model.form.*;
+
+import java.util.List;
 
 public class FormConstructor {
     public static BinPojo getConstructBin() {
@@ -28,8 +28,8 @@ public class FormConstructor {
         return channelListing;
     }
 
-    public static ChannelPojo getConstructChannel(String name, InvoiceType type) {
-        ChannelPojo channel = new ChannelPojo();
+    public static ChannelForm getConstructChannel(String name, InvoiceType type) {
+        ChannelForm channel = new ChannelForm();
         channel.setName(name);
         channel.setInvoiceType(type);
         return channel;
@@ -51,22 +51,20 @@ public class FormConstructor {
         return inventory;
     }
 
-    public static OrderItemPojo getConstructOrderItem(Long globalSku, Long orderId, Long orderedQty, Long allocatedQty, Long fulfilledQty) {
-        OrderItemPojo orderItemPojo = new OrderItemPojo();
+    public static OrderItemForm getConstructOrderItem(Long globalSku, Long orderedQty) {
+        OrderItemForm orderItemPojo = new OrderItemForm();
         orderItemPojo.setGlobalSkuId(globalSku);
-        orderItemPojo.setOrderId(orderId);
         orderItemPojo.setOrderedQuantity(orderedQty);
-        orderItemPojo.setAllocatedQuantity(allocatedQty);
-        orderItemPojo.setFulfilledQuantity(fulfilledQty);
         return orderItemPojo;
     }
 
-    public static OrderPojo getConstructOrder(Long customerId, Long clientId, Long channelId, String channelOrderId) {
-        OrderPojo order = new OrderPojo();
+    public static OrderForm getConstructOrder(Long customerId, Long clientId, Long channelId, String channelOrderId, List<OrderItemForm> orderItemFormList) {
+        OrderForm order = new OrderForm();
         order.setCustomerId(customerId);
         order.setClientId(clientId);
         order.setChannelId(channelId);
         order.setChannelOrderId(channelOrderId);
+        order.setOrderItemList(orderItemFormList);
         return order;
     }
 

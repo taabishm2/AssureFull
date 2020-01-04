@@ -3,6 +3,7 @@ package com.increff.assure.dto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.increff.assure.pojo.*;
 import com.increff.assure.service.*;
+import com.increff.assure.util.FormValidateUtil;
 import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
 import model.ConsumerType;
@@ -48,6 +49,7 @@ public class OrderDto extends AbstractService {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(OrderForm orderForm) throws ApiException {
+        FormValidateUtil.validate(orderForm);
         OrderPojo orderPojo = convert(orderForm, OrderPojo.class);
         validateOrder(orderPojo);
 
@@ -63,7 +65,7 @@ public class OrderDto extends AbstractService {
         if (!consumerService.getCheckId(orderPojo.getCustomerId()).getType().equals(ConsumerType.CUSTOMER))
             throw new ApiException("Specified CustomerID beLongs to a Client");
 
-        checkNotNull(channelService.getCheckId(orderPojo.getChannelId()), "Channel does not exist");
+        channelService.getCheckId(orderPojo.getChannelId());
     }
 
     @Transactional(rollbackFor = ApiException.class)
