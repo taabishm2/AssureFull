@@ -15,16 +15,16 @@ import java.util.List;
 
 @Api
 @RestController
-public class OrderApiController {
+public class OrderController {
 
     @Autowired
     private OrderDto orderDto;
 
     @ApiOperation(value = "Adds an Order")
-    @RequestMapping(path = "/api/order", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public String add(@Valid @RequestBody OrderForm form) throws ApiException {
+    //TODO: Make abstract rest controller put produces/consumes inside
+    @RequestMapping(path = "/api/order", method = RequestMethod.POST)
+    public void add(@Valid @RequestBody OrderForm form) throws ApiException {
         orderDto.add(form);
-        return "Done";
     }
 
     @ApiOperation(value = "Gets an Order by ID")

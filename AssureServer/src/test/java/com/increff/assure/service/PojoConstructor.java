@@ -3,7 +3,6 @@ package com.increff.assure.service;
 import com.increff.assure.pojo.*;
 import model.ConsumerType;
 import model.InvoiceType;
-import model.OrderStatus;
 
 public class PojoConstructor {
     public static BinPojo getConstructBin() {
@@ -14,7 +13,7 @@ public class PojoConstructor {
         BinSkuPojo binSkuPojo = new BinSkuPojo();
         binSkuPojo.setGlobalSkuId(globalSku);
         binSkuPojo.setBinId(binId);
-        binSkuPojo.setAvailableQuantity(quantity);
+        binSkuPojo.setQuantity(quantity);
         return binSkuPojo;
     }
 

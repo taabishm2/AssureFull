@@ -3,7 +3,7 @@ package com.increff.assure.dto;
 import com.increff.assure.pojo.BinSkuPojo;
 import com.increff.assure.pojo.InventoryPojo;
 import com.increff.assure.service.*;
-import com.increff.assure.util.FormValidateUtil;
+import com.increff.assure.util.CheckValid;
 import model.data.BinSkuData;
 import model.form.BinSkuForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,9 @@ public class BinSkuDto {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(BinSkuForm binSkuForm) throws ApiException {
+        CheckValid.validate(binSkuForm);
         validateProductAndBin(binSkuForm);
-        FormValidateUtil.validate(binSkuForm);
+
         BinSkuPojo binSkuPojo = convert(binSkuForm, BinSkuPojo.class);
         binSkuService.addOrUpdate(binSkuPojo);
 
@@ -39,6 +40,12 @@ public class BinSkuDto {
     public BinSkuData get(Long id) throws ApiException {
         BinSkuPojo binSkuPojo = binSkuService.getCheckId(id);
         return convert(binSkuPojo, BinSkuData.class);
+    }
+
+    @Transactional(rollbackFor = ApiException.class)
+    public void addList(List<BinSkuForm> formList) throws ApiException {
+        List<BinSkuPojo> binSkuMasterPojoList = convert(formList, BinSkuPojo.class);
+        binSkuService.addList(binSkuMasterPojoList);
     }
 
     @Transactional(readOnly = true)
@@ -56,7 +63,7 @@ public class BinSkuDto {
     @Transactional(rollbackFor = ApiException.class)
     private void addOrUpdateInventory(BinSkuPojo binSkuPojo) {
         InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setAvailableQuantity(binSkuPojo.getAvailableQuantity());
+        inventoryPojo.setAvailableQuantity(binSkuPojo.getQuantity());
         inventoryPojo.setAllocatedQuantity(0L);
         inventoryPojo.setFulfilledQuantity(0L);
         inventoryPojo.setGlobalSkuId(binSkuPojo.getGlobalSkuId());

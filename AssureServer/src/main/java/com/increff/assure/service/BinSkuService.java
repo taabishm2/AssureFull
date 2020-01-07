@@ -20,7 +20,7 @@ public class BinSkuService extends AbstractService {
     public void addOrUpdate(BinSkuPojo inputPojo) {
         BinSkuPojo existingPojo = getByBinIdAndGlobalSku(inputPojo.getBinId(), inputPojo.getGlobalSkuId());
         if (Objects.nonNull(existingPojo))
-            existingPojo.setAvailableQuantity(inputPojo.getAvailableQuantity() + existingPojo.getAvailableQuantity());
+            existingPojo.setQuantity(inputPojo.getQuantity() + existingPojo.getQuantity());
         else
             binSkuDao.insert(inputPojo);
     }
@@ -43,13 +43,19 @@ public class BinSkuService extends AbstractService {
     //Allocate as many items as can be removed from BinSKU. Returns deficit.
     public Long removeFromBin(BinSkuPojo targetBin, Long requiredQuantity) {
         Long deduction = 0L;
-        deduction = min(targetBin.getAvailableQuantity(), requiredQuantity);
-        targetBin.setAvailableQuantity(targetBin.getAvailableQuantity() - deduction);
+        deduction = min(targetBin.getQuantity(), requiredQuantity);
+        targetBin.setQuantity(targetBin.getQuantity() - deduction);
 
         return requiredQuantity - deduction;
     }
 
     public List<BinSkuPojo> selectBinsByGlobalSku(Long globalSku) {
         return binSkuDao.selectByGlobalSku(globalSku);
+    }
+
+    @Transactional(rollbackOn = ApiException.class)
+    public void addList(List<BinSkuPojo> binSkuMasterPojoList) {
+        for (BinSkuPojo binSkuPojo : binSkuMasterPojoList)
+            addOrUpdate(binSkuPojo);
     }
 }

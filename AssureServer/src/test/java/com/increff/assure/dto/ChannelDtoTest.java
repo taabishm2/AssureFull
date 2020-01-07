@@ -4,14 +4,9 @@ import com.increff.assure.dao.ChannelDao;
 import com.increff.assure.pojo.ChannelPojo;
 import com.increff.assure.service.ApiException;
 import model.InvoiceType;
-import model.data.ChannelData;
 import model.form.ChannelForm;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,8 +20,8 @@ public class ChannelDtoTest extends AbstractUnitTest {
 
     @Test
     public void testInit() throws ApiException {
-        channelDto.init();
-        channelDto.init();
+        channelDto.initializeInternalChannel();
+        channelDto.initializeInternalChannel();
         ChannelPojo internalChannel = channelDao.selectByName("INTERNAL");
 
         assertEquals(1, channelDao.selectAll().size());

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Api
 @RestController
-public class BinSkuApiController {
+public class BinSkuController {
     @Autowired
     private BinSkuDto binSkuDto;
 

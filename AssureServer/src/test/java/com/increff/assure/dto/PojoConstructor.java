@@ -13,7 +13,7 @@ public class PojoConstructor {
         BinSkuPojo binSkuPojo = new BinSkuPojo();
         binSkuPojo.setGlobalSkuId(globalSku);
         binSkuPojo.setBinId(binId);
-        binSkuPojo.setAvailableQuantity(quantity);
+        binSkuPojo.setQuantity(quantity);
         return binSkuPojo;
     }
 

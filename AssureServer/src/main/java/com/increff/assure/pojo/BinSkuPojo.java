@@ -24,13 +24,14 @@ public class BinSkuPojo extends BaseEntity implements Comparable<BinSkuPojo> {
     private Long globalSkuId;
 
     @NotNull
-    private Long availableQuantity;
+    private Long quantity;
 
+    //TODO: Move to DTO
     @Override
     public int compareTo(BinSkuPojo binSkuPojo) {
-        if (getAvailableQuantity() == null || binSkuPojo.getAvailableQuantity() == null) {
+        if (getQuantity() == null || binSkuPojo.getQuantity() == null) {
             return 0;
         }
-        return -getAvailableQuantity().compareTo(-binSkuPojo.getAvailableQuantity());
+        return -getQuantity().compareTo(-binSkuPojo.getQuantity());
     }
 }

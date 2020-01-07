@@ -3,7 +3,7 @@ package com.increff.assure.dto;
 import com.increff.assure.pojo.ChannelPojo;
 import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ChannelService;
-import com.increff.assure.util.FormValidateUtil;
+import com.increff.assure.util.CheckValid;
 import com.increff.assure.util.NormalizeUtil;
 import model.InvoiceType;
 import model.data.ChannelData;
@@ -22,7 +22,7 @@ public class ChannelDto {
     private ChannelService channelService;
 
     @Transactional(rollbackFor = ApiException.class)
-    public void init() {
+    public void initializeInternalChannel() {
         ChannelPojo internalChannel = new ChannelPojo();
         internalChannel.setName("INTERNAL");
         internalChannel.setInvoiceType(InvoiceType.SELF);
@@ -42,7 +42,7 @@ public class ChannelDto {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(ChannelForm channelForm) throws ApiException {
-        FormValidateUtil.validate(channelForm);
+        CheckValid.validate(channelForm);
         ChannelPojo channelPojo = convert(channelForm, ChannelPojo.class);
         NormalizeUtil.normalize(channelPojo);
 

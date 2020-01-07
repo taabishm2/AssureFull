@@ -18,7 +18,7 @@ public class BinService extends AbstractService {
     @Transactional(rollbackOn = ApiException.class)
     public ArrayList<Long> addBins(int numberOfBins) {
         ArrayList<Long> newBinIds = new ArrayList<>();
-        for (int i = 0; i < numberOfBins; i++) {
+        for (Integer i = 0; i < numberOfBins; i++) {
             BinPojo newBinPojo = new BinPojo();
             binDao.insert(newBinPojo);
             newBinIds.add(newBinPojo.getId());

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Api
 @RestController
-public class ConsumerApiController {
+public class ConsumerController {
     @Autowired
     ConsumerDto consumerDto;
 
@@ -34,17 +34,5 @@ public class ConsumerApiController {
     @RequestMapping(path = "/api/consumer", method = RequestMethod.GET)
     public List<ConsumerData> getAll() throws ApiException {
         return consumerDto.getAll();
-    }
-
-    @ApiOperation(value = "Gets list of all Clients")
-    @RequestMapping(path = "/api/consumer/clients", method = RequestMethod.GET)
-    public List<ConsumerData> getAllClients() throws ApiException {
-        return consumerDto.getAllClients();
-    }
-
-    @ApiOperation(value = "Gets list of all Clients")
-    @RequestMapping(path = "/api/consumer/customers", method = RequestMethod.GET)
-    public List<ConsumerData> getAllCustomers() throws ApiException {
-        return consumerDto.getAllCustomers();
     }
 }

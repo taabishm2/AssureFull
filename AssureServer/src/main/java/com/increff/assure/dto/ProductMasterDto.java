@@ -4,7 +4,7 @@ import com.increff.assure.pojo.ProductMasterPojo;
 import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ConsumerService;
 import com.increff.assure.service.ProductMasterService;
-import com.increff.assure.util.FormValidateUtil;
+import com.increff.assure.util.CheckValid;
 import model.ConsumerType;
 import model.data.ProductMasterData;
 import model.form.ProductMasterForm;
@@ -32,7 +32,7 @@ public class ProductMasterDto {
     @Transactional(rollbackFor = ApiException.class)
     public void add(ProductMasterForm productForm) throws ApiException {
         ProductMasterPojo productPojo = convert(productForm, ProductMasterPojo.class);
-        FormValidateUtil.validate((productForm));
+        CheckValid.validate((productForm));
         validateClient(productPojo.getClientId());
 
         productService.add(productPojo);

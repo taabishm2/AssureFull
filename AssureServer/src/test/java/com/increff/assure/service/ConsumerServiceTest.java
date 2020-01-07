@@ -26,12 +26,12 @@ public class ConsumerServiceTest extends AbstractUnitTest {
 
     @Test
     public void testAdd() throws ApiException {
-        int consumerCount = consumerDao.selectAll().size();
 
+        //TODO: TestPojo.getConsumerPojo
         ConsumerPojo pojo = PojoConstructor.getConstructConsumer("TEST NAME", ConsumerType.CUSTOMER);
         consumerService.add(pojo);
 
-        assertEquals(1, consumerDao.selectAll().size() - consumerCount);
+        assertEquals(1, consumerDao.selectAll().size());
 
         ConsumerPojo duplicatePojo = PojoConstructor.getConstructConsumer("TEST NAME", ConsumerType.CUSTOMER);
         try {

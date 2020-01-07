@@ -3,7 +3,7 @@ package com.increff.assure.util;
 import com.increff.assure.service.ApiException;
 import model.form.*;
 
-public class FormValidateUtil {
+public class CheckValid {
     public static void validate(ConsumerForm consumerForm) throws ApiException {
         if(consumerForm.getName().length() < 3)
             throw new ApiException("Name is too Short. Min. length is 3");
@@ -18,8 +18,8 @@ public class FormValidateUtil {
     }
 
     public static void validate(BinSkuForm binSkuForm) throws ApiException {
-        if(binSkuForm.getAvailableQuantity() < 0)
-            throw new ApiException("Bin Available Qty cannot be negative");
+        if(binSkuForm.getQuantity() < 0L)
+            throw new ApiException("Bin Quantity cannot be negative");
     }
 
     public static void validate(ChannelForm channelForm) throws ApiException {

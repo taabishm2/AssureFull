@@ -58,11 +58,11 @@ public class BinSkuServiceTest extends AbstractUnitTest {
     public void testAddOrUpdate() {
         binSkuService.addOrUpdate(binSkuPojo);
         BinSkuPojo addedBinSku = binSkuDao.select(binSkuPojo.getId());
-        assertEquals(10L, (long) addedBinSku.getAvailableQuantity());
+        assertEquals(10L, (long) addedBinSku.getQuantity());
 
         binSkuService.addOrUpdate(binSkuPojo);
         BinSkuPojo updatedBinSku = binSkuDao.select(binSkuPojo.getId());
-        assertEquals(20L, (long) updatedBinSku.getAvailableQuantity());
+        assertEquals(20L, (long) updatedBinSku.getQuantity());
     }
 
     @Test

@@ -15,13 +15,13 @@ import java.util.List;
 
 @Api
 @RestController
-public class BinApiController {
+public class BinController {
     @Autowired
     private BinDto binDto;
 
     @ApiOperation(value = "Create specified number of Bins")
     @RequestMapping(path = "/api/bin", method = RequestMethod.POST)
-    public ArrayList<Long> add(@RequestBody int numberOfBins) throws ApiException {
+    public List<Long> add(@RequestBody Integer numberOfBins) throws ApiException {
         return binDto.add(numberOfBins);
     }
 

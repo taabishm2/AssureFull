@@ -15,18 +15,14 @@ import java.util.List;
 
 @Api
 @RestController
-public class ChannelApiController {
+public class ChannelController {
     @Autowired
     private ChannelDto channelDto;
-
-    @PostConstruct
-    public void init() throws ApiException {
-        channelDto.init();
-    }
 
     @ApiOperation(value = "Add a Channel")
     @RequestMapping(path = "/api/channel", method = RequestMethod.POST)
     public void add(@Valid @RequestBody ChannelForm form) throws ApiException {
+        channelDto.initializeInternalChannel();
         channelDto.add(form);
     }
 

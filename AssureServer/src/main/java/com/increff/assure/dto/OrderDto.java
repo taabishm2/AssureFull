@@ -1,9 +1,12 @@
 package com.increff.assure.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.increff.assure.pojo.*;
+import com.increff.assure.pojo.BinSkuPojo;
+import com.increff.assure.pojo.OrderItemPojo;
+import com.increff.assure.pojo.OrderPojo;
+import com.increff.assure.pojo.ProductMasterPojo;
 import com.increff.assure.service.*;
-import com.increff.assure.util.FormValidateUtil;
+import com.increff.assure.util.CheckValid;
 import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
 import model.ConsumerType;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.increff.assure.util.ConvertUtil.convert;
 
@@ -49,7 +53,7 @@ public class OrderDto extends AbstractService {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(OrderForm orderForm) throws ApiException {
-        FormValidateUtil.validate(orderForm);
+        CheckValid.validate(orderForm);
         OrderPojo orderPojo = convert(orderForm, OrderPojo.class);
         validateOrder(orderPojo);
 
@@ -60,34 +64,26 @@ public class OrderDto extends AbstractService {
 
     private void validateOrder(OrderPojo orderPojo) throws ApiException {
         if (!consumerService.getCheckId(orderPojo.getClientId()).getType().equals(ConsumerType.CLIENT))
-            throw new ApiException("Specified ClientID beLongs to a Customer");
+            throw new ApiException("Invalid ClientID");
 
         if (!consumerService.getCheckId(orderPojo.getCustomerId()).getType().equals(ConsumerType.CUSTOMER))
-            throw new ApiException("Specified CustomerID beLongs to a Client");
+            throw new ApiException("Invalid CustomerID");
 
         channelService.getCheckId(orderPojo.getChannelId());
     }
 
     @Transactional(rollbackFor = ApiException.class)
     private void addOrderItemsForOrder(List<OrderItemForm> orderItemFormList, Long orderId, Long clientId) throws ApiException {
-        List<OrderItemPojo> orderItemList = getCreateOrderItemPojoList(orderItemFormList, orderId);
+        List<OrderItemPojo> orderItemList = convert(orderItemFormList, OrderItemPojo.class).stream().
+                map(o -> {
+                    o.setOrderId(orderId);
+                    return o;
+                }).collect(Collectors.toList());
+        //orderItemList.forEach(orderItem->orderItem.setOrderId(orderId));
         for (OrderItemPojo orderItem : orderItemList)
             validateOrderItem(orderItem, clientId);
 
         orderItemService.addList(orderItemList);
-    }
-
-    @Transactional(rollbackFor = ApiException.class)
-    private List<OrderItemPojo> getCreateOrderItemPojoList(List<OrderItemForm> orderItemList, Long orderId) throws ApiException {
-        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
-
-        for (OrderItemForm orderItemForm : orderItemList) {
-            OrderItemPojo orderItemPojo = convert(orderItemForm, OrderItemPojo.class);
-            orderItemPojo.setOrderId(orderId);
-            orderItemPojoList.add(orderItemPojo);
-        }
-
-        return orderItemPojoList;
     }
 
     @Transactional(readOnly = true)
@@ -217,7 +213,6 @@ public class OrderDto extends AbstractService {
             orderItemReceipt.setOrderItemId(orderItem.getId());
             orderItemReceipt.setQuantity(orderItem.getAllocatedQuantity());
 
-            //TODO: Get all data as a list before loop
             ProductMasterPojo product = productMasterService.getCheckId(orderItem.getGlobalSkuId());
             orderItemReceipt.setMrp(product.getMrp());
             orderItemReceipt.setTotal((long) (orderItem.getAllocatedQuantity() * product.getMrp()));

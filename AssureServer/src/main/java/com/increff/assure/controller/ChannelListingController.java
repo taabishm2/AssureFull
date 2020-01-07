@@ -14,12 +14,13 @@ import java.util.List;
 
 @Api
 @RestController
-public class ChannelListingApiController {
+public class ChannelListingController {
     @Autowired
     private ChannelListingDto channelListingDto;
 
     @ApiOperation(value = "Adds a Channel-Listing")
     @RequestMapping(path = "/api/channelListing", method = RequestMethod.POST)
+    //TODO: Remove @Valid, use CheckValid()
     public void add(@Valid @RequestBody ChannelListingForm form) throws ApiException {
         channelListingDto.add(form);
     }

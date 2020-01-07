@@ -16,14 +16,12 @@ public class InventoryService extends AbstractService {
 
     @Transactional(rollbackOn = ApiException.class)
     public void addOrUpdate(InventoryPojo inventoryPojo) {
-        InventoryPojo duplicateSkuPojo = getByGlobalSku(inventoryPojo.getGlobalSkuId());
-        if (Objects.nonNull(duplicateSkuPojo)) {
-            duplicateSkuPojo.setAvailableQuantity(inventoryPojo.getAvailableQuantity() + duplicateSkuPojo.getAvailableQuantity());
-            duplicateSkuPojo.setAllocatedQuantity(inventoryPojo.getAllocatedQuantity() + duplicateSkuPojo.getAllocatedQuantity());
-            duplicateSkuPojo.setFulfilledQuantity(inventoryPojo.getFulfilledQuantity() + duplicateSkuPojo.getFulfilledQuantity());
+        InventoryPojo exists = getByGlobalSku(inventoryPojo.getGlobalSkuId());
+        if (Objects.nonNull(exists)) {
+            exists.setAvailableQuantity(inventoryPojo.getAvailableQuantity() + exists.getAvailableQuantity());
+            exists.setAllocatedQuantity(inventoryPojo.getAllocatedQuantity() + exists.getAllocatedQuantity());
+            exists.setFulfilledQuantity(inventoryPojo.getFulfilledQuantity() + exists.getFulfilledQuantity());
         } else {
-            inventoryPojo.setAllocatedQuantity(0L);
-            inventoryPojo.setFulfilledQuantity(0L);
             inventoryDao.insert(inventoryPojo);
         }
     }

@@ -15,5 +15,5 @@ public class BinSkuForm {
     private Long globalSkuId;
 
     @NotNull
-    private Long availableQuantity;
+    private Long quantity;
 }

@@ -17,7 +17,7 @@ public class BinDto {
     private BinService binService;
 
     @Transactional(rollbackFor = ApiException.class)
-    public ArrayList<Long> add(int numberOfBins) throws ApiException {
+    public ArrayList<Long> add(Integer numberOfBins) throws ApiException {
         return binService.addBins(numberOfBins);
     }
 

@@ -1,5 +1,6 @@
 package com.increff.assure.util;
 
+import com.increff.assure.service.ApiException;
 import org.apache.fop.apps.*;
 
 import javax.xml.transform.Result;
@@ -22,19 +23,12 @@ public class PdfGenerateUtil {
         OUTPUT_DIR = "src//main//resources//output//";
     }
 
-    public static void generate(Long orderId) {
+    public static void generate(Long orderId) throws ApiException {
         PdfGenerateUtil fOPPdfDemo = new PdfGenerateUtil();
         try {
             fOPPdfDemo.convertToPDF(orderId);
-        } catch (FOPException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new ApiException(e.getMessage());
         }
     }
 

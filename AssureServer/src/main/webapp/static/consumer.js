@@ -1,7 +1,7 @@
 //Returns the URL to call the APIs
 function getBinInventoryApiUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/binSku";
+	return baseUrl + "/api/consumer";
 }
 
 //Add a binInventory
