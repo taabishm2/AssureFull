@@ -8,4 +8,6 @@ import model.form.ChannelListingForm;
 @Setter
 public class ChannelListingData extends ChannelListingForm {
     private Long id;
+
+    private String channelName;
 }

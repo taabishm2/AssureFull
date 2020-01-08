@@ -37,6 +37,7 @@ public class ChannelListingDto {
     private ChannelListingData convertPojoToData(ChannelListingPojo channelListingPojo) throws ApiException {
         ChannelListingData listingData = convert(channelListingPojo, ChannelListingData.class);
         listingData.setClientSkuId(productService.getCheckId(channelListingPojo.getGlobalSkuId()).getClientSkuId());
+        listingData.setChannelName(channelService.getCheckId(channelListingPojo.getChannelId()).getName());
         return listingData;
     }
 
@@ -81,9 +82,6 @@ public class ChannelListingDto {
     private ChannelListingPojo convertFormToPojo(ChannelListingForm listingForm, Long channelId) throws ApiException {
         ChannelListingPojo listingPojo = ConvertUtil.convert(listingForm, ChannelListingPojo.class);
         listingPojo.setChannelId(channelId);
-        System.out.println("ClientID: "+listingForm.getClientId());
-        System.out.println("CSKU  ID: "+listingForm.getClientSkuId());
-        System.out.println("Product : "+productService.getByClientAndClientSku(listingForm.getClientId(), listingForm.getClientSkuId()).getName());
 
         listingPojo.setGlobalSkuId(productService.getByClientAndClientSku(listingForm.getClientId(), listingForm.getClientSkuId()).getId());
         return listingPojo;

@@ -103,8 +103,8 @@ function displayChannelListingList(data){
 		var e = data[i];
 	var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
-		+ '<td style="text-align:center; font-weight: bold;">' + e.channelId + '</td>'
-		+ '<td>' + e.clientId + '</td>'
+		+ '<td style="text-align:center; font-weight: bold;">' + e.channelName + '</td>'
+		+ '<td style="text-align:center;">' + e.clientId + '</td>'
 		+ '<td>' + e.channelSkuId + '</td>'
 		+ '<td>'  + e.clientSkuId + '</td>'
 		+ '</tr>';

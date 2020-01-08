@@ -51,7 +51,9 @@ public class ProductMasterService extends AbstractService {
         return getCheckId(globalSkuId).getClientId();
     }
 
-    public ProductMasterPojo getByClientAndClientSku(Long clientId, String clientSkuId) {
-        return productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId);
+    public ProductMasterPojo getByClientAndClientSku(Long clientId, String clientSkuId) throws ApiException {
+        ProductMasterPojo exists = productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId);
+        checkNotNull(exists, "Product with ClientID:"+clientId+" ClientSKUId:"+clientSkuId+" doesn't exist.");
+        return exists;
     }
 }
