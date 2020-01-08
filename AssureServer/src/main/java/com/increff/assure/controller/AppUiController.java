@@ -6,22 +6,22 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class AppUiController extends AbstractUiController {
-	@RequestMapping(value = "/ui/consumer")
+	@RequestMapping(value = "/consumer")
 	public ModelAndView consumer() {
 		return mav("consumer.html");
 	}
 
-	@RequestMapping(value = "/ui/product")
+	@RequestMapping(value = "/product")
 	public ModelAndView product() {
 		return mav("product.html");
 	}
 
-	@RequestMapping(value = "/ui/bin")
+	@RequestMapping(value = "/bin")
 	public ModelAndView bin() {
 		return mav("bin.html");
 	}
 
-	@RequestMapping(value = "/ui/binSku")
+	@RequestMapping(value = "/binSku")
 	public ModelAndView binInventory() {
 		return mav("binInventory.html");
 	}

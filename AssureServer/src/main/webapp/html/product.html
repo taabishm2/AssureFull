@@ -14,7 +14,8 @@
             <span class="text-muted" style="font-size:0.9em;">Add, Display & Edit Product Details.</span>
         </p>
         <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
-            Add Product
+            <i aria-hidden="true" class="fa fa-plus"></i>
+            &nbspAdd Product List
         </button>
     </div>
     <!-- Modal -->
@@ -79,7 +80,11 @@
             <table class="table table-sm table-striped" id="product-table">
                 <thead>
                 <tr>
-                    <th colspan="8">Product List</th>
+                    <th colspan="8">Product List
+                        <button class="btn btn-primary" id="refresh-data" style="float: right; width:60" type="button">
+                            <i aria-hidden="true" class="fa fa-refresh"></i>
+                        </button>
+                    </th>
                 </tr>
                 <tr>
                     <th scope="col" style="text-align:center">ID</th>
@@ -98,54 +103,61 @@
         </div>
     </div>
     <!-- product Edit Modal -->
-    <div class="modal" id="edit-product-modal" role="dialog" tabindex="-1">
+    <div class="modal" id="edit-product-modal" role="dialog" tabindex="-1" >
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Employee</h5>
+                    <h5 class="modal-title">
+                        <i class="fa fa-wrench" aria-hidden="true"></i>
+                        Edit Product Details
+                    </h5>
                     <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form class="form-inline" id="product-edit-form">
-                        <div class="form-group">
-                            <label class="col-sm-2 col-form-label">Name</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" name="name" placeholder="Enter Name" type="text">
+                <form class="form-inline" id="product-edit-form">
+                    <div class="modal-body">
+                        <div class="form-group" style="width: 100%; margin-top:5px;">
+                            <div class="col-sm-3 col-form-label" style="text-align:right;">Name</div>
+                            <div class="col-sm-9">
+                                <input class="form-control" name="name" placeholder="Enter Name" type="text" style="float:left; width:100%" required>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 col-form-label">Brand ID</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" name="brandId" placeholder="Enter Brand ID" type="text">
+                        <div class="form-group" style="width: 100%; margin-top:5px;">
+                            <div class="col-sm-3 col-form-label" style="text-align:right">Brand ID</div>
+                            <div class="col-sm-9">
+                                <input class="form-control" name="brandId" placeholder="Enter Brand ID" type="text" style="float:left; width:100%">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 col-form-label">MRP</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" name="mrp" placeholder="Enter MRP" type="text">
+                        <div class="form-group" style="width: 100%; margin-top:5px;">
+                            <div class="col-sm-3 col-form-label" style="text-align:right">MRP</div>
+                            <div class="col-sm-9">
+                                <input class="form-control" name="mrp" placeholder="Enter MRP" type="text" style="float:left; width:100%">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 col-form-label">Brand ID</label>
-                            <div class="col-sm-10">
+                        <div class="form-group" style="width: 100%; margin-top:5px;">
+                            <div class="col-sm-3 col-form-label" style="text-align:right">Description</div>
+                            <div class="col-sm-9">
                                 <input class="form-control" name="description" placeholder="Enter Description"
-                                       type="text">
+                                       type="text" style="float:left; width:100%">
                             </div>
                         </div>
                         <input name="clientId" type="hidden">
                         <input name="clientSkuId" type="hidden">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Cancel</button>
-                    <button class="btn btn-primary" id="update-product" type="button">Update</button>
-                </div>
+                    </div>
+                    <div class="modal-footer" style="width: 100%; margin-top: 25px;  padding-bottom: 10px;">
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Cancel</button>
+                        <button class="btn btn-primary" id="update-product" type="submit">Update</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
 </div>
+
+
+<input type="button" value = "Test the alert" onclick="alert('Alert this pages');" />
 
 <footer th:replace="snippets.html :: footer"></footer>
 <script th:src="@{/static/product.js}"></script>

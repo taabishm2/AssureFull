@@ -10,13 +10,10 @@ function getClientNamesUrl(){
 
 function updateProduct(event){
 	$('#edit-product-modal').modal('toggle');
-	var clientId = $("#product-edit-form input[name=clientId]").val();
-	var clientSkuId = $("#product-edit-form input[name=clientSkuId]").val();
-	var url = getProductUrl() + "/" + clientId + "/" + clientSkuId;
+	var url = getProductUrl() + "/" + currentlySelectedClientId + "/" + currentlySelectedClientSkuId;
 
 	var $form = $("#product-edit-form");
 	var json = toJson($form);
-	console.log(json);
 
 	$.ajax({
 	   url: url,
@@ -34,7 +31,6 @@ function updateProduct(event){
 	return false;
 }
 
-
 function getProductList(){
 	var url = getProductUrl();
 	$.ajax({
@@ -49,17 +45,22 @@ function getProductList(){
 
 // FILE UPLOAD METHODS
 var fileData = [];
-var clientJson;
 var errorData = [];
 var processCount = 0;
+var clientId;
+var addListRequestBody = [];
 
+var currentlySelectedClientId;
+var currentlySelectedClientSkuId;
 
 function processData(){
     var $form = $("#product-form");
-	clientJson = toJson($form);
+	var clientJson = toJson($form);
+
+	var obj = JSON.parse(clientJson);
+	clientId = obj["clientId"];
 
 	var file = $('#productFile')[0].files[0];
-
 	readFileData(file, readFileDataCallback);
 }
 
@@ -69,23 +70,17 @@ function readFileDataCallback(results){
 }
 
 function uploadRows(){
-	//Update progress
 	updateUploadDialog();
-	//If everything processed then return
-	if(processCount==fileData.length){
-		return;
+	var url = getProductUrl()+"/list/"+clientId;
+
+    var formList = [];
+    var processCount;
+	for(processCount=0; processCount<fileData.length; processCount++){
+	    formList.push(fileData[processCount]);
 	}
-	
-	//Process next row
-	var row = fileData[processCount];
 
-	processCount++;
-
-    var json1 = JSON.parse(clientJson);
-    $.extend(row, json1);
-
-	var json = JSON.stringify(row);
-	var url = getProductUrl();
+	var json = JSON.stringify(formList);
+	console.log(url, json);
 
 	//Make ajax call
 	$.ajax({
@@ -96,12 +91,13 @@ function uploadRows(){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		uploadRows();  
+	   		console.log("Success1");
 	   },
 	   error: function(response){
-	   		row.error=response.responseText
-	   		errorData.push(row);
-	   		uploadRows();
+	   		//row.error=response.responseText
+	   		//errorData.push(row);
+	   		//uploadRows();
+	   		console.log(response.responseText);
 	   }
 	});
 }
@@ -116,7 +112,7 @@ function displayProductList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml =  '<button class="btn btn-primary btn-sm" onclick="displayEditProduct(' + e.id + ')">edit</button>'
+		var buttonHtml =  '<button class="btn btn-primary btn-sm" onclick="displayEditProduct(' + e.clientId + ',\'' + e.clientSkuId + '\')"><i class="fa fa-wrench" aria-hidden="true"></i></button>'
 		var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.clientId + '</td>'
@@ -131,8 +127,11 @@ function displayProductList(data){
 	}
 }
 
-function displayEditProduct(id){
-	var url = getProductUrl() + "/" + id;
+function displayEditProduct(clientId, clientSkuId){
+    console.log("Hit it",clientId,clientSkuId);
+	var url = getProductUrl() + "/" + clientId + "/" + clientSkuId;
+	currentlySelectedClientId = clientId;
+	currentlySelectedClientSkuId = clientSkuId;
 	$.ajax({
 	   url: url,
 	   type: 'GET',
@@ -175,8 +174,9 @@ function displayUploadData(){
 
 function displayProduct(data){
 	$("#product-edit-form input[name=name]").val(data.name);	
-	$("#product-edit-form input[name=age]").val(data.age);	
-	$("#product-edit-form input[name=id]").val(data.id);	
+	$("#product-edit-form input[name=brandId]").val(data.brandId);
+	$("#product-edit-form input[name=mrp]").val(data.mrp);
+	$("#product-edit-form input[name=description]").val(data.description);
 	$('#edit-product-modal').modal('toggle');
 }
 

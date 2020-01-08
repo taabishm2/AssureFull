@@ -48,7 +48,6 @@ public class BinSkuDtoTest extends AbstractUnitTest {
     public void testAdd() throws ApiException {
         binSkuDto.add(binSkuForm);
         assertEquals(1, binSkuDao.selectAll().size());
-        System.out.println(bin.getId()+" "+product.getId()+" "+binSkuDao.selectByBinIdAndGlobalSku(bin.getId(), product.getId()).getQuantity()+" "+binSkuDao.selectByBinIdAndGlobalSku(bin.getId(), product.getId()).getGlobalSkuId());
         assertEquals(123L, (long) binSkuDao.selectByBinIdAndGlobalSku(bin.getId(), product.getId()).getQuantity());
 
         InventoryPojo inventory = inventoryDao.selectByGlobalSku(product.getId());

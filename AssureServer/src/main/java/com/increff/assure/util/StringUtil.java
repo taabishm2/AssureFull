@@ -14,4 +14,6 @@ public class StringUtil {
 		return s == null ? null : s.trim().toUpperCase();
 	}
 
+	public static String trimSpaces(String s){ return s == null ? null : s.trim(); }
+
 }

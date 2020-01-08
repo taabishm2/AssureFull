@@ -35,4 +35,10 @@ public class ConsumerController {
     public List<ConsumerData> getAll() throws ApiException {
         return consumerDto.getAll();
     }
+
+    @ApiOperation(value = "Gets a list of all Clients")
+    @RequestMapping(path = "/api/consumer/clients", method = RequestMethod.GET)
+    public List<ConsumerData> getAllClients() throws ApiException {
+        return consumerDto.getAllClients();
+    }
 }

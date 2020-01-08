@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Table(
         uniqueConstraints = {@UniqueConstraint(columnNames = {"binId", "globalSkuId"})}
 )
-public class BinSkuPojo extends BaseEntity implements Comparable<BinSkuPojo> {
+public class BinSkuPojo extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,13 +25,4 @@ public class BinSkuPojo extends BaseEntity implements Comparable<BinSkuPojo> {
 
     @NotNull
     private Long quantity;
-
-    //TODO: Move to DTO
-    @Override
-    public int compareTo(BinSkuPojo binSkuPojo) {
-        if (getQuantity() == null || binSkuPojo.getQuantity() == null) {
-            return 0;
-        }
-        return -getQuantity().compareTo(-binSkuPojo.getQuantity());
-    }
 }

@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,12 +75,8 @@ public class OrderDto extends AbstractService {
 
     @Transactional(rollbackFor = ApiException.class)
     private void addOrderItemsForOrder(List<OrderItemForm> orderItemFormList, Long orderId, Long clientId) throws ApiException {
-        List<OrderItemPojo> orderItemList = convert(orderItemFormList, OrderItemPojo.class).stream().
-                map(o -> {
-                    o.setOrderId(orderId);
-                    return o;
-                }).collect(Collectors.toList());
-        //orderItemList.forEach(orderItem->orderItem.setOrderId(orderId));
+        List<OrderItemPojo> orderItemList = convert(orderItemFormList, OrderItemPojo.class);
+        orderItemList.forEach(orderItem->orderItem.setOrderId(orderId));
         for (OrderItemPojo orderItem : orderItemList)
             validateOrderItem(orderItem, clientId);
 
@@ -130,12 +127,10 @@ public class OrderDto extends AbstractService {
         Long globalSkuOfOrderItem, orderedQuantity, allocatedOrderItemQuantity;
 
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(orderId)) {
-
             globalSkuOfOrderItem = orderItem.getGlobalSkuId();
             orderedQuantity = orderItem.getOrderedQuantity() - orderItem.getAllocatedQuantity();
 
             allocatedOrderItemQuantity = allocateFromAllBins(globalSkuOfOrderItem, orderedQuantity);
-
             if (allocatedOrderItemQuantity == 0)
                 continue;
             inventoryService.allocateAvailableItems(globalSkuOfOrderItem, allocatedOrderItemQuantity);
@@ -153,14 +148,19 @@ public class OrderDto extends AbstractService {
     @Transactional(rollbackFor = ApiException.class)
     public Long allocateFromAllBins(Long globalSku, Long quantityToAllocate) throws ApiException {
         Long remainingQuantityToAllocate = quantityToAllocate;
+
         List<BinSkuPojo> allBinSkus = binSkuService.selectBinsByGlobalSku(globalSku);
-        Collections.sort(allBinSkus);
+        sortByQuantity(allBinSkus);
 
         for (BinSkuPojo binSkuPojo : allBinSkus) {
             remainingQuantityToAllocate = binSkuService.removeFromBin(binSkuPojo, remainingQuantityToAllocate);
-            if (remainingQuantityToAllocate == 0) return 0L;
+            if (remainingQuantityToAllocate == 0) return quantityToAllocate;
         }
         return quantityToAllocate - remainingQuantityToAllocate;
+    }
+
+    private void sortByQuantity(List<BinSkuPojo> allBinSkus) {
+        allBinSkus.sort((bin1, bin2) -> (bin2.getQuantity()).compareTo(bin1.getQuantity()));
     }
 
     @Transactional(rollbackFor = ApiException.class)

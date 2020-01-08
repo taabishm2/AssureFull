@@ -50,4 +50,8 @@ public class ProductMasterService extends AbstractService {
     public Long getClientIdOfProduct(Long globalSkuId) throws ApiException {
         return getCheckId(globalSkuId).getClientId();
     }
+
+    public ProductMasterPojo getByClientAndClientSku(Long clientId, String clientSkuId) {
+        return productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId);
+    }
 }

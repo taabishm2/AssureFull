@@ -5,6 +5,8 @@ import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ConsumerService;
 import com.increff.assure.service.ProductMasterService;
 import com.increff.assure.util.CheckValid;
+import com.increff.assure.util.ConvertUtil;
+import com.increff.assure.util.NormalizeUtil;
 import model.ConsumerType;
 import model.data.ProductMasterData;
 import model.form.ProductMasterForm;
@@ -13,9 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import static com.increff.assure.util.ConvertUtil.convert;
 
 @Service
 public class ProductMasterDto {
@@ -26,16 +27,12 @@ public class ProductMasterDto {
 
     public ProductMasterData get(Long id) throws ApiException {
         ProductMasterPojo productPojo = productService.getCheckId(id);
-        return convert(productPojo, ProductMasterData.class);
+        return ConvertUtil.convert(productPojo, ProductMasterData.class);
     }
 
-    @Transactional(rollbackFor = ApiException.class)
-    public void add(ProductMasterForm productForm) throws ApiException {
-        ProductMasterPojo productPojo = convert(productForm, ProductMasterPojo.class);
+    public void normalizeAndValidateForm(ProductMasterForm productForm) throws ApiException {
+        NormalizeUtil.normalize(productForm);
         CheckValid.validate((productForm));
-        validateClient(productPojo.getClientId());
-
-        productService.add(productPojo);
     }
 
     private void validateClient(Long clientId) throws ApiException {
@@ -45,16 +42,32 @@ public class ProductMasterDto {
 
     public List<ProductMasterData> getAll() throws ApiException {
         List<ProductMasterPojo> allProductMasterPojo = productService.getAll();
-        return convert(allProductMasterPojo, ProductMasterData.class);
+        return ConvertUtil.convert(allProductMasterPojo, ProductMasterData.class);
     }
 
     @Transactional(rollbackFor = ApiException.class)
-    public void addList(List<ProductMasterForm> formList) throws ApiException {
-        List<ProductMasterPojo> productMasterPojoList = convert(formList, ProductMasterPojo.class);
+    public void addList(List<ProductMasterForm> formList, Long clientId) throws ApiException {
+        validateClient(clientId);
+
+        List<ProductMasterPojo> productMasterPojoList = new ArrayList<>();
+        for (ProductMasterForm productForm : formList) {
+            normalizeAndValidateForm(productForm);
+            productMasterPojoList.add(convertFormToPojo(productForm, clientId));
+        }
         productService.addList(productMasterPojoList);
+    }
+
+    private ProductMasterPojo convertFormToPojo(ProductMasterForm productForm, Long clientId) throws ApiException {
+        ProductMasterPojo productPojo = ConvertUtil.convert(productForm, ProductMasterPojo.class);
+        productPojo.setClientId(clientId);
+        return productPojo;
     }
 
     public void update(Long clientId, String clientSku, ProductUpdateForm form) throws ApiException {
         productService.update(clientId, clientSku, form);
+    }
+
+    public ProductMasterData getByClientAndClientSku(Long clientId, String clientSkuId) throws ApiException {
+        return ConvertUtil.convert(productService.getByClientAndClientSku(clientId, clientSkuId), ProductMasterData.class);
     }
 }

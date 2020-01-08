@@ -12,9 +12,6 @@ public class ProductMasterForm {
     @NotBlank(message = "[NAME] cannot be Blank.")
     private String name;
 
-    @NotNull
-    private Long clientId;
-
     @NotBlank(message = "[ClientSKU] cannot be Blank.")
     private String clientSkuId;
 

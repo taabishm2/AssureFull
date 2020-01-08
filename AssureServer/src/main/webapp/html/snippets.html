@@ -1,12 +1,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="page_head">
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="baseUrl" th:attr="content=${baseUrl}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" th:href="@{/static/app.css}">
 </head>
 
@@ -14,7 +14,7 @@
      th:fragment="navbar">
     <nav class="navbar navbar-light">
         <a class="navbar-brand" href="@{/html/index}" style="color:#FEFFFF; font-weight: 500;">
-            <img th:src="@{/static/Images/logo.png}" class="d-inline-block align-top" width="30" height="30" alt="">
+            <img src="logo.png" class="d-inline-block align-top" width="30" height="30" alt="">
             Increff
         </a>
     </nav>
@@ -25,40 +25,73 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" th:href="@{/ui/index}" style="color:#FEFFFF;">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" th:href="@{/index}" style="color:#FEFFFF;">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false" style="color:#FEFFFF;">
-                    Assure
+                    Consumers
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" th:href="@{/ui/consumer}">Consumer Page</a>
-                    <a class="dropdown-item" th:href="@{/ui/product}">Product Page</a>
-                    <a class="dropdown-item" th:href="@{/ui/bin}">Bin Page</a>
-                    <a class="dropdown-item" th:href="@{/ui/bininventory}">Bin Inventory Page</a>
-                    <a class="dropdown-item" th:href="@{/ui/inventory}">Inventory Page</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" th:href="@{/html/channel}">Channel Page</a>
-                    <a class="dropdown-item" th:href="@{/html/channellisting}">Channel Listing Page</a>
-                    <a class="dropdown-item" th:href="@{/html/order}">Order Page</a>
-                    <a class="dropdown-item" th:href="@{/html/orderitem}">Order Item Page</a>
+                    <a class="dropdown-item" th:href="@{/consumer}">View Consumers</a>
+                    <a class="dropdown-item" th:href="@{/product}">Add Consumers</a>
                 </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/swagger-ui.html}" tabindex="-1" aria-disabled="true"
-                   style="color:#FEFFFF;">Swagger</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false" style="color:#FEFFFF;">
+                    Products
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" th:href="@{/consumer}">View Product List</a>
+                    <a class="dropdown-item" th:href="@{/product}">Add Product</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false" style="color:#FEFFFF;">
+                    Bins
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" th:href="@{/consumer}">View Bin List</a>
+                    <a class="dropdown-item" th:href="@{/product}">Add Bin</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" th:href="@{/product}">View Bin Inventory</a>
+                    <a class="dropdown-item" th:href="@{/product}">Add Products to Bin</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false" style="color:#FEFFFF;">
+                    Channels
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" th:href="@{/consumer}">View Channels</a>
+                    <a class="dropdown-item" th:href="@{/product}">Add Channels</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false" style="color:#FEFFFF;">
+                    Orders
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" th:href="@{/consumer}">View Orders</a>
+                    <a class="dropdown-item" th:href="@{/product}">Add Order</a>
+                </div>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
             <ul class="navbar-nav mr-sm-2">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/ui/about}" style="color:#FEFFFF;">About</a>
+                    <a class="nav-link" th:href="@{/about}" style="color:#FEFFFF;">About</a>
                 </li>
             </ul>
         </form>
     </div>
 </nav>
+
+
 
 
 <div class="main-header" th:fragment="main_header">
@@ -71,7 +104,10 @@
 
 <footer class="footer" th:fragment="footer">
     <div class="container">
-        <span class="text-muted">&copyIncreff 2019</span>
+        <span class="text-muted">
+            <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
+            Assure &copyIncreff 2019
+        </span>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

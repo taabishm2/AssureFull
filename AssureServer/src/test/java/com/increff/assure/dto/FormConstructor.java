@@ -71,7 +71,6 @@ public class FormConstructor {
     public static ProductMasterForm getConstructProduct(String name, Long clientId, String brandId, Double mrp, String clientSkuId, String description) {
         ProductMasterForm product = new ProductMasterForm();
         product.setName(name);
-        product.setClientId(clientId);
         product.setBrandId(brandId);
         product.setMrp(mrp);
         product.setClientSkuId(clientSkuId);

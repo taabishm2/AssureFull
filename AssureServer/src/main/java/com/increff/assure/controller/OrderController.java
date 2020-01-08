@@ -21,7 +21,6 @@ public class OrderController {
     private OrderDto orderDto;
 
     @ApiOperation(value = "Adds an Order")
-    //TODO: Make abstract rest controller put produces/consumes inside
     @RequestMapping(path = "/api/order", method = RequestMethod.POST)
     public void add(@Valid @RequestBody OrderForm form) throws ApiException {
         orderDto.add(form);

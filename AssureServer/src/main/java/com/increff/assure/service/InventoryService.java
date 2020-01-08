@@ -41,7 +41,6 @@ public class InventoryService extends AbstractService {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    //Deduct from availableQuantity, add to allocatedQuantity for given globalSkuId
     public void allocateAvailableItems(Long globalSkuId, Long allocatedQuantity) throws ApiException {
         InventoryPojo inventoryItem = getByGlobalSku(globalSkuId);
         checkNotNull(inventoryItem, "Couldn't find Product in Inventory, GlobalSkuID:" + globalSkuId);

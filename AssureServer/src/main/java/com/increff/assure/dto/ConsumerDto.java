@@ -23,11 +23,10 @@ public class ConsumerDto {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(ConsumerForm consumerForm) throws ApiException {
-        CheckValid.validate(consumerForm);
         NormalizeUtil.normalize(consumerForm);
+        CheckValid.validate(consumerForm);
 
         ConsumerPojo consumerPojo = convert(consumerForm, ConsumerPojo.class);
-
         consumerService.add(consumerPojo);
     }
 

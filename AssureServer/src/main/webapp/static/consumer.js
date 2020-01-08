@@ -1,14 +1,14 @@
 //Returns the URL to call the APIs
-function getBinInventoryApiUrl(){
+function getConsumerApiUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/consumer";
 }
 
-//Add a binInventory
-function addBinInventory(event){
-	var $form = $("#binInventory-form");
+//Add a consumer
+function addConsumer(event){
+	var $form = $("#consumer-form");
 	var json = toJson($form);
-	var url = getBinInventoryApiUrl();
+	var url = getConsumerApiUrl();
 
 	$.ajax({
 	   url: url,
@@ -16,39 +16,38 @@ function addBinInventory(event){
 	   data: json,
 	   headers: {
        	'Content-Type': 'application/json'
-       },	   
+       },
 	   success: function(response) {
-	   		getBinInventoryList();
+	   		getConsumerList();
 	   },
 	   error: handleAjaxError
 	});
 	return false;
 }
 
-//GET Method: Retrieve all BinInventorys
-function getBinInventoryList(){
-	var url = getBinInventoryApiUrl();
+//GET Method: Retrieve all Consumers
+function getConsumerList(){
+	var url = getConsumerApiUrl();
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayBinInventoryList(data);
+	   		displayConsumerList(data);
 	   },
 	   error: handleAjaxError
 	});
 }
 
-//Display table of BinInventorys
-function displayBinInventoryList(data){
-	var $tbody = $('#binInventory-table').find('tbody');
+//Display table of Consumers
+function displayConsumerList(data){
+	var $tbody = $('#consumer-table').find('tbody');
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
 		var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
-		+ '<td>' + e.binId + '</td>'
-		+ '<td>' + e.globalSkuId + '</td>'
-		+ '<td>' + e.quantity + '</td>'
+		+ '<td>' + e.name + '</td>'
+		+ '<td>' + e.type + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 	}
@@ -56,10 +55,10 @@ function displayBinInventoryList(data){
 
 //Initialization Code
 function init(){
-	$('#add-binInventory').click(addBinInventory);
-	$('#refresh-data').click(getBinInventoryList);
+	$('#consumer-form').submit(addConsumer);
+	$('#refresh-data').click(getConsumerList);
 }
 
 $(document).ready(init);
-$(document).ready(getBinInventoryList);
+$(document).ready(getConsumerList);
 

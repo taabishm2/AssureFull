@@ -8,4 +8,5 @@ import model.form.ProductMasterForm;
 @Setter
 public class ProductMasterData extends ProductMasterForm {
     private Long id;
+    private Long clientId;
 }
