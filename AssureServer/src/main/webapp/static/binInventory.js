@@ -1,14 +1,17 @@
 //Returns the URL to call the APIs
-function getConsumerApiUrl(){
+function getBinSkuApiUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/consumer";
+	return baseUrl + "/api/binSku";
 }
 
-//Add a consumer
-function addConsumer(event){
-	var $form = $("#consumer-form");
+//Add a binSku
+function addBinSku(event){
+    console.log("Adding BIN SKU");
+	var $form = $("#binSku-form");
 	var json = toJson($form);
-	var url = getConsumerApiUrl();
+	var url = getBinSkuApiUrl();
+	console.log("JSON FORM:", json);
+	console.log("URL HIT  :", url);
 
 	$.ajax({
 	   url: url,
@@ -18,36 +21,46 @@ function addConsumer(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		getConsumerList();
+	   		getBinSkuList();
+	   		getSuccessSnackbar("Bin Inventory Item Created.");
 	   },
 	   error: handleAjaxError
 	});
 	return false;
 }
 
-//GET Method: Retrieve all Consumers
-function getConsumerList(){
-	var url = getConsumerApiUrl();
+//GET Method: Retrieve all BinSkus
+function getBinSkuList(){
+	var url = getBinSkuApiUrl();
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayConsumerList(data);
+	   		displayBinSkuList(data);
 	   },
 	   error: handleAjaxError
 	});
 }
 
-//Display table of Consumers
-function displayConsumerList(data){
-	var $tbody = $('#consumer-table').find('tbody');
+//Display table of BinSkus
+function displayBinSkuList(data){
+	var $tbody = $('#binSku-table').find('tbody');
 	$tbody.empty();
+
+    if(data.length == 0){
+	    var row = '<tr>'
+        + '<td style="text-align:center; font-weight: bold; background-color:#ffebe8;" colspan="4">No Bin Inventory Items</td>'
+        + '</tr>';
+        $tbody.append(row);
+    }
+
 	for(var i in data){
 		var e = data[i];
 		var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
-		+ '<td>' + e.name + '</td>'
-		+ '<td>' + e.type + '</td>'
+		+ '<td style="text-align:center;>' + e.binId + '</td>'
+		+ '<td>' + e.globalSkuId + '</td>'
+		+ '<td>' + e.quantity + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 	}
@@ -55,10 +68,11 @@ function displayConsumerList(data){
 
 //Initialization Code
 function init(){
-	$('#add-consumer').click(addConsumer);
-	$('#refresh-data').click(getConsumerList);
+	$('#binSku-form').submit(addBinSku);
+	$('#refresh-data').click(getBinSkuList);
 }
 
+console.log(getBinSkuApiUrl());
 $(document).ready(init);
-$(document).ready(getConsumerList);
+$(document).ready(getBinSkuList);
 

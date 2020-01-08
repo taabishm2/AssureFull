@@ -1,0 +1,99 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="snippets.html :: page_head"></head>
+
+<body>
+<nav th:replace="snippets.html :: navbar"></nav>
+
+<div class="parent-container">
+    <div class="main-header">
+        <p class="page-header">
+            <span style="font-size: 20px">Channel Listing Page</span>
+            <br/>
+            <span class="text-muted" style="font-size:0.9em;">Add, Display & Edit Channel Listing Details.</span>
+        </p>
+        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
+            <i aria-hidden="true" class="fa fa-plus"></i>
+            &nbspAdd Channel Listing
+        </button>
+    </div>
+    <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add a Channel Listing Entry</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="channelListing-form">
+                <div class="modal-body">
+
+                        <div class="form-group" id="client-dropdown">
+                            <div class="" role="document">
+                                <label for="channelId">Channel:</label>
+                                <select class="form-control" id="channelId" name="channelId" required title="Enter a ClientID">
+                                    <option disabled hidden selected value="none">
+                                        Select an Option
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                    <div class="form-group">
+                        <label for="globalSkuId">Global SKU ID</label>
+                        <input aria-describedby="globalSkuIdHelp" class="form-control" id="globalSkuId" name="globalSkuId"
+                               placeholder="Enter Channel SKU ID" required title="This field is required"
+                               type="text">
+                        <small class="form-text text-muted" id="globalSkuIdHelp">Channel SKU ID must be unique.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="channelSkuId">Channel SKU ID</label>
+                        <input aria-describedby="channelSkuIdHelp" class="form-control" id="channelSkuId" name="channelSkuId"
+                               placeholder="Enter Channel SKU ID" required title="This field is required"
+                               type="text">
+                        <small class="form-text text-muted" id="channelSkuIdHelp">Channel SKU ID must be unique.</small>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary" id="add-channelListing" type="submit">Submit</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="body-content">
+        <div class="table-display">
+            <table class="table table-sm table-striped" id="channelListing-table">
+                <thead>
+                <tr>
+                    <th colspan="8">Channel Listings
+                        <button class="btn btn-primary" id="refresh-data" style="float: right; width:60" type="button">
+                            <i aria-hidden="true" class="fa fa-refresh"></i>
+                        </button>
+                    </th>
+                </tr>
+                <tr>
+                    <th scope="col" style="text-align:center">ID</th>
+                    <th scope="col" style="text-align:center">Channel ID</th>
+                    <th scope="col">Channel SKU ID</th>
+                    <th scope="col">Global SKU ID</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="snippets.html :: footer"></footer>
+<script th:src="@{/static/channelListing.js}"></script>
+</body>
+</html>

@@ -25,4 +25,14 @@ public class AppUiController extends AbstractUiController {
 	public ModelAndView binInventory() {
 		return mav("binInventory.html");
 	}
+
+	@RequestMapping(value = "/channel")
+	public ModelAndView channel() {
+		return mav("channel.html");
+	}
+
+	@RequestMapping(value = "/channelListing")
+	public ModelAndView channelListing() {
+		return mav("channelListing.html");
+	}
 }

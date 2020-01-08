@@ -9,13 +9,13 @@
 <div class="parent-container">
     <div class="main-header">
         <p class="page-header">
-            <span style="font-size: 20px">Bin Inventory Page</span>
+            <span style="font-size: 20px">Channel Page</span>
             <br/>
-            <span class="text-muted" style="font-size:0.9em;">Add and View Bin-wise Inventory.</span>
+            <span class="text-muted" style="font-size:0.9em;">Add and View the registered Clients and Customers.</span>
         </p>
         <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
             <i aria-hidden="true" class="fa fa-plus"></i>
-            &nbspAdd Bin Inventory Item
+            &nbspAdd new Channel
         </button>
     </div>
     <!-- Modal -->
@@ -24,40 +24,37 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Bin Inventory Item</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Register New Channel</h5>
                     <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="binSku-form">
+                <form id="channel-form">
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <label for="binId">Bin ID</label>
-                            <input aria-describedby="binIdHelp" class="form-control" id="binId" name="binId"
-                                   pattern="[0-9]*" placeholder="Enter Bin ID" required title="This field is required"
+                            <label for="channelName">Name</label>
+                            <input aria-describedby="nameHelp" class="form-control" id="channelName" name="name"
+                                   pattern=".*\S+.*" placeholder="Enter Name" required title="This field is required"
                                    type="text">
-                            <small class="form-text text-muted" id="binIdHelp">Bin ID should exist in created Bin table.</small>
+                            <small class="form-text text-muted" id="nameHelp">Name should be unique.</small>
                         </div>
-
                         <div class="form-group">
-                            <label for="globalSkuId">Global SKU ID</label>
-                            <input aria-describedby="globalSkuIdHelp" class="form-control" id="globalSkuId" name="globalSkuId"
-                                   pattern="[0-9]*" placeholder="Enter GSKU ID" required title="This field is required"
-                                   type="text">
-                            <small class="form-text text-muted" id="globalSkuIdHelp">Product with GSKU must be registered.</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="quantity">Product Quantity</label>
-                            <input class="form-control" id="quantity" name="quantity"
-                                   pattern="[0-9]*" placeholder="Enter Product Quantity" required title="This field is required"
-                                   type="text">
+                            <label for="invoiceType">Channel Type:</label>
+                            <select class="form-control" id="invoiceType" name="invoiceType" required
+                                    title="Select a Channel Type">
+                                <option disabled hidden selected value="">
+                                    Select an Option
+                                </option>
+                                <option value="SELF">SELF</option>
+                                <option value="CHANNEL">CHANNEL</option>
+                            </select>
+                            <br>
                         </div>
 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary" id="add-binSku" type="submit">Submit</button>
+                        <button class="btn btn-primary" id="add-channel" type="submit">Submit</button>
                         <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
                     </div>
                 </form>
@@ -66,10 +63,10 @@
     </div>
     <div class="body-content">
         <div class="table-display">
-            <table class="table table-sm table-striped" id="binSku-table">
+            <table class="table table-sm table-striped" id="channel-table">
                 <thead>
                 <tr>
-                    <th colspan="4">Bin Inventory List
+                    <th colspan="3">Channel List
                         <button class="btn btn-primary" id="refresh-data" style="float: right; width:60" type="button">
                             <i aria-hidden="true" class="fa fa-refresh"></i>
                         </button>
@@ -77,9 +74,8 @@
                 </tr>
                 <tr>
                     <th scope="col" style="width:80px; text-align:center;">ID</th>
-                    <th scope="col" style="text-align:center;">Bin ID</th>
-                    <th scope="col">Global SKU</th>
-                    <th scope="col" style="width:130px">Quantity</th>
+                    <th scope="col">Channel Name</th>
+                    <th scope="col" style="width:130px">Invoice Type</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -93,7 +89,7 @@
 
 <footer th:replace="snippets.html :: footer"></footer>
 
-<script th:src="@{/static/binInventory.js}"></script>
+<script th:src="@{/static/channel.js}"></script>
 
 </body>
 </html>

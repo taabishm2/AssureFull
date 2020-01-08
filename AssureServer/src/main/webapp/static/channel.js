@@ -1,14 +1,14 @@
 //Returns the URL to call the APIs
-function getConsumerApiUrl(){
+function getChannelApiUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/consumer";
+	return baseUrl + "/api/channel";
 }
 
-//Add a consumer
-function addConsumer(event){
-	var $form = $("#consumer-form");
+//Add a channel
+function addChannel(event){
+	var $form = $("#channel-form");
 	var json = toJson($form);
-	var url = getConsumerApiUrl();
+	var url = getChannelApiUrl();
 
 	$.ajax({
 	   url: url,
@@ -18,35 +18,35 @@ function addConsumer(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		getConsumerList();
-            getSuccessSnackbar("Consumer Created.");
+	   		getChannelList();
+            getSuccessSnackbar("Channel Created.");
 	   },
 	   error: handleAjaxError
 	});
 	return false;
 }
 
-//GET Method: Retrieve all Consumers
-function getConsumerList(){
-	var url = getConsumerApiUrl();
+//GET Method: Retrieve all Channels
+function getChannelList(){
+	var url = getChannelApiUrl();
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayConsumerList(data);
+	   		displayChannelList(data);
 	   },
 	   error: handleAjaxError
 	});
 }
 
-//Display table of Consumers
-function displayConsumerList(data){
-	var $tbody = $('#consumer-table').find('tbody');
+//Display table of Channels
+function displayChannelList(data){
+	var $tbody = $('#channel-table').find('tbody');
 	$tbody.empty();
 
 	if(data.length == 0){
     	    var row = '<tr>'
-            + '<td style="text-align:center; font-weight: bold; background-color:#ffebe8;" colspan="3">No Consumers Created</td>'
+            + '<td style="text-align:center; font-weight: bold; background-color:#ffebe8;" colspan="3">No Channels Created</td>'
             + '</tr>';
             $tbody.append(row);
     	}
@@ -56,7 +56,7 @@ function displayConsumerList(data){
 		var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
 		+ '<td>' + e.name + '</td>'
-		+ '<td>' + e.type + '</td>'
+		+ '<td>' + e.invoiceType + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 	}
@@ -64,10 +64,10 @@ function displayConsumerList(data){
 
 //Initialization Code
 function init(){
-	$('#consumer-form').submit(addConsumer);
-	$('#refresh-data').click(getConsumerList);
+	$('#channel-form').submit(addChannel);
+	$('#refresh-data').click(getChannelList);
 }
 
 $(document).ready(init);
-$(document).ready(getConsumerList);
+$(document).ready(getChannelList);
 

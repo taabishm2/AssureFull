@@ -80,7 +80,6 @@ function uploadRows(){
 	}
 
 	var json = JSON.stringify(formList);
-	console.log(url, json);
 
 	//Make ajax call
 	$.ajax({
@@ -91,13 +90,14 @@ function uploadRows(){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		console.log("Success1");
+	        getProductList();
+	   		getSuccessSnackbar("Products Added.");
 	   },
 	   error: function(response){
 	   		//row.error=response.responseText
 	   		//errorData.push(row);
 	   		//uploadRows();
-	   		console.log(response.responseText);
+	   		alert(response.responseText);
 	   }
 	});
 }
@@ -110,6 +110,14 @@ function downloadErrors(){
 function displayProductList(data){
 	var $tbody = $('#product-table').find('tbody');
 	$tbody.empty();
+
+	if(data.length == 0){
+    	    var row = '<tr>'
+            + '<td style="text-align:center; font-weight: bold; background-color:#ffebe8;" colspan="8">No Products Created</td>'
+            + '</tr>';
+            $tbody.append(row);
+    	}
+
 	for(var i in data){
 		var e = data[i];
 		var buttonHtml =  '<button class="btn btn-primary btn-sm" onclick="displayEditProduct(' + e.clientId + ',\'' + e.clientSkuId + '\')"><i class="fa fa-wrench" aria-hidden="true"></i></button>'
@@ -128,7 +136,6 @@ function displayProductList(data){
 }
 
 function displayEditProduct(clientId, clientSkuId){
-    console.log("Hit it",clientId,clientSkuId);
 	var url = getProductUrl() + "/" + clientId + "/" + clientSkuId;
 	currentlySelectedClientId = clientId;
 	currentlySelectedClientSkuId = clientSkuId;
@@ -206,10 +213,10 @@ function populateDropdown(){
 
 //INITIALIZATION CODE
 function init(){
-	$('#update-product').click(updateProduct);
+	$('#update-product').submit(updateProduct);
 	$('#refresh-data').click(getProductList);
 	$('#upload-data').click(displayUploadData);
-	$('#process-data').click(processData);
+	$('#process-data').submit(processData);
 	$('#download-errors').click(downloadErrors);
     $('#productFile').on('change', updateFileName)
 

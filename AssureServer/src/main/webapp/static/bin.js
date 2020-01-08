@@ -42,6 +42,14 @@ function getBinList(){
 function displayBinList(data){
 	var $tbody = $('#bin-table').find('tbody');
 	$tbody.empty();
+
+	if(data.length == 0){
+	    var row = '<tr>'
+        + '<td style="text-align:center; font-weight: bold; background-color:#ffebe8;" colspan="2">No Bins Created</td>'
+        + '</tr>';
+        $tbody.append(row);
+	}
+
 	for(var i in data){
 		var e = data[i];
 		var row = '<tr>'
