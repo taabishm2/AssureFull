@@ -22,6 +22,7 @@ public class ProductMasterController {
     @ApiOperation(value = "Add a List of Products")
     @RequestMapping(path = "/api/product/list/{clientId}", method = RequestMethod.POST)
     public void addList(@PathVariable Long clientId, @Valid @RequestBody List<ProductMasterForm> formList) throws ApiException {
+        System.out.println("HIT THE API"+clientId);
         productMasterDto.addList(formList, clientId);
     }
 

@@ -6,12 +6,9 @@ function getBinSkuApiUrl(){
 
 //Add a binSku
 function addBinSku(event){
-    console.log("Adding BIN SKU");
 	var $form = $("#binSku-form");
 	var json = toJson($form);
 	var url = getBinSkuApiUrl();
-	console.log("JSON FORM:", json);
-	console.log("URL HIT  :", url);
 
 	$.ajax({
 	   url: url,
@@ -58,10 +55,11 @@ function displayBinSkuList(data){
 		var e = data[i];
 		var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
-		+ '<td style="text-align:center;>' + e.binId + '</td>'
+		+ '<td style="text-align:center;">' + e.binId + '</td>'
 		+ '<td>' + e.globalSkuId + '</td>'
 		+ '<td>' + e.quantity + '</td>'
 		+ '</tr>';
+		console.log(row);
         $tbody.append(row);
 	}
 }

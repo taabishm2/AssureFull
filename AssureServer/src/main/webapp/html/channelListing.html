@@ -30,12 +30,13 @@
                     </button>
                 </div>
                 <form id="channelListing-form">
-                <div class="modal-body">
+                    <div class="modal-body">
 
                         <div class="form-group" id="client-dropdown">
                             <div class="" role="document">
                                 <label for="channelId">Channel:</label>
-                                <select class="form-control" id="channelId" name="channelId" required title="Enter a ClientID">
+                                <select class="form-control" id="channelId" name="channelId" required
+                                        title="Enter a ClientID">
                                     <option disabled hidden selected value="none">
                                         Select an Option
                                     </option>
@@ -43,27 +44,28 @@
                             </div>
                         </div>
 
-                    <div class="form-group">
-                        <label for="globalSkuId">Global SKU ID</label>
-                        <input aria-describedby="globalSkuIdHelp" class="form-control" id="globalSkuId" name="globalSkuId"
-                               placeholder="Enter Channel SKU ID" required title="This field is required"
-                               type="text">
-                        <small class="form-text text-muted" id="globalSkuIdHelp">Channel SKU ID must be unique.</small>
-                    </div>
+                        <div class="">
+                            <div class="modal-header">
+                                <p class="modal-title">Upload Channel Listing CSV</p>
+                            </div>
+                            <div class="modal-body">
+                                <div class="product-file">
+                                    <input class="custom-file-input" id="channelListingFile" type="file" required>
+                                    <label class="custom-file-label" for="channelListingFile"
+                                           id="channelListingFileName">Choose
+                                        CSV
+                                        File</label>
+                                </div>
+                                <a target="_blank" th:href="@{src/main/resources/productSample.csv}">Download Sample</a>
 
-                    <div class="form-group">
-                        <label for="channelSkuId">Channel SKU ID</label>
-                        <input aria-describedby="channelSkuIdHelp" class="form-control" id="channelSkuId" name="channelSkuId"
-                               placeholder="Enter Channel SKU ID" required title="This field is required"
-                               type="text">
-                        <small class="form-text text-muted" id="channelSkuIdHelp">Channel SKU ID must be unique.</small>
-                    </div>
+                            </div>
+                        </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-primary" id="add-channelListing" type="submit">Submit</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-primary" id="add-channelListing" type="button">Submit</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -82,6 +84,7 @@
                 <tr>
                     <th scope="col" style="text-align:center">ID</th>
                     <th scope="col" style="text-align:center">Channel ID</th>
+                    <th scope="col" style="text-align:center">Client ID</th>
                     <th scope="col">Channel SKU ID</th>
                     <th scope="col">Global SKU ID</th>
                 </tr>

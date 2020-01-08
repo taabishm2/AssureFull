@@ -5,8 +5,8 @@ import com.increff.assure.pojo.OrderPojo;
 import model.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -14,7 +14,7 @@ public class OrderService extends AbstractService {
     @Autowired
     private OrderDao orderDao;
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void add(OrderPojo orderPojo) throws ApiException {
         checkDuplicateOrders(orderPojo);
         orderPojo.setStatus(OrderStatus.CREATED);
@@ -36,7 +36,7 @@ public class OrderService extends AbstractService {
         return orderPojo;
     }
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void updateStatus(Long orderId, OrderStatus status) throws ApiException {
         OrderPojo matchedPojo = getCheckId(orderId);
         matchedPojo.setStatus(status);

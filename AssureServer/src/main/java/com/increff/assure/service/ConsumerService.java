@@ -5,8 +5,8 @@ import com.increff.assure.pojo.ConsumerPojo;
 import model.ConsumerType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -14,7 +14,7 @@ public class ConsumerService extends AbstractService {
     @Autowired
     private ConsumerDao consumerDao;
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void add(ConsumerPojo consumerPojo) throws ApiException {
         checkIfConsumerExists(consumerPojo);
         consumerDao.insert(consumerPojo);

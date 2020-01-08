@@ -4,8 +4,9 @@ import com.increff.assure.dao.InventoryDao;
 import com.increff.assure.pojo.InventoryPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+//import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +15,7 @@ public class InventoryService extends AbstractService {
     @Autowired
     private InventoryDao inventoryDao;
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void addOrUpdate(InventoryPojo inventoryPojo) {
         InventoryPojo exists = getByGlobalSku(inventoryPojo.getGlobalSkuId());
         if (Objects.nonNull(exists)) {
@@ -40,7 +41,7 @@ public class InventoryService extends AbstractService {
         return inventoryPojo;
     }
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void allocateAvailableItems(Long globalSkuId, Long allocatedQuantity) throws ApiException {
         InventoryPojo inventoryItem = getByGlobalSku(globalSkuId);
         checkNotNull(inventoryItem, "Couldn't find Product in Inventory, GlobalSkuID:" + globalSkuId);

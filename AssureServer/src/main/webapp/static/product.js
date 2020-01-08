@@ -23,11 +23,11 @@ function updateProduct(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		getProductList();   
+	   		getProductList();
+	   		getSuccessSnackbar("Product Updated.");
 	   },
 	   error: handleAjaxError
 	});
-
 	return false;
 }
 
@@ -61,11 +61,13 @@ function processData(){
 	clientId = obj["clientId"];
 
 	var file = $('#productFile')[0].files[0];
+	console.log("FILE: ",file);
 	readFileData(file, readFileDataCallback);
 }
 
 function readFileDataCallback(results){
 	fileData = results.data;
+	console.log("FILE DATA: ",fileData);
 	uploadRows();
 }
 
@@ -80,7 +82,6 @@ function uploadRows(){
 	}
 
 	var json = JSON.stringify(formList);
-
 	//Make ajax call
 	$.ajax({
 	   url: url,
@@ -100,6 +101,7 @@ function uploadRows(){
 	   		alert(response.responseText);
 	   }
 	});
+	return false;
 }
 
 function downloadErrors(){
@@ -213,10 +215,10 @@ function populateDropdown(){
 
 //INITIALIZATION CODE
 function init(){
-	$('#update-product').submit(updateProduct);
+	$('#update-product').click(updateProduct);
 	$('#refresh-data').click(getProductList);
 	$('#upload-data').click(displayUploadData);
-	$('#process-data').submit(processData);
+	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
     $('#productFile').on('change', updateFileName)
 

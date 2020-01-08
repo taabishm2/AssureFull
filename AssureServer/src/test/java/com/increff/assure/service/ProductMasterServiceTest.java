@@ -86,6 +86,20 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
     }
 
     @Test
+    public void testSelectByClientIdAndClientSku() throws ApiException {
+        ProductMasterPojo pojo = PojoConstructor.getConstructProduct(
+                "PUMAX1Duplicate",
+                client.getId(),
+                "PUMAX Brand",
+                4200D,
+                "PUMAX1SKU",
+                "PUMAX Duplicate Description");
+        productService.add(pojo);
+
+        assertEquals("PUMAX1Duplicate", productService.getByClientAndClientSku(client.getId(),"PUMAX1SKU").getName());
+    }
+
+    @Test
     public void testAddList() throws ApiException {
         List<ProductMasterPojo> productList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {

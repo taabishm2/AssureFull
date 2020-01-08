@@ -5,7 +5,7 @@ import com.increff.assure.pojo.ChannelPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -13,7 +13,7 @@ public class ChannelService extends AbstractService {
     @Autowired
     private ChannelDao channelDao;
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void add(ChannelPojo channelPojo) throws ApiException {
         checkDuplicateChannelName(channelPojo.getName());
 

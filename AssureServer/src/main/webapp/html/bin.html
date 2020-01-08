@@ -13,36 +13,44 @@
             <br/>
             <span class="text-muted" style="font-size:0.9em;">Add and View the created Bins.</span>
         </p>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
             Create Bins
         </button>
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
+         tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Create New Bins.</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form id="bin-form">
+                <form id="bin-form">
+                    <div class="modal-body">
+
                         <div class="form-group">
                             <label for="binQuantity">Quantity</label><br/>
                             <input aria-describedby="nameHelp" class="form-control" id="binQuantity" name="binQuantity"
-                                   placeholder="Enter Number of Bins" style="width:78%; float:left;" type="text" />
+                                   placeholder="Enter Number of Bins" style="width:100%; float:left;" type="text"
+                                   required pattern="[0-9]*" title="Enter a valid number"/>
                             <br/>
-                            <small class="form-text text-muted" id="nameHelp">Enter Number of Bins to be Created.</small>
+                            <div>
+                                <small class="form-text text-muted" id="nameHelp" style="clear:both">Enter Number of
+                                    Bins to be
+                                    Created.</small>
+                            </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="add-bin">Create</button>
-                </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-primary" id="add-bin" type="submit">Create</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -5,7 +5,7 @@ import com.increff.assure.pojo.BinSkuPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,7 +16,7 @@ public class BinSkuService extends AbstractService {
     @Autowired
     private BinSkuDao binSkuDao;
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void addOrUpdate(BinSkuPojo inputPojo) {
         BinSkuPojo existingPojo = getByBinIdAndGlobalSku(inputPojo.getBinId(), inputPojo.getGlobalSkuId());
         if (Objects.nonNull(existingPojo))
@@ -39,7 +39,7 @@ public class BinSkuService extends AbstractService {
         return binSkuPojo;
     }
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     //Allocate as many items as can be removed from BinSKU. Returns deficit.
     public Long removeFromBin(BinSkuPojo targetBin, Long requiredQuantity) {
         Long deduction = 0L;
@@ -53,7 +53,7 @@ public class BinSkuService extends AbstractService {
         return binSkuDao.selectByGlobalSku(globalSku);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void addList(List<BinSkuPojo> binSkuMasterPojoList) {
         for (BinSkuPojo binSkuPojo : binSkuMasterPojoList)
             addOrUpdate(binSkuPojo);

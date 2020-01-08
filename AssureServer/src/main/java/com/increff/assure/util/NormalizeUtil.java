@@ -2,6 +2,7 @@ package com.increff.assure.util;
 
 import com.increff.assure.pojo.ChannelPojo;
 import com.increff.assure.pojo.ConsumerPojo;
+import model.form.ChannelListingForm;
 import model.form.ConsumerForm;
 import model.form.ProductMasterForm;
 
@@ -20,5 +21,10 @@ public class NormalizeUtil {
 
     public static void normalize(ProductMasterForm productForm) {
         productForm.setName(StringUtil.trimSpaces(productForm.getName()));
+    }
+
+    public static void normalize(ChannelListingForm listingForm) {
+        listingForm.setChannelSkuId(StringUtil.trimSpaces(listingForm.getChannelSkuId()));
+        listingForm.setClientSkuId(StringUtil.trimSpaces(listingForm.getClientSkuId()));
     }
 }

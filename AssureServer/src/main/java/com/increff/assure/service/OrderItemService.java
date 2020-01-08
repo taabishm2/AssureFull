@@ -5,7 +5,7 @@ import com.increff.assure.pojo.OrderItemPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -13,7 +13,7 @@ public class OrderItemService extends AbstractService {
     @Autowired
     private OrderItemDao orderItemDao;
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void add(OrderItemPojo orderItemPojo) throws ApiException {
         checkDuplicate(orderItemPojo);
         orderItemPojo.setAllocatedQuantity(0L);
@@ -21,7 +21,7 @@ public class OrderItemService extends AbstractService {
         orderItemDao.insert(orderItemPojo);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void addList(List<OrderItemPojo> orderItemList) throws ApiException {
         for (OrderItemPojo orderItem : orderItemList)
             add(orderItem);
@@ -52,7 +52,7 @@ public class OrderItemService extends AbstractService {
         return orderItemDao.selectByOrderId(orderId);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void allocateOrderItems(OrderItemPojo orderItem, Long quantityToBeAllocated) throws ApiException {
         orderItem.setAllocatedQuantity(orderItem.getAllocatedQuantity() + quantityToBeAllocated);
     }

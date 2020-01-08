@@ -2,10 +2,11 @@ package com.increff.assure.service;
 
 import com.increff.assure.dao.ChannelListingDao;
 import com.increff.assure.pojo.ChannelListingPojo;
+import com.increff.assure.pojo.ProductMasterPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -13,7 +14,7 @@ public class ChannelListingService extends AbstractService {
     @Autowired
     private ChannelListingDao channelListingDao;
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackFor = ApiException.class)
     public void add(ChannelListingPojo listingPojo) throws ApiException {
         checkDuplicateChannelListing(listingPojo);
 
@@ -36,7 +37,7 @@ public class ChannelListingService extends AbstractService {
         return channelListingDao.selectAll();
     }
 
-    public ChannelListingPojo getByChannelIdAndGlobalSku(Long channelId, Long globalSkuId){
+    public ChannelListingPojo getByChannelIdAndGlobalSku(Long channelId, Long globalSkuId) {
         return channelListingDao.selectByChannelAndGlobalSku(channelId, globalSkuId);
     }
 
@@ -44,5 +45,11 @@ public class ChannelListingService extends AbstractService {
         ChannelListingPojo listingPojo = channelListingDao.select(id);
         checkNotNull(listingPojo, "Channel Listing (ID:" + id + ") does not exist.");
         return listingPojo;
+    }
+
+    @Transactional(rollbackFor = ApiException.class)
+    public void addList(List<ChannelListingPojo> channelListingPojos) throws ApiException {
+        for (ChannelListingPojo pojo : channelListingPojos)
+            add(pojo);
     }
 }

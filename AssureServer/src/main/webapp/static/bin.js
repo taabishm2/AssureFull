@@ -18,7 +18,8 @@ function addBin(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		getBinList();
+    	   getBinList();
+    	   getSuccessSnackbar("Bins Created");
 	   },
 	   error: handleAjaxError
 	});
@@ -62,7 +63,7 @@ function displayBinList(data){
 
 //Initialization Code
 function init(){
-	$('#add-bin').click(addBin);
+	$('#bin-form').submit(addBin);
 	$('#refresh-data').click(getBinList);
 }
 

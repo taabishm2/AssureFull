@@ -37,4 +37,9 @@ public class CheckValid {
         if(orderForm.getChannelOrderId().length() > 50)
             throw new ApiException("Name is too Long. Max. length is 20");
     }
+
+    public static void validate(ChannelListingForm listingForm) throws ApiException {
+        if(listingForm.getChannelSkuId().length() < 3)
+            throw new ApiException("Channel Sku is too Short. Min. length is 3");
+    }
 }

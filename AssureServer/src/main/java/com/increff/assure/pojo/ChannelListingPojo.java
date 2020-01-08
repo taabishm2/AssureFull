@@ -11,7 +11,8 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Table(uniqueConstraints={
         @UniqueConstraint(columnNames={"channelId", "channelSkuId"}),
-        @UniqueConstraint(columnNames={"channelId", "globalSkuId"})
+        @UniqueConstraint(columnNames={"channelId", "globalSkuId"}),
+        @UniqueConstraint(columnNames={"clientId", "globalSkuId"})
 })
 public class ChannelListingPojo extends BaseEntity{
     @Id
@@ -26,4 +27,7 @@ public class ChannelListingPojo extends BaseEntity{
 
     @NotNull
     private Long globalSkuId;
+
+    @NotNull
+    private Long clientId;
 }

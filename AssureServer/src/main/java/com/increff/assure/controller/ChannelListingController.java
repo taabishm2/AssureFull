@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import model.data.ChannelListingData;
 import model.form.ChannelListingForm;
+import model.form.ProductMasterForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +19,10 @@ public class ChannelListingController {
     @Autowired
     private ChannelListingDto channelListingDto;
 
-    @ApiOperation(value = "Adds a Channel-Listing")
-    @RequestMapping(path = "/api/channelListing", method = RequestMethod.POST)
-    //TODO: Remove @Valid, use CheckValid()
-    public void add(@Valid @RequestBody ChannelListingForm form) throws ApiException {
-        channelListingDto.add(form);
+    @ApiOperation(value = "Add a List of Channel Listings for a Channel")
+    @RequestMapping(path = "/api/channelListing/list/{channelId}", method = RequestMethod.POST)
+    public void addList(@PathVariable Long channelId, @Valid @RequestBody List<ChannelListingForm> formList) throws ApiException {
+        channelListingDto.addList(formList, channelId);
     }
 
     @ApiOperation(value = "Gets a Channel-Listing by ID")
