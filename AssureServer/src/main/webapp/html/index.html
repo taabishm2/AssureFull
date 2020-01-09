@@ -1,0 +1,140 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="snippets.html :: page_head"></head>
+
+<body>
+<nav th:replace="snippets.html :: navbar"></nav>
+
+<div style="padding-top: 10px;">
+    <div class="addressbar" style="border-bottom:1px solid #ECECEC; width:90%; margin: auto; height: 25px; font-size: 0.85em; padding-left: 15px;">
+        Home
+    </div>
+</div>
+
+<div class="row" style="width:90%; padding-top: 35px; margin: auto;">
+    <div class="col-sm-1"></div>
+
+    <div class="col-sm-5">
+        <div style="color:#17252A">
+            <i class="fa fa-user" aria-hidden="true" style="font-size: 40px"></i>
+            <span style="font-size: 25px;">&nbspConsumers</span>
+        </div>
+
+        <div style="margin-left:18px; margin-top: 10px; color:#157370">
+            <div style="margin-top:5px">
+                <i class="fa fa-user-plus" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
+                <span>Add a Consumer</span>
+            </div>
+            <div style="margin-top:5px">
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
+                <span>View All Consumers</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-5">
+        <div style="color:#17252A">
+            <i class="fa fa-cubes" aria-hidden="true" style="font-size: 40px"></i>
+            <span style="font-size: 25px;">Product Master</span>
+        </div>
+
+        <div style="margin-left:18px; margin-top: 10px; color:#157370">
+            <div style="margin-top:5px">
+                <i class="fa fa-cube" aria-hidden="true" style="font-size: 20px"></i>
+                <span>Add a Product</span>
+            </div>
+            <div style="margin-top:5px">
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px"></i>
+                <span style="">View All Products</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="width:90%; padding-top: 40px; margin: auto;">
+    <div class="col-sm-1"></div>
+
+    <div class="col-sm-5">
+        <div style="color:#17252A">
+            <i class="fa fa-shopping-basket" aria-hidden="true" style="font-size: 40px"></i>
+            <span style="font-size: 25px;">&nbspBins</span>
+        </div>
+
+        <div style="margin-left:18px; margin-top: 10px; color:#157370">
+            <div style="margin-top:5px">
+                <i class="fa fa-plus" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
+                <span>Create Bins</span>
+            </div>
+            <div style="margin-top:5px">
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
+                <span>View All Bins</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-5">
+        <div style="color:#17252A">
+            <i class="fa fa-list-alt" aria-hidden="true" style="font-size: 40px"></i>
+            <span style="font-size: 25px;">Bin Inventory Master</span>
+        </div>
+
+        <div style="margin-left:18px; margin-top: 10px; color:#157370">
+            <div style="margin-top:5px">
+                <i class="fa fa-plus" aria-hidden="true" style="font-size: 20px"></i>
+                <span>Create Bin Inventory Entry</span>
+            </div>
+            <div style="margin-top:5px">
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px"></i>
+                <span>View Bin Inventory List</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="width:90%; padding-top: 40px; margin: auto;">
+    <div class="col-sm-1"></div>
+
+    <div class="col-sm-5">
+        <div style="color:#17252A">
+            <i class="fa fa-shopping-cart" aria-hidden="true" style="font-size: 40px"></i>
+            <span style="font-size: 25px;">&nbspChannels</span>
+        </div>
+
+        <div style="margin-left:18px; margin-top: 10px; color:#157370">
+            <div style="margin-top:5px">
+                <i class="fa fa-plus" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
+                <span>Create Channel</span>
+            </div>
+            <div style="margin-top:5px">
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
+                <span>View All Channels</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-5">
+        <div style="color:#17252A">
+            <i class="fa fa-clipboard" aria-hidden="true" style="font-size: 40px"></i>
+            <span style="font-size: 25px;">Orders</span>
+        </div>
+
+        <div style="margin-left:18px; margin-top: 10px; color:#157370">
+            <div style="margin-top:5px">
+                <i class="fa fa-plus" aria-hidden="true" style="font-size: 20px"></i>
+                <span style="">Create Orders</span>
+            </div>
+            <div style="margin-top:5px">
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px"></i>
+                <span style="">View, Allocate, Invoice Orders</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="snippets.html :: footer"></footer>
+<script th:src="@{/static/bin.js}"></script>
+
+</body>
+
+</html>

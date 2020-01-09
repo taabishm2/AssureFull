@@ -65,7 +65,7 @@ function toJson($form){
 
 
 function handleAjaxError(response){
-    console.log("RESPONSE ",response.responseText);
+    console.log("RESPONSE CHANNEL: ",response.responseText);
 	var response = JSON.parse(response.responseText);
 	alert(response.message);
 }

@@ -41,4 +41,10 @@ public class ConsumerController {
     public List<ConsumerData> getAllClients() throws ApiException {
         return consumerDto.getAllClients();
     }
+
+    @ApiOperation(value = "Gets a list of all Clients")
+    @RequestMapping(path = "/api/consumer/customers", method = RequestMethod.GET)
+    public List<ConsumerData> getAllCustomers() throws ApiException {
+        return consumerDto.getAllCustomers();
+    }
 }

@@ -6,4 +6,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class AppUiController extends AbstractUiController {
+    @RequestMapping(value = "/order")
+    public ModelAndView order() {
+        return mav("order.html");
+    }
 }

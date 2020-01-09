@@ -1,18 +1,19 @@
 package com.increff.assure.dto;
 
+import com.increff.assure.pojo.ChannelListingPojo;
 import com.increff.assure.pojo.OrderItemPojo;
-import com.increff.assure.service.ApiException;
-import com.increff.assure.service.OrderItemService;
-import com.increff.assure.service.OrderService;
-import com.increff.assure.service.ProductMasterService;
+import com.increff.assure.pojo.ProductMasterPojo;
+import com.increff.assure.service.*;
 import model.data.OrderItemData;
 import model.form.OrderItemForm;
+import model.form.OrderItemValidationForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.increff.assure.util.ConvertUtil.convert;
 
@@ -24,6 +25,10 @@ public class OrderItemDto {
     private OrderItemService orderItemService;
     @Autowired
     private ProductMasterService productService;
+    @Autowired
+    private ChannelListingService channelListingService;
+    @Autowired
+    private InventoryService inventoryService;
 
     public void add(OrderItemForm form) throws ApiException {
         OrderItemPojo orderItemPojo = convert(form, OrderItemPojo.class);
@@ -47,5 +52,21 @@ public class OrderItemDto {
 
         if (!orderService.getOrderClient(orderItemPojo.getOrderId()).equals(productService.getClientIdOfProduct(orderItemPojo.getGlobalSkuId())))
             throw new ApiException("Invalid Client for Product(ID: " + orderItemPojo.getGlobalSkuId() + ").");
+    }
+
+    public void validateOrderItemForm(OrderItemValidationForm validationForm) throws ApiException {
+        ProductMasterPojo product = productService.getCheckId(validationForm.getGlobalSkuId());
+        if(!product.getClientId().equals(validationForm.getClientId()))
+            throw new ApiException("Client does not provide the mentioned Product");
+
+        ChannelListingPojo channelListing = channelListingService.getByChannelIdAndGlobalSku(validationForm.getChannelId(), validationForm.getGlobalSkuId());
+        if(Objects.isNull(channelListing))
+            throw new ApiException("Channel does not provide the mentioned Product");
+
+        if(!channelListing.getChannelId().equals(validationForm.getChannelId()))
+            throw new ApiException("Channel does not provide the mentioned Product");
+
+        if(validationForm.getQuantity() > inventoryService.getByGlobalSku(product.getId()).getAvailableQuantity())
+            throw new ApiException("Insufficient Stock.");
     }
 }

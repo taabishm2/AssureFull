@@ -18,6 +18,7 @@ public class AppRestControllerAdvice {
     public MessageData handle(ApiException e) {
         MessageData data = new MessageData();
         data.setMessage(e.getMessage());
+        System.out.println("Exception:ApiException-"+e.getMessage());
         return data;
     }
 
@@ -26,6 +27,7 @@ public class AppRestControllerAdvice {
     public MessageData handle(MethodArgumentNotValidException e) {
         MessageData data = new MessageData();
         data.setMessage("Invalid Input");
+        System.out.println("Exception:MethodArgumentNotValidException-"+e.getMessage());
         return data;
     }
 
@@ -35,6 +37,7 @@ public class AppRestControllerAdvice {
         MessageData data = new MessageData();
         data.setMessage("An unknown error has occurred in Assure Server- " + e);
         e.printStackTrace();
+        System.out.println("Exception:InternalServerError-"+e.getMessage());
         return data;
     }
 }

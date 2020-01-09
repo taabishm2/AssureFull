@@ -10,14 +10,18 @@ import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
 import model.data.OrderReceiptData;
 import model.form.OrderForm;
+import model.form.OrderItemValidationForm;
+import model.form.OrderValidationForm;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
 @Service
 public class OrderDto {
 
-    public void add(@RequestBody ChannelAppOrderForm orderForm) throws ApiException, JsonProcessingException {
+    public void add(@RequestBody ChannelAppOrderForm orderForm) throws ApiException {
         OrderForm serverSideOrderForm = ClientWrapper.convert(orderForm);
         //Autowire ClientWrapper
         ClientWrapper.hitAddOrderApi(serverSideOrderForm);
@@ -34,5 +38,17 @@ public class OrderDto {
         PdfGenerateUtil.generate(orderReceipt.getOrderId());
 
         ClientWrapper.sendOrderInvoice(orderReceipt.getOrderId());
+    }
+
+    public void validateOrder(OrderValidationForm validationForm) throws ApiException {
+        ClientWrapper.hitOrderValidationApi(validationForm);
+    }
+
+    public void validateOrderItemForm(OrderItemValidationForm validationForm) throws ApiException {
+        ClientWrapper.hitOrderItemValidationApi(validationForm);
+    }
+
+    public List<ChannelAppOrderData> getAll(Long channelId) {
+        return ClientWrapper.hitGetOrdersByChannelApi(channelId);
     }
 }

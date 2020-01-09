@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 @Table(uniqueConstraints={
         @UniqueConstraint(columnNames={"channelId", "globalSkuId"}),
         @UniqueConstraint(columnNames={"channelId", "clientId", "channelSkuId"}),
-        @UniqueConstraint(columnNames={"clientId", "globalSkuId"})
 })
 public class ChannelListingPojo extends BaseEntity{
     @Id

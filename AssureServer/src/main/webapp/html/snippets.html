@@ -27,7 +27,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" style="color:#FEFFFF;" th:href="@{/index}">Home <span
+                <a class="nav-link" style="color:#FEFFFF;" th:href="@{/}">Home <span
                         class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item dropdown">
@@ -37,7 +37,7 @@
                 </a>
                 <div aria-labelledby="navbarDropdown" class="dropdown-menu">
                     <a class="dropdown-item" th:href="@{/consumer}">View Consumers</a>
-                    <a class="dropdown-item" th:href="@{/product}">Add Consumers</a>
+                    <a class="dropdown-item" th:href="@{/consumer}">Add Consumers</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
@@ -46,7 +46,7 @@
                     Products
                 </a>
                 <div aria-labelledby="navbarDropdown" class="dropdown-menu">
-                    <a class="dropdown-item" th:href="@{/consumer}">View Product List</a>
+                    <a class="dropdown-item" th:href="@{/product}">View Product List</a>
                     <a class="dropdown-item" th:href="@{/product}">Add Product</a>
                 </div>
             </li>
@@ -56,11 +56,11 @@
                     Bins
                 </a>
                 <div aria-labelledby="navbarDropdown" class="dropdown-menu">
-                    <a class="dropdown-item" th:href="@{/consumer}">View Bin List</a>
-                    <a class="dropdown-item" th:href="@{/product}">Add Bin</a>
+                    <a class="dropdown-item" th:href="@{/bin}">View Bin List</a>
+                    <a class="dropdown-item" th:href="@{/bin}">Add Bin</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" th:href="@{/product}">View Bin Inventory</a>
-                    <a class="dropdown-item" th:href="@{/product}">Add Products to Bin</a>
+                    <a class="dropdown-item" th:href="@{/binSku}">View Bin Inventory</a>
+                    <a class="dropdown-item" th:href="@{/binSku}">Add Products to Bin</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
@@ -69,8 +69,11 @@
                     Channels
                 </a>
                 <div aria-labelledby="navbarDropdown" class="dropdown-menu">
-                    <a class="dropdown-item" th:href="@{/consumer}">View Channels</a>
-                    <a class="dropdown-item" th:href="@{/product}">Add Channels</a>
+                    <a class="dropdown-item" th:href="@{/channel}">View Channels</a>
+                    <a class="dropdown-item" th:href="@{/channel}">Add Channels</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" th:href="@{/channelListing}">Add Channels</a>
+                    <a class="dropdown-item" th:href="@{/channel}">Add Channels</a>
                 </div>
             </li>
             <li class="nav-item dropdown">

@@ -17,6 +17,8 @@ import model.data.OrderItemReceiptData;
 import model.data.OrderReceiptData;
 import model.form.OrderForm;
 import model.form.OrderItemForm;
+import model.form.OrderItemValidationForm;
+import model.form.OrderValidationForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,6 +66,7 @@ public class OrderDto extends AbstractService {
     }
 
     private void validateOrder(OrderPojo orderPojo) throws ApiException {
+        System.out.println("HIT VALIDATION DTO VALIDATOR");
         if (!consumerService.getCheckId(orderPojo.getClientId()).getType().equals(ConsumerType.CLIENT))
             throw new ApiException("Invalid ClientID");
 
@@ -222,5 +225,9 @@ public class OrderDto extends AbstractService {
 
         orderInvoice.setOrderItems(orderItems);
         return orderInvoice;
+    }
+
+    public void validateOrderForm(OrderValidationForm validationForm) throws ApiException {
+        validateOrder(convert(validationForm, OrderPojo.class));
     }
 }

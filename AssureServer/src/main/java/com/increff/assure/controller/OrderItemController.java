@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import model.data.OrderItemData;
 import model.form.OrderItemForm;
+import model.form.OrderItemValidationForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +35,11 @@ public class OrderItemController {
     @RequestMapping(path = "/api/orderItem", method = RequestMethod.GET)
     public List<OrderItemData> getAll() throws ApiException {
         return orderItemDto.getAll();
+    }
+
+    @ApiOperation(value = "Validate Order Details")
+    @RequestMapping(path = "/api/orderitem/validate", method = RequestMethod.POST)
+    public void validateOrderItem(@RequestBody OrderItemValidationForm validationForm) throws ApiException {
+        orderItemDto.validateOrderItemForm(validationForm);
     }
 }

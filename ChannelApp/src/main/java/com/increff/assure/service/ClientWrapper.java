@@ -8,17 +8,27 @@ import com.increff.assure.model.form.ChannelAppOrderForm;
 import com.increff.assure.util.ConvertUtil;
 import model.data.OrderReceiptData;
 import model.form.OrderForm;
+import model.form.OrderItemValidationForm;
+import model.form.OrderValidationForm;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Component
 public class ClientWrapper {
-    public static void hitAddOrderApi(OrderForm orderForm) throws JsonProcessingException {
+    public static void hitAddOrderApi(OrderForm orderForm) throws ApiException {
         ObjectMapper mapper = new ObjectMapper();
-        String jsonStr = mapper.writeValueAsString(orderForm);
+
+        String jsonStr;
+        try {
+            jsonStr = mapper.writeValueAsString(orderForm);
+        } catch (JsonProcessingException e) {
+            throw new ApiException(e.getMessage());
+        }
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -44,5 +54,47 @@ public class ClientWrapper {
 
     public static ChannelOrderReceiptData convert(OrderReceiptData orderReceiptData) throws ApiException {
         return ConvertUtil.convert(orderReceiptData, ChannelOrderReceiptData.class);
+    }
+
+    public static void hitOrderValidationApi(OrderValidationForm validationForm) throws ApiException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        String jsonStr;
+        try {
+            jsonStr = mapper.writeValueAsString(validationForm);
+        } catch (JsonProcessingException e) {
+            throw new ApiException(e.getMessage());
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request = new HttpEntity<String>(jsonStr, headers);
+        restTemplate.postForObject("http://localhost:6060/assure/api/order/validate", request, String.class);
+    }
+
+    public static void hitOrderItemValidationApi(OrderItemValidationForm validationForm) throws ApiException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        String jsonStr;
+        try {
+            jsonStr = mapper.writeValueAsString(validationForm);
+        } catch (JsonProcessingException e) {
+            throw new ApiException(e.getMessage());
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request = new HttpEntity<String>(jsonStr, headers);
+        System.out.println("HITTING ORDER ITEM VALIDATION API:");
+        restTemplate.postForObject("http://localhost:6060/assure/api/orderitem/validate", request, String.class);
+    }
+
+    public static List<ChannelAppOrderData> hitGetOrdersByChannelApi(Long channelId) {
+
+        return null;
     }
 }

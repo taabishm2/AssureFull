@@ -1,0 +1,117 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="snippets.html :: page_head"></head>
+
+<body>
+<nav th:replace="snippets.html :: navbar"></nav>
+
+<div class="parent-container">
+    <div class="main-header">
+        <p class="page-header">
+            <span style="font-size: 20px">Order Page</span>
+            <br/>
+            <span class="text-muted" style="font-size:0.9em;">Add and View the created Orders.</span>
+        </p>
+        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
+            Create Orders
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create New Order.</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="order-form">
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="clientId">Client ID</label>
+                            <input aria-describedby="clientIdHelp" class="form-control" id="clientId" name="clientId"
+                                   pattern="[0-9]*" placeholder="Enter Client ID" required title="This field is required"
+                                   type="text">
+                            <small class="form-text text-muted" id="clientIdHelp">Client ID should be registered.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerId">Customer ID</label>
+                            <input aria-describedby="customerIdHelp" class="form-control" id="customerId" name="customerId"
+                                   pattern="[0-9]*" placeholder="Enter Customer ID" required title="This field is required"
+                                   type="text">
+                            <small class="form-text text-muted" id="customerIdHelp">Customer ID should be registered.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="channelId">Channel ID</label>
+                            <input aria-describedby="channelIdHelp" class="form-control" id="channelId" name="channelId"
+                                   pattern="[0-9]*" placeholder="Enter Channel ID" required title="This field is required"
+                                   type="text">
+                            <small class="form-text text-muted" id="channelIdHelp">Channel ID should be registered.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="channelOrderId">Channel Order ID</label>
+                            <input aria-describedby="channelOrderIdHelp" class="form-control" id="channelOrderId" name="channelOrderId"
+                                    placeholder="Enter Channel Order ID" required title="This field is required"
+                                   type="text">
+                        </div>
+
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Order Items</h5>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="globalSkuId">Product GSKU ID</label>
+                            <input aria-describedby="globalSkuIdHelp" class="form-control" id="globalSkuId" name="globalSkuId"
+                                   placeholder="Enter Product SKU ID" required title="This field is required"
+                                   type="text">
+                            <button class="btn btn-primary" id="add-order-item" type="click">Add Item</button>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-primary" id="add-order" type="submit">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="body-content">
+        <div class="table-display">
+            <table class="table table-sm table-striped" id="order-table" style="width:70%; margin:auto">
+                <thead>
+                <tr>
+                    <th colspan="2">
+                        Order Detail List &nbsp
+                        <button class="btn btn-primary" id="refresh-data" style="float: right; width:60" type="button">
+                            <i aria-hidden="true" class="fa fa-refresh"></i>
+                        </button>
+                    </th>
+                </tr>
+                <tr>
+                    <th scope="col" style="text-align:center;">ID</th>
+                    <th scope="col" style="text-align:center;">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="snippets.html :: footer"></footer>
+<script th:src="@{/static/order.js}"></script>
+
+</body>
+</html>

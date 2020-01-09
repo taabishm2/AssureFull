@@ -7,6 +7,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import model.data.OrderData;
 import model.form.OrderForm;
+import model.form.OrderItemValidationForm;
+import model.form.OrderValidationForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,4 +51,12 @@ public class OrderController {
     public void generateReceipt(@PathVariable Long id) throws ApiException, JsonProcessingException {
         orderDto.fulfillOrder(id);
     }
+
+    @ApiOperation(value = "Validate Order Details")
+    @RequestMapping(path = "/api/order/validate", method = RequestMethod.POST)
+    public void validateOrder(@RequestBody OrderValidationForm validationForm) throws ApiException {
+        orderDto.validateOrderForm(validationForm);
+    }
 }
+
+
