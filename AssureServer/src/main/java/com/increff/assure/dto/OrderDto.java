@@ -205,7 +205,7 @@ public class OrderDto extends AbstractService {
         orderInvoice.setChannelOrderId(order.getChannelOrderId());
         orderInvoice.setClientDetails(consumerService.getCheckId(order.getClientId()).getName());
         orderInvoice.setCustomerDetails(consumerService.getCheckId(order.getCustomerId()).getName());
-        orderInvoice.setOrderCreationTime(order.getCreatedAt());
+        orderInvoice.setOrderCreationTime(order.getCreatedAt().toString());
 
         List<OrderItemReceiptData> orderItems = new ArrayList<>();
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(order.getId())) {

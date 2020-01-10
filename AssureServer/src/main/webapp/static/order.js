@@ -82,6 +82,8 @@ function validateOrderItem(event){
 	var json = toJson($form);
 	var parsedJson = JSON.parse(json);
 
+    parsedJson['globalSkuId'] = parsedJson['globalSkuId'].trim();
+
     console.log(sessionStorage.getItem('orderItems'));
 
 	var orderDetails = sessionStorage.getItem("orderIdentifier");
@@ -94,7 +96,8 @@ function validateOrderItem(event){
 	console.log(parsedJson);
 
 	var parsedOrderItemList = JSON.parse(sessionStorage.getItem('orderItemList'));
-	if(parsedOrderItemList.includes(sessionStorage.getItem('orderItemList'))){
+	console.log(parsedOrderItemList, sessionStorage.getItem('orderItemList'));
+	if(parsedOrderItemList.includes(parsedJson['globalSkuId'])){
 	    alert("Product already added");
 	    return false;
 	}

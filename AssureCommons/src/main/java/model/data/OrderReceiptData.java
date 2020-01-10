@@ -11,7 +11,7 @@ public class OrderReceiptData {
     Long orderId;
     String channelName;
     String channelOrderId;
-    ZonedDateTime OrderCreationTime;
+    String OrderCreationTime;
     String clientDetails;
     String customerDetails;
 
@@ -44,12 +44,12 @@ public class OrderReceiptData {
         this.channelOrderId = channelOrderId;
     }
 
-    public ZonedDateTime getOrderCreationTime() {
+    public String getOrderCreationTime() {
         return OrderCreationTime;
     }
 
     @XmlElement
-    public void setOrderCreationTime(ZonedDateTime orderCreationTime) {
+    public void setOrderCreationTime(String orderCreationTime) {
         OrderCreationTime = orderCreationTime;
     }
 
