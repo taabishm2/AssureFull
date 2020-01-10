@@ -118,7 +118,7 @@ public class OrderDto extends AbstractService {
 
     public boolean isOrderAllocated(Long orderId) {
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(orderId)) {
-            if (orderItem.getOrderedQuantity().equals(orderItem.getAllocatedQuantity()))
+            if (!orderItem.getOrderedQuantity().equals(orderItem.getAllocatedQuantity()))
                 return false;
         }
         return true;

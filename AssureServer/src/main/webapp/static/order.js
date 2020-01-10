@@ -173,10 +173,38 @@ function displayOrderDetails(orderId){
 
 function allocateOrder(orderId){
     var url = getOrderApiUrl() + "/allocate/" + orderId;
+    	$.ajax({
+    	   url: url,
+    	   type: 'POST',
+    	   data: '',
+    	   headers: {
+           	'Content-Type': 'application/json'
+           },
+    	   success: function(response) {
+    	       getOrderList();
+        	   getSuccessSnackbar("Order Allocated");
+    	   },
+    	   error: handleAjaxError
+    	});
+    	return false;
 }
 
 function invoiceOrder(orderId){
     var url = getOrderApiUrl() + "/invoice/" + orderId;
+        	$.ajax({
+        	   url: url,
+        	   type: 'POST',
+        	   data: '',
+        	   headers: {
+               	'Content-Type': 'application/json'
+               },
+        	   success: function(response) {
+        	       getOrderList();
+            	   getSuccessSnackbar("Invoice Generated");
+        	   },
+        	   error: handleAjaxError
+        	});
+        	return false;
 }
 
 //Initialization Code
