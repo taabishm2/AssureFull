@@ -48,7 +48,7 @@ public class OrderController {
 
     @ApiOperation(value = "Generate Order Invoice")
     @RequestMapping(path = "/api/order/invoice/{id}", method = RequestMethod.POST)
-    public void generateReceipt(@PathVariable Long id) throws ApiException, JsonProcessingException {
+    public void generateInvoice(@PathVariable Long id) throws ApiException, JsonProcessingException {
         orderDto.fulfillOrder(id);
     }
 

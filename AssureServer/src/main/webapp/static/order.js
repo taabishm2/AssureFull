@@ -149,7 +149,10 @@ function displayOrderList(data){
 
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml =  '<button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="displayOrderDetails(' + e.id + ')"><i class="fa fa-info-circle"></i>&nbspDetails</button><button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="allocateOrder(' + e.id + ')"><i class="fa fa-link"></i>&nbspAllocate</button><button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="invoiceOrder(' + e.id + ')"><i class="fa fa-print"></i>&nbspInvoice</button>'
+		var infoButtonHtml = '<button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="displayOrderDetails(' + e.id + ')"><i class="fa fa-info-circle"></i>&nbspDetails</button>';
+		var allocateButtonHtml = '<button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="allocateOrder(' + e.id + ')"><i class="fa fa-link"></i>&nbspAllocate</button>';
+		var invoiceButtonHtml = '<button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="invoiceOrder(' + e.id + ')"><i class="fa fa-print"></i>&nbspInvoice</button>';
+
 		var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
 		+ '<td style="text-align:center;">' + e.clientId + '</td>'
@@ -157,10 +160,23 @@ function displayOrderList(data){
 		+ '<td>' + e.channelId + '</td>'
 		+ '<td>' + e.channelOrderId + '</td>'
 		+ '<td>' + e.status + '</td>'
-	    + '<td align="right">' + buttonHtml + '</td>'
+	    + '<td align="right">' + infoButtonHtml + allocateButtonHtml + invoiceButtonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 	}
+}
+
+function displayOrderDetails(orderId){
+    var url = getOrderApiUrl() + "/details/" + orderId;
+    //TODO:Implement
+}
+
+function allocateOrder(orderId){
+    var url = getOrderApiUrl() + "/allocate/" + orderId;
+}
+
+function invoiceOrder(orderId){
+    var url = getOrderApiUrl() + "/invoice/" + orderId;
 }
 
 //Initialization Code

@@ -19,8 +19,8 @@ public class PdfGenerateUtil {
     public static final String OUTPUT_DIR;
 
     static {
-        RESOURCES_DIR = "src//main//resources//";
-        OUTPUT_DIR = "src//main//resources//output//";
+        RESOURCES_DIR = "AssureServer//src//main//resources//";
+        OUTPUT_DIR = "AssureServer//src//main//resources//output//";
     }
 
     public static void generate(Long orderId) throws ApiException {
@@ -28,7 +28,7 @@ public class PdfGenerateUtil {
         try {
             fOPPdfDemo.convertToPDF(orderId);
         } catch (Exception e) {
-            throw new ApiException(e.getMessage());
+            throw new ApiException("Couldn't generate Invoice PDF:" + e.getMessage());
         }
     }
 

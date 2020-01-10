@@ -1,17 +1,11 @@
 package com.increff.assure.util;
 
-import model.data.OrderItemReceiptData;
 import model.data.OrderReceiptData;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.File;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class XmlGenerateUtil {
 
@@ -28,7 +22,7 @@ public class XmlGenerateUtil {
         }
     }
 
-    public static void main(String args[]){
+/*    public static void main(String args[]){
         Instant now = Instant.now();
         ZoneId zoneId = ZoneId.of("America/Los_Angeles");
         ZonedDateTime dateAndTimeInLA = ZonedDateTime.ofInstant(now, zoneId);
@@ -69,5 +63,5 @@ public class XmlGenerateUtil {
         orderData.setOrderItems(orderItemList);
 
         generate(orderData);
-    }
+    }*/
 }
