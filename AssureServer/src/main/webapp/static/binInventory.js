@@ -19,6 +19,7 @@ function addBinSku(event){
        },	   
 	   success: function(response) {
 	   		getBinSkuList();
+	   		$('#exampleModal').modal('toggle');
 	   		getSuccessSnackbar("Bin Inventory Item Created.");
 	   },
 	   error: handleAjaxError
@@ -55,9 +56,9 @@ function displayBinSkuList(data){
 		var e = data[i];
 		var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
-		+ '<td style="text-align:center;">' + e.binId + '</td>'
+		+ '<td>' + e.binId + '</td>'
 		+ '<td>' + e.globalSkuId + '</td>'
-		+ '<td>' + e.quantity + '</td>'
+		+ '<td style="text-align:center;">' + e.quantity + '</td>'
 		+ '</tr>';
 		console.log(row);
         $tbody.append(row);

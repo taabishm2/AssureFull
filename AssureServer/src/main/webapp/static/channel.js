@@ -19,6 +19,7 @@ function addChannel(event){
        },
 	   success: function(response) {
 	   		getChannelList();
+	   		$('#exampleModal').modal('toggle');
             getSuccessSnackbar("Channel Created.");
 	   },
 	   error: handleAjaxError

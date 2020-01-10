@@ -63,6 +63,7 @@ function processData(){
 	var file = $('#productFile')[0].files[0];
 	console.log("FILE: ",file);
 	readFileData(file, readFileDataCallback);
+	return false;
 }
 
 function readFileDataCallback(results){
@@ -92,6 +93,7 @@ function uploadRows(){
        },	   
 	   success: function(response) {
 	        getProductList();
+	        $('#exampleModal').modal('toggle');
 	   		getSuccessSnackbar("Products Added.");
 	   },
 	   error: function(response){
@@ -215,10 +217,10 @@ function populateDropdown(){
 
 //INITIALIZATION CODE
 function init(){
-	$('#update-product').click(updateProduct);
+	$('#product-edit-form').submit(updateProduct);
 	$('#refresh-data').click(getProductList);
 	$('#upload-data').click(displayUploadData);
-	$('#process-data').click(processData);
+	$('#product-form').submit(processData);
 	$('#download-errors').click(downloadErrors);
     $('#productFile').on('change', updateFileName)
 

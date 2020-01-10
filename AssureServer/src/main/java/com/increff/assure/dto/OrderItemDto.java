@@ -66,7 +66,8 @@ public class OrderItemDto {
         if(!channelListing.getChannelId().equals(validationForm.getChannelId()))
             throw new ApiException("Channel does not provide the mentioned Product");
 
-        if(validationForm.getQuantity() > inventoryService.getByGlobalSku(product.getId()).getAvailableQuantity())
+        System.out.println("");
+        if(validationForm.getOrderedQuantity() > inventoryService.getByGlobalSku(product.getId()).getAvailableQuantity())
             throw new ApiException("Insufficient Stock.");
     }
 }

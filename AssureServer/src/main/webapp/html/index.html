@@ -7,12 +7,12 @@
 <nav th:replace="snippets.html :: navbar"></nav>
 
 <div style="padding-top: 10px;">
-    <div class="addressbar" style="border-bottom:1px solid #ECECEC; width:90%; margin: auto; height: 25px; font-size: 0.85em; padding-left: 15px;">
+    <div class="addressbar" style="border-bottom:1px solid #ECECEC; width:90%; margin: auto; height: 25px; font-size: 0.85em; padding-left: 15px; margin-top:3px;">
         Home
     </div>
 </div>
 
-<div class="row" style="width:90%; padding-top: 35px; margin: auto;">
+<div class="row" style="width:90%; padding-top: 25px; margin: auto;">
     <div class="col-sm-1"></div>
 
     <div class="col-sm-5">
@@ -23,30 +23,30 @@
 
         <div style="margin-left:18px; margin-top: 10px; color:#157370">
             <div style="margin-top:5px">
-                <i class="fa fa-user-plus" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
-                <span>Add a Consumer</span>
+                <i class="fa fa-user-plus" aria-hidden="true" style="font-size: 25px; color:#2B7A78"></i>
+                <a th:href="@{/consumer}"><span>Add a Consumer</span></a>
             </div>
             <div style="margin-top:5px">
-                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
-                <span>View All Consumers</span>
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 25px; color:#2B7A78"></i>
+                <a th:href="@{/consumer}"><span>View All Consumers</span></a>
             </div>
         </div>
     </div>
 
     <div class="col-sm-5">
         <div style="color:#17252A">
-            <i class="fa fa-cubes" aria-hidden="true" style="font-size: 40px"></i>
+            <i class="fa fa-cubes" aria-hidden="true" style="font-size: 35px"></i>
             <span style="font-size: 25px;">Product Master</span>
         </div>
 
         <div style="margin-left:18px; margin-top: 10px; color:#157370">
             <div style="margin-top:5px">
-                <i class="fa fa-cube" aria-hidden="true" style="font-size: 20px"></i>
-                <span>Add a Product</span>
+                <i class="fa fa-cube" aria-hidden="true" style="font-size: 25px"></i>
+                <a th:href="@{/product}"><span>Add a Product</span></a>
             </div>
             <div style="margin-top:5px">
-                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px"></i>
-                <span style="">View All Products</span>
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 25px"></i>
+                <a th:href="@{/product}"><span style="">View All Products</span></a>
             </div>
         </div>
     </div>
@@ -63,12 +63,12 @@
 
         <div style="margin-left:18px; margin-top: 10px; color:#157370">
             <div style="margin-top:5px">
-                <i class="fa fa-plus" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
-                <span>Create Bins</span>
+                <i class="fa fa-plus" aria-hidden="true" style="font-size: 25px; color:#2B7A78"></i>
+                <a th:href="@{/bin}"><span>Create Bins</span></a>
             </div>
             <div style="margin-top:5px">
-                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
-                <span>View All Bins</span>
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 25px; color:#2B7A78"></i>
+                <a th:href="@{/bin}"><span>View All Bins</span></a>
             </div>
         </div>
     </div>
@@ -81,12 +81,12 @@
 
         <div style="margin-left:18px; margin-top: 10px; color:#157370">
             <div style="margin-top:5px">
-                <i class="fa fa-plus" aria-hidden="true" style="font-size: 20px"></i>
-                <span>Create Bin Inventory Entry</span>
+                <i class="fa fa-plus" aria-hidden="true" style="font-size: 25px"></i>
+                <a th:href="@{/binSku}"><span>Create Bin Inventory Entry</span></a>
             </div>
             <div style="margin-top:5px">
-                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px"></i>
-                <span>View Bin Inventory List</span>
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 25px"></i>
+                <a th:href="@{/binSku}"><span>View Bin Inventory List</span></a>
             </div>
         </div>
     </div>
@@ -103,30 +103,38 @@
 
         <div style="margin-left:18px; margin-top: 10px; color:#157370">
             <div style="margin-top:5px">
-                <i class="fa fa-plus" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
-                <span>Create Channel</span>
+                <i class="fa fa-plus" aria-hidden="true" style="font-size: 25px; color:#2B7A78"></i>
+                <a th:href="@{/channel}"><span>Create Channel</span></a>
             </div>
             <div style="margin-top:5px">
-                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px; color:#2B7A78"></i>
-                <span>View All Channels</span>
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 25px; color:#2B7A78"></i>
+                <a th:href="@{/channel}"><span>View All Channels</span></a>
+            </div>
+            <div style="margin-top:5px">
+                <i class="fa fa-link" aria-hidden="true" style="font-size: 25px; color:#2B7A78"></i>
+                <a th:href="@{/channelListing}"><span>Add Channel Listing</span></a>
             </div>
         </div>
     </div>
 
     <div class="col-sm-5">
         <div style="color:#17252A">
-            <i class="fa fa-clipboard" aria-hidden="true" style="font-size: 40px"></i>
+            <i class="fa fa-clipboard" aria-hidden="true" style="font-size: 35px"></i>
             <span style="font-size: 25px;">Orders</span>
         </div>
 
         <div style="margin-left:18px; margin-top: 10px; color:#157370">
             <div style="margin-top:5px">
-                <i class="fa fa-plus" aria-hidden="true" style="font-size: 20px"></i>
-                <span style="">Create Orders</span>
+                <i class="fa fa-plus" aria-hidden="true" style="font-size: 25px"></i>
+                <a th:href="@{/order}"><span style="">Create Orders</span></a>
             </div>
             <div style="margin-top:5px">
-                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 20px"></i>
-                <span style="">View, Allocate, Invoice Orders</span>
+                <i class="fa fa-th-list" aria-hidden="true" style="font-size: 25px"></i>
+                <a th:href="@{/order}"><span style="">View Orders</span></a>
+            </div>
+            <div style="margin-top:5px">
+                <i class="fa fa-share-square-o" aria-hidden="true" style="font-size: 25px"></i>
+                <a th:href="@{/order}"><span style="">Allocate, Invoice Orders</span></a>
             </div>
         </div>
     </div>

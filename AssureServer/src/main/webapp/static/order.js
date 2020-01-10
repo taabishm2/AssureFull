@@ -6,19 +6,17 @@ function getOrderApiUrl(){
 
 //Add a order
 function addOrder(event){
-
 	var $form = $("#order-form");
 	var json = toJson($form);
 	var url = getOrderApiUrl();
 
-	sessionStorage.setItem('orderItems',sessionStorage.getItem('orderItems')+']');
+    var orderItemString = sessionStorage.getItem('orderItems');
+    var requestString = orderItemString.substring(0,orderItemString.length-1) + "]";
 
+    var orderString = sessionStorage.getItem('orderIdentifier');
+    var orderTrimmedString = orderString.substring(0,orderString.length-1) + ", \"orderItemList\":" + requestString + "}";
 
-    var orderJson = JSON.parse(sessionStorage.getItem('orderIdentifier'))
-    orderJson["orderItemList"] = sessionStorage.getItem('orderItems');
-
-    console.log(orderJson);
-    console.log(JSON.stringify(orderJson));
+    console.log("REEEEEEEQUESSSSSTTTT",orderTrimmedString);
 
 	$.ajax({
 	   url: url,
@@ -52,18 +50,9 @@ function validateOrder(event){
        },
 	   success: function(response) {
 	   		getOrderList();
-	   		document.getElementById('clientId').setAttribute('readonly','true');
-	   		document.getElementById('customerId').setAttribute('readonly','true');
-	   		document.getElementById('channelId').setAttribute('readonly','true');
-	   		document.getElementById('channelOrderId').setAttribute('readonly','true');
 
 	   		sessionStorage.setItem("orderIdentifier",JSON.stringify(parsedJson));
-
-            document.getElementById("order-entry").style.display = "none";
-            document.getElementById("order-validate-button").style.display = "none";
-
-            document.getElementById("order-item-entry").style.display = "block";
-            document.getElementById("order-submit-button").style.display = "block";
+	   		toggleOrderCreateModify();
 
 	   		getSuccessSnackbar("Order Validated.");
 	   },
@@ -73,22 +62,45 @@ function validateOrder(event){
 }
 
 sessionStorage.setItem('orderItems','[');
+sessionStorage.setItem('orderItemList', JSON.stringify([]));
+
+function toggleOrderCreateModify(){
+document.getElementById('clientId').setAttribute('readonly','true');
+	   		document.getElementById('customerId').setAttribute('readonly','true');
+	   		document.getElementById('channelId').setAttribute('readonly','true');
+	   		document.getElementById('channelOrderId').setAttribute('readonly','true');
+
+	   		            document.getElementById("order-entry").style.display = "none";
+                        document.getElementById("order-validate-button").style.display = "none";
+
+                        document.getElementById("order-item-entry").style.display = "block";
+                        document.getElementById("order-submit-button").style.display = "block";
+}
 
 function validateOrderItem(event){
 	var $form = $("#order-item-form");
 	var json = toJson($form);
+	var parsedJson = JSON.parse(json);
 
-	sessionStorage.setItem('orderItems',sessionStorage.getItem('orderItems')+json+',')
+    console.log(sessionStorage.getItem('orderItems'));
 
 	var orderDetails = sessionStorage.getItem("orderIdentifier");
 	var orderJson = JSON.parse(orderDetails);
 
-	var parsedJson = JSON.parse(json);
+	$.extend(orderJson, parsedJson);
+	json = JSON.stringify(orderJson);
 
-	$.extend(parsedJson, orderJson);
-	json = JSON.stringify(parsedJson);
+	var url = "/assure/api/orderitem/validate";
+	console.log(parsedJson);
 
-	var url = getOrderApiUrl()+"/orderitem/validate";
+	var parsedOrderItemList = JSON.parse(sessionStorage.getItem('orderItemList'));
+	if(parsedOrderItemList.includes(sessionStorage.getItem('orderItemList'))){
+	    alert("Product already added");
+	    return false;
+	}
+
+	parsedOrderItemList.push(parsedJson['globalSkuId']);
+	sessionStorage.setItem('orderItemList', JSON.stringify(parsedOrderItemList));
 
 	$.ajax({
 	   url: url,
@@ -98,10 +110,8 @@ function validateOrderItem(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		getOrderList();
-
-	   		sessionStorage.setItem(parsedJson['globalSkuId'],'json');
-
+            sessionStorage.setItem('orderItems',sessionStorage.getItem('orderItems')+JSON.stringify(parsedJson)+',');
+            console.log(sessionStorage.getItem('orderItems'));
 	   		getSuccessSnackbar("Item Added");
 	   },
 	   error: handleAjaxError
@@ -129,20 +139,21 @@ function displayOrderList(data){
 
     if(data.length == 0){
 	    var row = '<tr>'
-        + '<td style="text-align:center; font-weight: bold; background-color:#ffebe8;" colspan="4">No Bin Inventory Items</td>'
+        + '<td style="text-align:center; font-weight: bold; background-color:#ffebe8;" colspan="7">No Bin Inventory Items</td>'
         + '</tr>';
         $tbody.append(row);
     }
 
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml =  '<button class="btn btn-primary btn-sm" onclick="displayOrderDetails(' + e.id + ')"><i class="fa fa-info-circle" aria-hidden="true"></i>&nbspDetails</button>'
+		var buttonHtml =  '<button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="displayOrderDetails(' + e.id + ')"><i class="fa fa-info-circle"></i>&nbspDetails</button><button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="allocateOrder(' + e.id + ')"><i class="fa fa-link"></i>&nbspAllocate</button><button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="invoiceOrder(' + e.id + ')"><i class="fa fa-print"></i>&nbspInvoice</button>'
 		var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
 		+ '<td style="text-align:center;">' + e.clientId + '</td>'
 		+ '<td style="text-align:center;">' + e.customerId + '</td>'
 		+ '<td>' + e.channelId + '</td>'
 		+ '<td>' + e.channelOrderId + '</td>'
+		+ '<td>' + e.status + '</td>'
 	    + '<td align="right">' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);

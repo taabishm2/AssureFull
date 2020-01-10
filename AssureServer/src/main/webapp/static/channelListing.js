@@ -29,33 +29,28 @@ var channelId;
 var addListRequestBody = [];
 
 function processData(){
-    console.log("Processing Data");
     var $form = $("#channelListing-form");
 	var channelJson = toJson($form);
-	console.log("CHANNEL-JSON: ",channelJson);
 
 	var obj = JSON.parse(channelJson);
 	channelId = obj["channelId"];
 
 	var file = $('#channelListingFile')[0].files[0];
-	console.log("FIRST FILE: ",file);
 	readFileData(file, readFileDataCallback);
+	return false;
 }
 
 function readFileDataCallback(results){
 	fileData = results.data;
-	console.log("FILEDATA: ",fileData);
 	uploadRows();
 }
 
 function uploadRows(){
 	var url = getChannelListingUrl()+"/list/"+channelId;
 
-    console.log("URL: ",url)
     var formList = [];
     var processCount;
 	for(processCount=0; processCount<fileData.length; processCount++){
-	    console.log("FILE ROW: ",fileData[processCount]);
 	    formList.push(fileData[processCount]);
 	}
 
@@ -72,6 +67,7 @@ function uploadRows(){
        },	   
 	   success: function(response) {
 	        getChannelListingList();
+	        $('#exampleModal').modal('toggle');
 	   		getSuccessSnackbar("Channel Listings Created.");
 	   },
 	   error: function(response){
@@ -161,11 +157,8 @@ function populateDropdown(){
 function init(){
 
 	$('#refresh-data').click(getChannelListingList);
-	$('#upload-data').click(displayUploadData);
-	$('#add-channelListing').click(processData);
-	$('#download-errors').click(downloadErrors);
+	$('#channelListing-form').submit(processData);
     $('#channelListingFile').on('change', updateFileName)
-
 }
 
 $(document).ready(init);

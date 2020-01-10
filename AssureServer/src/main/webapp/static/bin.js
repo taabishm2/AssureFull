@@ -19,6 +19,7 @@ function addBin(event){
        },
 	   success: function(response) {
     	   getBinList();
+    	   $('#exampleModal').modal('toggle');
     	   getSuccessSnackbar("Bins Created");
 	   },
 	   error: handleAjaxError

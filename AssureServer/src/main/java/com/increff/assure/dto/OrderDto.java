@@ -66,7 +66,6 @@ public class OrderDto extends AbstractService {
     }
 
     private void validateOrder(OrderPojo orderPojo) throws ApiException {
-        System.out.println("HIT VALIDATION DTO VALIDATOR");
         if (!consumerService.getCheckId(orderPojo.getClientId()).getType().equals(ConsumerType.CLIENT))
             throw new ApiException("Invalid ClientID");
 

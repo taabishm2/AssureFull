@@ -25,5 +25,5 @@ public class OrderItemValidationForm {
     private String channelOrderId;
 
     @NotNull
-    private Long quantity;
+    private Long orderedQuantity;
 }

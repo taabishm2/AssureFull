@@ -19,6 +19,7 @@ function addConsumer(event){
        },
 	   success: function(response) {
 	   		getConsumerList();
+	   		$('#exampleModal').modal('toggle');
             getSuccessSnackbar("Consumer Created.");
 	   },
 	   error: handleAjaxError

@@ -30,11 +30,12 @@
                     </button>
                 </div>
                 <form id="product-form">
-                <div class="modal-body">
+                    <div class="modal-body">
 
                         <div class="form-group" id="client-dropdown">
                             <label for="clientId">Client:</label>
-                            <select class="form-control" id="clientId" name="clientId" required title="Enter a ClientID">
+                            <select class="form-control" id="clientId" name="clientId" required
+                                    title="Enter a ClientID">
                                 <option disabled hidden selected value="none">
                                     Select an Option
                                 </option>
@@ -47,30 +48,30 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="product-file">
-                                            <input class="custom-file-input" id="productFile" type="file" required>
+                                            <input class="custom-file-input" id="productFile" required type="file">
                                             <label class="custom-file-label" for="productFile" id="productFileName">Choose
                                                 CSV
                                                 File</label>
                                         </div>
-                                        <a target="_blank" th:href="@{src/main/resources/productSample.csv}">Download Sample</a>
-
+                                        <a target="_blank" th:href="@{src/main/resources/productSample.csv}">Download
+                                            Sample</a>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-primary" id="process-data" type="button">Upload</button>
-                    <button class="btn btn-warning" id="download-errors" type="button">Download Errors
-                    </button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-primary" id="process-data" type="submit">Upload</button>
+                        <button class="btn btn-warning" id="download-errors" type="button">Download Errors
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
+
     <div class="body-content">
         <div class="table-display">
             <table class="table table-sm table-striped" id="product-table">
@@ -98,13 +99,14 @@
             </table>
         </div>
     </div>
+
     <!-- product Edit Modal -->
-    <div class="modal" id="edit-product-modal" role="dialog" tabindex="-1" >
+    <div class="modal" id="edit-product-modal" role="dialog" tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fa fa-wrench" aria-hidden="true"></i>
+                        <i aria-hidden="true" class="fa fa-wrench"></i>
                         Edit Product Details
                     </h5>
                     <button aria-label="Close" class="close" data-dismiss="modal" type="button">
@@ -116,34 +118,36 @@
                         <div class="form-group" style="width: 100%; margin-top:5px;">
                             <div class="col-sm-3 col-form-label" style="text-align:right;">Name</div>
                             <div class="col-sm-9">
-                                <input class="form-control" name="name" placeholder="Enter Name" type="text" style="float:left; width:100%" required>
+                                <input class="form-control" name="name" placeholder="Enter Name" required
+                                       style="float:left; width:100%" type="text">
                             </div>
                         </div>
                         <div class="form-group" style="width: 100%; margin-top:5px;">
                             <div class="col-sm-3 col-form-label" style="text-align:right">Brand ID</div>
                             <div class="col-sm-9">
-                                <input class="form-control" name="brandId" placeholder="Enter Brand ID" type="text" style="float:left; width:100%" required>
+                                <input class="form-control" name="brandId" placeholder="Enter Brand ID" required
+                                       style="float:left; width:100%" type="text">
                             </div>
                         </div>
                         <div class="form-group" style="width: 100%; margin-top:5px;">
                             <div class="col-sm-3 col-form-label" style="text-align:right">MRP</div>
                             <div class="col-sm-9">
-                                <input class="form-control" name="mrp" placeholder="Enter MRP" type="text" style="float:left; width:100%" required>
+                                <input class="form-control" name="mrp" pattern="[0-9]*" placeholder="Enter MRP"
+                                       required style="float:left; width:100%" title="Enter a Valid MRP"
+                                       type="text">
                             </div>
                         </div>
                         <div class="form-group" style="width: 100%; margin-top:5px;">
                             <div class="col-sm-3 col-form-label" style="text-align:right">Description</div>
                             <div class="col-sm-9">
                                 <input class="form-control" name="description" placeholder="Enter Description"
-                                       type="text" style="float:left; width:100%" required>
+                                       required style="float:left; width:100%" type="text">
                             </div>
                         </div>
-                        <input name="clientId" type="hidden">
-                        <input name="clientSkuId" type="hidden">
                     </div>
                     <div class="modal-footer" style="width: 100%; margin-top: 25px;  padding-bottom: 10px;">
                         <button class="btn btn-secondary" data-dismiss="modal" type="button">Cancel</button>
-                        <button class="btn btn-primary" id="update-product" type="button">Update</button>
+                        <button class="btn btn-primary" id="update-product" type="submit">Update</button>
                     </div>
                 </form>
             </div>
