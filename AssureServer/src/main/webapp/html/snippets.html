@@ -16,7 +16,7 @@
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #17252A; font-weight: 400;"
      th:fragment="navbar">
     <nav class="navbar navbar-light" style="padding-right:0px">
-        <a class="navbar-brand" href="@{/html/index}" style="color:#FEFFFF; font-weight: 500;">
+        <a class="navbar-brand" href="@{/}" style="color:#FEFFFF; font-weight: 500;">
             <span class="increff-client-icons increff-logo" style="font-size: 0.8em; color:#FEFFFF"></span>
             <span class="increff-client-icons increff-text" style="font-size: 0.8em; color:#FEFFFF"></span>
         </a>
@@ -33,37 +33,13 @@
                         class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item dropdown">
-                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
-                   href="#" role="button" style="color:#FEFFFF;">
-                    Consumers
-                </a>
-                <div aria-labelledby="navbarDropdown" class="dropdown-menu">
-                    <a class="dropdown-item" th:href="@{/consumer}">View Consumers</a>
-                    <a class="dropdown-item" th:href="@{/consumer}">Add Consumers</a>
-                </div>
+                <a class="nav-link" style="color:#FEFFFF;" th:href="@{/consumer}">Consumers</a>
             </li>
             <li class="nav-item dropdown">
-                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
-                   href="#" role="button" style="color:#FEFFFF;">
-                    Products
-                </a>
-                <div aria-labelledby="navbarDropdown" class="dropdown-menu">
-                    <a class="dropdown-item" th:href="@{/product}">View Product List</a>
-                    <a class="dropdown-item" th:href="@{/product}">Add Product</a>
-                </div>
+                <a class="nav-link" style="color:#FEFFFF;" th:href="@{/product}">Products</a>
             </li>
             <li class="nav-item dropdown">
-                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
-                   href="#" role="button" style="color:#FEFFFF;">
-                    Bins
-                </a>
-                <div aria-labelledby="navbarDropdown" class="dropdown-menu">
-                    <a class="dropdown-item" th:href="@{/bin}">View Bin List</a>
-                    <a class="dropdown-item" th:href="@{/bin}">Add Bin</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" th:href="@{/binSku}">View Bin Inventory</a>
-                    <a class="dropdown-item" th:href="@{/binSku}">Add Products to Bin</a>
-                </div>
+                <a class="nav-link" style="color:#FEFFFF;" th:href="@{/bin}">Bins</a>
             </li>
             <li class="nav-item dropdown">
                 <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
@@ -71,22 +47,13 @@
                     Channels
                 </a>
                 <div aria-labelledby="navbarDropdown" class="dropdown-menu">
-                    <a class="dropdown-item" th:href="@{/channel}">View Channels</a>
-                    <a class="dropdown-item" th:href="@{/channel}">Add Channels</a>
+                    <a class="dropdown-item" th:href="@{/channel}">Manage Channels</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" th:href="@{/channelListing}">Add Channels</a>
-                    <a class="dropdown-item" th:href="@{/channel}">Add Channels</a>
+                    <a class="dropdown-item" th:href="@{/channelListing}">Add Channel Listing</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
-                   href="#" role="button" style="color:#FEFFFF;">
-                    Orders
-                </a>
-                <div aria-labelledby="navbarDropdown" class="dropdown-menu">
-                    <a class="dropdown-item" th:href="@{/consumer}">View Orders</a>
-                    <a class="dropdown-item" th:href="@{/product}">Add Order</a>
-                </div>
+                <a class="nav-link" style="color:#FEFFFF;" th:href="@{/order}">Orders</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -98,15 +65,6 @@
         </form>
     </div>
 </nav>
-
-
-<div class="main-header" th:fragment="main_header">
-    <p class="page-header">
-        <span style="font-size: 40px">Page Title</span>
-        <br/>
-        <span class="text-muted" style="font-size:0.9em;">We'll never share your email with anyone else.</span>
-    </p>
-</div>
 
 <footer class="footer" th:fragment="footer">
     <div id="snackbar"></div>

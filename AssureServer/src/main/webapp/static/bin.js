@@ -4,6 +4,11 @@ function getBinApiUrl(){
 	return baseUrl + "/api/bin";
 }
 
+function getBinSkuApiUrl(){
+	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	return baseUrl + "/api/binSku";
+}
+
 function addBin(event){
     var $form = $("#bin-form");
 	var json = toJson($form);
@@ -18,10 +23,32 @@ function addBin(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-    	   getBinList();
-    	   $('#exampleModal').modal('toggle');
+    	   $('#binCreateModal').modal('toggle');
     	   getSuccessSnackbar("Bins Created");
     	   displayNewBinInfo(response);
+	   },
+	   error: handleAjaxError
+	});
+	return false;
+}
+
+//Add a binSku
+function addBinSku(event){
+	var $form = $("#binSku-form");
+	var json = toJson($form);
+	var url = getBinSkuApiUrl();
+
+	$.ajax({
+	   url: url,
+	   type: 'POST',
+	   data: json,
+	   headers: {
+       	'Content-Type': 'application/json'
+       },
+	   success: function(response) {
+	   		getBinSkuList();
+	   		$('#binInventoryModal').modal('toggle');
+	   		getSuccessSnackbar("Bin Inventory Item Created");
 	   },
 	   error: handleAjaxError
 	});
@@ -45,46 +72,66 @@ function displayNewBinInfo(response){
     	$('#binIdModal').modal('show');
 }
 
-//GET Method: Retrieve all Bins
-function getBinList(){
-	var url = getBinApiUrl();
-	$.ajax({
-	   url: url,
-	   type: 'GET',
-	   success: function(data) {
-	   		displayBinList(data);
-	   },
-	   error: handleAjaxError
-	});
+function getSearchBinInventoryList(){
+    var $form = $("#search-param-form");
+    var json = JSON.parse(toJson($form));
+    json['quantity'] = "0";
+    json = JSON.stringify(json);
+
+	var url = getBinSkuApiUrl() + '/search';
+
+		$.ajax({
+    	   url: url,
+    	   type: 'POST',
+    	   data: json,
+    	   headers: {
+           	'Content-Type': 'application/json'
+           },
+    	   success: function(response) {
+    	   		displayBinInventoryData(response);
+    	   		getSuccessSnackbar("Loaded Results");
+    	   },
+    	   error: handleAjaxError
+    	});
+    	return false;
+
 }
 
-//Display table of Bins
-function displayBinList(data){
-	var $tbody = $('#bin-table').find('tbody');
+function displayBinInventoryData(data){
+	var $tbody = $('#binSku-table').find('tbody');
 	$tbody.empty();
 
 	if(data.length == 0){
-	    var row = '<tr>'
-        + '<td style="text-align:center; font-weight: bold; background-color:#ffebe8;" colspan="2">No Bins Created</td>'
-        + '</tr>';
-        $tbody.append(row);
-	}
-
+    	    var row = '<tr>'
+            + '<td style="text-align:center; font-weight: bold; background-color:#ffebe8;" colspan="4">No Items</td>'
+            + '</tr>';
+            $tbody.append(row);
+    	}
+    console.log("Data: ",data);
 	for(var i in data){
 		var e = data[i];
 		var row = '<tr>'
-		+ '<td style="text-align:center; font-weight: bold;">' + e + '</td>'
-		+ '<td style="text-align:center;">CREATED</td>'
+		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
+		+ '<td>' + e.binId + '</td>'
+		+ '<td>' + e.globalSkuId + '</td>'
+		+ '<td style="text-align:center;">' + e.quantity + '</td>'
 		+ '</tr>';
+		console.log(row);
         $tbody.append(row);
 	}
+
+	document.getElementById("binSku-table").style.visibility = "visible";
+	document.getElementById("refresh-data").disabled = false;
+	getSuccessSnackbar("Refreshed");
+	return false;
 }
 
 //Initialization Code
 function init(){
 	$('#bin-form').submit(addBin);
-	$('#refresh-data').click(getBinList);
+	$('#binSku-form').submit(addBinSku);
+	$('#search-param-form').submit(getSearchBinInventoryList);
+	document.getElementById("refresh-data").disabled = true;
 }
 
 $(document).ready(init);
-$(document).ready(getBinList);

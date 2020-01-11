@@ -2,6 +2,7 @@ package com.increff.assure.service;
 
 import com.increff.assure.dao.BinSkuDao;
 import com.increff.assure.pojo.BinSkuPojo;
+import model.data.BinSkuData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,5 +58,9 @@ public class BinSkuService extends AbstractService {
     public void addList(List<BinSkuPojo> binSkuMasterPojoList) {
         for (BinSkuPojo binSkuPojo : binSkuMasterPojoList)
             addOrUpdate(binSkuPojo);
+    }
+
+    public List<BinSkuPojo> getSearchByBinAndProduct(Long binId, Long globalSkuId) {
+        return binSkuDao.getSearchByBinAndProduct(binId, globalSkuId);
     }
 }

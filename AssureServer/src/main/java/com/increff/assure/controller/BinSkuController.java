@@ -18,10 +18,10 @@ public class BinSkuController {
     @Autowired
     private BinSkuDto binSkuDto;
 
-    @ApiOperation(value = "Add to Bin-wise-Inventory")
-    @RequestMapping(path = "/api/binSku", method = RequestMethod.POST)
-    public void add(@Valid @RequestBody BinSkuForm form) throws ApiException {
-        binSkuDto.add(form);
+   @ApiOperation(value = "Add a Bin Inventory List")
+    @RequestMapping(path = "/api/binSku/list/{clientId}", method = RequestMethod.POST)
+    public void addList(@PathVariable Long clientId, @Valid @RequestBody List<BinSkuForm> formList) throws ApiException {
+        binSkuDto.addList(formList, clientId);
     }
 
     @ApiOperation(value = "Get a Bin-wise-Inventory item by ID")
@@ -34,5 +34,11 @@ public class BinSkuController {
     @RequestMapping(path = "/api/binSku", method = RequestMethod.GET)
     public List<BinSkuData> getAll() throws ApiException {
         return binSkuDto.getAll();
+    }
+
+    @ApiOperation(value = "Get list of all Bin-wise-Inventories")
+    @RequestMapping(path = "/api/binSku/search", method = RequestMethod.POST)
+    public List<BinSkuData> getSearchByBinAndProduct(@RequestBody BinSkuForm form) throws ApiException {
+        return binSkuDto.getSearchByBinAndProduct(form.getBinId(), form.getClientSkuId());
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.increff.assure.util.ConvertUtil.convert;
@@ -43,9 +44,19 @@ public class BinSkuDto {
     }
 
     @Transactional(rollbackFor = ApiException.class)
-    public void addList(List<BinSkuForm> formList) throws ApiException {
-        List<BinSkuPojo> binSkuMasterPojoList = convert(formList, BinSkuPojo.class);
+    public void addList(List<BinSkuForm> formList, Long clientId) throws ApiException {
+        List<BinSkuPojo> binSkuMasterPojoList = convertFormToPojo(formList, clientId);
         binSkuService.addList(binSkuMasterPojoList);
+    }
+
+    private List<BinSkuPojo> convertFormToPojo(List<BinSkuForm> formList, Long clientId) throws ApiException {
+        List<BinSkuPojo> pojoList = new ArrayList<>();
+        for(BinSkuForm form:formList){
+            BinSkuPojo pojo = convert(form, BinSkuPojo.class);
+            pojo.setGlobalSkuId(productService.getByClientAndClientSku(clientId, form.getClientSkuId()).getId());
+            pojoList.add(pojo);
+        }
+        return pojoList;
     }
 
     @Transactional(readOnly = true)
@@ -56,7 +67,7 @@ public class BinSkuDto {
 
     @Transactional(readOnly = true)
     public void validateProductAndBin(BinSkuForm binSkuPojo) throws ApiException {
-        productService.getCheckId(binSkuPojo.getGlobalSkuId());
+        productService.getByClientAndClientSku(binSkuPojo.getClientSkuId());
         binService.getCheckId(binSkuPojo.getBinId());
     }
 
@@ -69,5 +80,12 @@ public class BinSkuDto {
         inventoryPojo.setGlobalSkuId(binSkuPojo.getGlobalSkuId());
 
         inventoryService.addOrUpdate(inventoryPojo);
+    }
+
+    public List<BinSkuData> getSearchByBinAndProduct(Long binId, Long globalSkuId) throws ApiException {
+        binService.getCheckId(binId);
+        productService.getCheckId(globalSkuId);
+
+        return convert(binSkuService.getSearchByBinAndProduct(binId, globalSkuId), BinSkuData.class);
     }
 }

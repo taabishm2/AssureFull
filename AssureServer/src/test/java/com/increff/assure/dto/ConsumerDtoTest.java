@@ -45,7 +45,7 @@ public class ConsumerDtoTest extends AbstractUnitTest {
         assertEquals(ConsumerType.CLIENT, consumerDto.get(consumerPojo.getId()).getType());
 
         try {
-            consumerDto.add(FormConstructor.getConstructConsumer("Ti", ConsumerType.CLIENT));
+            consumerDto.add(FormConstructor.getConstructConsumer("", ConsumerType.CLIENT));
             fail();
         } catch (ApiException e) {
         }

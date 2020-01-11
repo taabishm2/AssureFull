@@ -13,8 +13,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
 
 public class BinSkuServiceTest extends AbstractUnitTest {
 
@@ -88,5 +92,38 @@ public class BinSkuServiceTest extends AbstractUnitTest {
 
         deficit = binSkuService.removeFromBin(binSkuPojo, 20L);
         assertEquals(20L, (long) deficit);
+    }
+
+    @Test
+    public void testGetSearchByBinAndProduct(){
+        binSkuDao.insert(PojoConstructor.getConstructBinSku(1L, 1L, 3L));
+        binSkuDao.insert(PojoConstructor.getConstructBinSku(1L, 2L, 3L));
+        binSkuDao.insert(PojoConstructor.getConstructBinSku(1L, 3L, 3L));
+        binSkuDao.insert(PojoConstructor.getConstructBinSku(2L, 1L, 3L));
+        binSkuDao.insert(PojoConstructor.getConstructBinSku(2L, 2L, 3L));
+        binSkuDao.insert(PojoConstructor.getConstructBinSku(3L, 4L, 3L));
+
+        List<BinSkuPojo> resultBinId1 = binSkuService.getSearchByBinAndProduct(1L, null);
+        assertEquals(2, resultBinId1.size());
+
+        List<BinSkuPojo> resultBinId2 = binSkuService.getSearchByBinAndProduct(2L, null);
+        assertEquals(2, resultBinId2.size());
+
+        List<BinSkuPojo> resultBinId4 = binSkuService.getSearchByBinAndProduct(4L, null);
+        assertEquals(1, resultBinId4.size());
+        assertEquals(3L, (long) resultBinId4.get(0).getGlobalSkuId());
+
+        List<BinSkuPojo> resultGsku1 = binSkuService.getSearchByBinAndProduct(null, 1L);
+        assertEquals(3L, resultGsku1.size());
+
+        List<BinSkuPojo> resultGsku3 = binSkuService.getSearchByBinAndProduct(null, 3L);
+        assertEquals(1L, resultGsku3.size());
+        assertEquals(4L, (long) resultBinId4.get(0).getBinId());
+
+        List<BinSkuPojo> resultGskuInv = binSkuService.getSearchByBinAndProduct(null, 13L);
+        assertEquals(0L, resultGskuInv.size());
+
+        List<BinSkuPojo> resultBinIdInv = binSkuService.getSearchByBinAndProduct(34L, null);
+        assertEquals(0L, resultBinIdInv.size());
     }
 }

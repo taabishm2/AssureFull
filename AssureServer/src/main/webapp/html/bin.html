@@ -11,16 +11,73 @@
         <p class="page-header">
             <span style="font-size: 20px">Bin Page</span>
             <br/>
-            <span class="text-muted" style="font-size:0.9em;">Add and View the created Bins.</span>
+            <span class="text-muted" style="font-size:0.9em;">Add Bins and manage Bin Inventory.</span>
         </p>
-        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
+        <button class="btn btn-primary" data-target="#binCreateModal" data-toggle="modal" type="button">
             <i aria-hidden="true" class="fa fa-plus" ></i>
             Create Bins
         </button>
-        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
+        <hr>
+        <button class="btn btn-primary" id="refresh-data" style="width:60" type="button">
+            <i aria-hidden="true" class="fa fa-refresh"></i>
+        </button>
+        <button class="btn btn-primary" data-target="#binInventoryModal" data-toggle="modal" type="button">
             <i aria-hidden="true" class="fa fa-cubes" ></i>
             Add Bin Inventory
         </button>
+        <!--Search Param Form-->
+        <hr style="margin-top:25px">
+        <div id="search-param-div" style="margin-top:15px">
+            <form id="search-param-form">
+                <div style="font-size: 1.3em">
+                    <i aria-hidden="true" class="fa fa-filter"></i> Filter
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="form-group col-md-4">
+                        <label for="binIdSearch" style="font-weight: bold;">Bin ID:</label>
+                        <input class="form-control" id="binIdSearch" name="binId"
+                               pattern="[0-9]*" placeholder="Enter Bin ID" type="text" style="border:0px; border-bottom:1px solid #2B7A78;">
+                        <br>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="globalSkuSearch" style="font-weight: bold;">Global SKU ID:</label>
+                        <input class="form-control" id="globalSkuSearch" name="globalSkuId"
+                               pattern="[0-9]*" placeholder="Enter GSKU ID" type="text" style="border:0px; border-bottom:1px solid #2B7A78;">
+                        <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <button class="btn btn-primary" id="search-button" type="submit">
+                            <i aria-hidden="true" class="fa fa-search"></i>
+                            &nbspSearch
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="body-content">
+        <div class="table-display">
+            <table class="table table-sm table-striped" id="binSku-table" style="visibility:hidden">
+                <thead>
+                <tr>
+                    <th colspan="4">Bin Inventory List
+                    </th>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:80px; text-align:center;">ID</th>
+                    <th scope="col">Bin ID</th>
+                    <th scope="col">Global SKU</th>
+                    <th scope="col" style="width:130px; text-align:center;">Quantity</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="binIdModal" role="dialog"
@@ -33,28 +90,27 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                    <div class="modal-body">
-                        <table class="table table-sm table-striped" id="new-bin-info-table" style="width:50%; margin:auto">
-                            <thead>
-                            <tr>
-                                <th scope="col" style="text-align:center;">Bin ID</th>
-                                <th scope="col" style="text-align:center;">Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                    </div>
+                <div class="modal-body" style="max-height: calc(100vh - 210px); overflow-y: auto;">
+                    <table class="table table-sm table-striped" id="new-bin-info-table" style="width:50%; margin:auto">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="text-align:center;">Bin ID</th>
+                            <th scope="col" style="text-align:center;">Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
+    <!-- Bin Create Modal -->
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="binCreateModal" role="dialog"
          tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -66,7 +122,6 @@
                 </div>
                 <form id="bin-form">
                     <div class="modal-body">
-
                         <div class="form-group">
                             <label for="binQuantity">Quantity</label><br/>
                             <input aria-describedby="nameHelp" class="form-control" id="binQuantity" name="binQuantity"
@@ -79,7 +134,6 @@
                                     Created.</small>
                             </div>
                         </div>
-
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
@@ -90,7 +144,68 @@
         </div>
     </div>
 
-
+    <!-- Bin Inventory Modal -->
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="binInventoryModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="binInvModalLabel">Add Bin Inventory Item</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="binSku-form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="binId">Bin ID</label>
+                            <input aria-describedby="binIdHelp" class="form-control" id="binId" name="binId"
+                                   pattern="[0-9]*" placeholder="Enter Bin ID" required title="This field is required"
+                                   type="text">
+                            <small class="form-text text-muted" id="binIdHelp">Bin ID should exist in created Bin
+                                table.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="globalSkuId">Global SKU ID</label>
+                            <input aria-describedby="globalSkuIdHelp" class="form-control" id="globalSkuId"
+                                   name="globalSkuId"
+                                   pattern="[0-9]*" placeholder="Enter GSKU ID" required title="This field is required"
+                                   type="text">
+                            <small class="form-text text-muted" id="globalSkuIdHelp">Product with GSKU must be
+                                registered.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Product Quantity</label>
+                            <input class="form-control" id="quantity" name="quantity"
+                                   pattern="[0-9]*" placeholder="Enter Product Quantity" required
+                                   title="This field is required"
+                                   type="text">
+                        </div>
+                        <div class="" role="document" style="margin-top:15px;">
+                            <div class="">
+                                <label for="product-upload-modal-body">Bin Inventory:</label>
+                                <div class="modal-body" id="product-upload-modal-body" style="padding:0px; margin-bottom:35px">
+                                    <div class="product-file">
+                                        <input class="custom-file-input" id="productFile" required type="file">
+                                        <label class="custom-file-label" for="productFile" id="productFileName">Upload
+                                            CSV
+                                            File</label>
+                                    </div>
+                                    <a target="_blank" th:href="@{/samples/productCsvSample.csv}" style="float:right; margin-top:5px;">
+                                        <i class="fa fa-download" aria-hidden="true"></i> Download CSV Sample
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="add-binSku" type="submit">Submit</button>
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <footer th:replace="snippets.html :: footer"></footer>

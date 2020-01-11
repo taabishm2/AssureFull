@@ -59,4 +59,14 @@ public class BinSkuDao extends AbstractDao<BinSkuPojo> {
             return new ArrayList<>();
         return resultList;
     }
+
+    public List<BinSkuPojo> getSearchByBinAndProduct(Long binId, Long globalSkuId) {
+
+        String queryStr = "SELECT c FROM BinSkuPojo c WHERE (:binId is null or c.binId = :binId) and (:globalSkuId is null or c.globalSkuId = :globalSkuId)";
+
+        TypedQuery<BinSkuPojo> query = entityManager.createQuery(queryStr, BinSkuPojo.class);
+        query.setParameter("binId", binId);
+        query.setParameter("globalSkuId", globalSkuId);
+        return query.getResultList();
+    }
 }

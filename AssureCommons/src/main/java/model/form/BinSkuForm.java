@@ -12,7 +12,7 @@ public class BinSkuForm {
     private Long binId;
 
     @NotNull
-    private Long globalSkuId;
+    private String clientSkuId;
 
     @NotNull
     private Long quantity;
