@@ -13,7 +13,7 @@ body {
   color: #17252A;
   width: 100%;
   font-size: 0.9em;
-  background-color: #F7F9FB;
+  background-color: #2B7A78;
   text-align:center;
   padding: 6px;
 }
@@ -34,6 +34,13 @@ a:link {
 .btn-primary:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:active:focus{
     background-color: #379e9b !important;
     border-color: #379e9b;
+}
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
 }
 
 .nav-item {
@@ -183,7 +190,7 @@ code {
   position: fixed;
   z-index: 1;
   right: 2%;
-  bottom: 30px;
+  top: 2%;
   z-index: 10005 !important;
 }
 
@@ -197,7 +204,6 @@ code {
   background-color:#F5FCC8;
   padding:2px;
 }
-
 
 #order-entry{
   display:block;
@@ -216,25 +222,31 @@ code {
   display: block;
 }
 
+th {
+  position: sticky;
+  top: 0px;  /* 0px if you don't have a navbar, but something is required */
+  background: white;
+}
+
 /* Animations to fade the snackbar in and out */
 @-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {top: 0; opacity: 0;}
+  to {top: 2%; opacity: 1;}
 }
 
 @keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {top: 0; opacity: 0;}
+  to {top: 2%; opacity: 1;}
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {top: 2%; opacity: 1;}
+  to {top: 0; opacity: 0;}
 }
 
 @keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {top: 2%; opacity: 1;}
+  to {top: 0; opacity: 0;}
 }
 
 @media (max-width: 600px)

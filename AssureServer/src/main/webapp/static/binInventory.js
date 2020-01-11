@@ -73,5 +73,4 @@ function init(){
 
 console.log(getBinSkuApiUrl());
 $(document).ready(init);
-$(document).ready(getBinSkuList);
 

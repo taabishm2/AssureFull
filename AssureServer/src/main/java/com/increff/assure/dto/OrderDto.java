@@ -23,6 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -69,8 +73,9 @@ public class OrderDto extends AbstractService {
         if (!consumerService.getCheckId(orderPojo.getClientId()).getType().equals(ConsumerType.CLIENT))
             throw new ApiException("Invalid ClientID");
 
-        if (!consumerService.getCheckId(orderPojo.getCustomerId()).getType().equals(ConsumerType.CUSTOMER))
-            throw new ApiException("Invalid CustomerID");
+        if (channelService.getCheckId(orderPojo.getChannelId()).getInvoiceType().equals(InvoiceType.SELF))
+            if (!consumerService.getCheckId(orderPojo.getCustomerId()).getType().equals(ConsumerType.CUSTOMER))
+                throw new ApiException("Invalid CustomerID");
 
         channelService.getCheckId(orderPojo.getChannelId());
     }
@@ -78,7 +83,7 @@ public class OrderDto extends AbstractService {
     @Transactional(rollbackFor = ApiException.class)
     private void addOrderItemsForOrder(List<OrderItemForm> orderItemFormList, Long orderId, Long clientId) throws ApiException {
         List<OrderItemPojo> orderItemList = convert(orderItemFormList, OrderItemPojo.class);
-        orderItemList.forEach(orderItem->orderItem.setOrderId(orderId));
+        orderItemList.forEach(orderItem -> orderItem.setOrderId(orderId));
         for (OrderItemPojo orderItem : orderItemList)
             validateOrderItem(orderItem, clientId);
 
@@ -126,6 +131,12 @@ public class OrderDto extends AbstractService {
 
     @Transactional(rollbackFor = ApiException.class)
     public void runAllocation(Long orderId) throws ApiException {
+        if (orderService.getCheckId(orderId).getStatus().equals(OrderStatus.ALLOCATED))
+            throw new ApiException("Order is already ALLOCATED");
+
+        if (orderService.getCheckId(orderId).getStatus().equals(OrderStatus.FULFILLED))
+            throw new ApiException("Cannot ALLOCATE a FULFILLED Order");
+
         Long globalSkuOfOrderItem, orderedQuantity, allocatedOrderItemQuantity;
 
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(orderId)) {
@@ -168,8 +179,12 @@ public class OrderDto extends AbstractService {
     @Transactional(rollbackFor = ApiException.class)
     public void fulfillOrder(Long orderId) throws ApiException, JsonProcessingException {
         OrderPojo order = orderService.getCheckId(orderId);
-        if (!order.getStatus().equals(OrderStatus.ALLOCATED))
+        if (order.getStatus().equals(OrderStatus.CREATED))
             throw new ApiException("Order is not Allocated");
+
+        File f = new File("C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//" + orderId + ".pdf");
+        if (f.exists() && !f.isDirectory())
+            return;
 
         if (channelService.getCheckId(order.getChannelId()).getInvoiceType().equals(InvoiceType.SELF)) {
             generateInvoicePdf(order);
@@ -228,5 +243,10 @@ public class OrderDto extends AbstractService {
 
     public void validateOrderForm(OrderValidationForm validationForm) throws ApiException {
         validateOrder(convert(validationForm, OrderPojo.class));
+    }
+
+    public List<OrderData> getByChannel(Long channelId) throws ApiException {
+        channelService.getCheckId(channelId);
+        return convert(orderService.getByChannel(channelId), OrderData.class);
     }
 }

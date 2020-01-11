@@ -1,10 +1,8 @@
-//Returns the URL to call the APIs
 function getConsumerApiUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/consumer";
 }
 
-//Add a consumer
 function addConsumer(event){
 	var $form = $("#consumer-form");
 	var json = toJson($form);
@@ -18,18 +16,19 @@ function addConsumer(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		getConsumerList();
 	   		$('#exampleModal').modal('toggle');
-            getSuccessSnackbar("Consumer Created.");
+            getSuccessSnackbar("Consumer Created");
 	   },
 	   error: handleAjaxError
 	});
 	return false;
 }
 
-//GET Method: Retrieve all Consumers
-function getConsumerList(){
-	var url = getConsumerApiUrl();
+function getSearchConsumerList(){
+    var $form = $("#search-param-form");
+    var json = JSON.parse(toJson($form));
+	var url = getConsumerApiUrl() + '/' + json['type'];
+
 	$.ajax({
 	   url: url,
 	   type: 'GET',
@@ -38,6 +37,7 @@ function getConsumerList(){
 	   },
 	   error: handleAjaxError
 	});
+	return false;
 }
 
 //Display table of Consumers
@@ -61,14 +61,20 @@ function displayConsumerList(data){
 		+ '</tr>';
         $tbody.append(row);
 	}
+
+	document.getElementById("consumer-table").style.visibility = "visible";
+	document.getElementById("refresh-data").disabled = false;
+	getSuccessSnackbar("Refreshed");
+	return false;
 }
 
 //Initialization Code
 function init(){
 	$('#consumer-form').submit(addConsumer);
-	$('#refresh-data').click(getConsumerList);
+	$('#refresh-data').click(getSearchConsumerList);
+	$('#search-param-form').submit(getSearchConsumerList);
+	document.getElementById("refresh-data").disabled = true;
 }
 
 $(document).ready(init);
-$(document).ready(getConsumerList);
 

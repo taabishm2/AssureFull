@@ -19,8 +19,8 @@ public class PdfGenerateUtil {
     public static final String OUTPUT_DIR;
 
     static {
-        RESOURCES_DIR = "AssureServer//src//main//resources//";
-        OUTPUT_DIR = "AssureServer//src//main//resources//output//";
+        RESOURCES_DIR = "C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//";
+        OUTPUT_DIR = "C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//";
     }
 
     public static void generate(Long orderId) throws ApiException {
@@ -40,7 +40,7 @@ public class PdfGenerateUtil {
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
         OutputStream out;
-        out = new java.io.FileOutputStream(OUTPUT_DIR + "//" + orderId + ".pdf");
+        out = new java.io.FileOutputStream(OUTPUT_DIR + orderId + ".pdf");
 
         try {
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);

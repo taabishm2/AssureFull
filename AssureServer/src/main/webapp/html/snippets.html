@@ -9,15 +9,16 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://storage.googleapis.com/www.increff.com/img/favicon.png?v=2" rel="icon" type="image/x-icon">
+    <link rel="stylesheet" href="https://storage.googleapis.com/static.increff.com/fonts/increff-fonts/increff-icons/1.0.0/css/style.css"/>
     <link rel="stylesheet" th:href="@{/static/app.css}">
 </head>
 
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #17252A; font-weight: 400;"
      th:fragment="navbar">
-    <nav class="navbar navbar-light">
-        <a th:href="@{/}" class="navbar-brand" style="color:#FEFFFF; font-weight: 500; z-index:10000;">
-            <img alt="" class="d-inline-block align-top" height="30" th:href="@{/static/Images/logo.png}" width="30">
-            Increff
+    <nav class="navbar navbar-light" style="padding-right:0px">
+        <a class="navbar-brand" href="@{/html/index}" style="color:#FEFFFF; font-weight: 500;">
+            <span class="increff-client-icons increff-logo" style="font-size: 0.8em; color:#FEFFFF"></span>
+            <span class="increff-client-icons increff-text" style="font-size: 0.8em; color:#FEFFFF"></span>
         </a>
     </nav>
     <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
@@ -112,8 +113,10 @@
 
     <div class="container">
         <span class="text-muted">
-            <i aria-hidden="true" class="fa fa-chevron-circle-up"></i>
-            Assure &copyIncreff 2019
+            <span style="color:#DEF2F1">
+                <i aria-hidden="true" class="fa fa-chevron-circle-up"></i>
+                Assure &copyIncreff 2019
+            </span>
         </span>
     </div>
 

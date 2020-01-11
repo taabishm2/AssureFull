@@ -13,10 +13,27 @@
             <br/>
             <span class="text-muted" style="font-size:0.9em;">Add, Display & Edit Product Details.</span>
         </p>
+        <button class="btn btn-primary" id="refresh-data" style="width:60" type="button">
+            <i aria-hidden="true" class="fa fa-refresh"></i>
+        </button>
         <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
-            <i aria-hidden="true" class="fa fa-plus"></i>
+            <i aria-hidden="true" class="fa fa-plus" ></i>
             &nbspAdd Product List
         </button>
+        <div style="margin-top:8px;">
+        <form id="productDisplayForm">
+            <select class="form-control" id="clientIdSelect" name="clientId" required
+                    title="Select a Client" style="width:30%; float:left; margin-right:5px;">
+                <option disabled hidden selected value="">
+                    Select a Client
+                </option>
+            </select>
+            <button class="btn btn-primary" type="submit" style="float:left">
+                <i aria-hidden="true" class="fa fa-list-ul"></i>
+                &nbspList Products
+            </button>
+        </form>
+        </div>
     </div>
     <!-- Modal -->
     <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
@@ -35,26 +52,25 @@
                         <div class="form-group" id="client-dropdown">
                             <label for="clientId">Client:</label>
                             <select class="form-control" id="clientId" name="clientId" required
-                                    title="Enter a ClientID">
-                                <option disabled hidden selected value="none">
-                                    Select an Option
+                                    title="Select a Client">
+                                <option disabled hidden selected value="">
+                                    Select a Client
                                 </option>
                             </select>
 
-                            <div class="" role="document">
+                            <div class="" role="document" style="margin-top:15px;">
                                 <div class="">
-                                    <div class="modal-header">
-                                        <p class="modal-title">Upload Product Master</p>
-                                    </div>
-                                    <div class="modal-body">
+                                    <label for="product-upload-modal-body">Product Master:</label>
+                                    <div class="modal-body" id="product-upload-modal-body" style="padding:0px; margin-bottom:35px">
                                         <div class="product-file">
                                             <input class="custom-file-input" id="productFile" required type="file">
-                                            <label class="custom-file-label" for="productFile" id="productFileName">Choose
+                                            <label class="custom-file-label" for="productFile" id="productFileName">Upload
                                                 CSV
                                                 File</label>
                                         </div>
-                                        <a target="_blank" th:href="@{AssureServer/src/main/resources/samples/productCsvSample.csv}">Download
-                                            Sample</a>
+                                        <a target="_blank" th:href="@{/samples/productCsvSample.csv}" style="float:right; margin-top:5px;">
+                                            <i class="fa fa-download" aria-hidden="true"></i> Download CSV Sample
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -64,8 +80,10 @@
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
                         <button class="btn btn-primary" id="process-data" type="submit">Upload</button>
-                        <button class="btn btn-warning" id="download-errors" type="button">Download Errors
-                        </button>
+                        <a id="error-file-link">
+                            <button class="btn btn-warning" id="download-errors" type="button">Download Errors
+                            </button>
+                        </a>
                     </div>
                 </form>
             </div>
@@ -73,19 +91,15 @@
     </div>
 
     <div class="body-content">
-        <div class="table-display">
+        <div class="table-display" style="margin-top:15px;">
             <table class="table table-sm table-striped" id="product-table">
                 <thead>
                 <tr>
                     <th colspan="8">Product List
-                        <button class="btn btn-primary" id="refresh-data" style="float: right; width:60" type="button">
-                            <i aria-hidden="true" class="fa fa-refresh"></i>
-                        </button>
                     </th>
                 </tr>
                 <tr>
                     <th scope="col" style="text-align:center">ID</th>
-                    <th scope="col" style="text-align:center">ClientID</th>
                     <th scope="col">ClientSKU</th>
                     <th scope="col">Name</th>
                     <th scope="col">BrandID</th>

@@ -14,8 +14,43 @@
             <span class="text-muted" style="font-size:0.9em;">Add and View the created Bins.</span>
         </p>
         <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
+            <i aria-hidden="true" class="fa fa-plus" ></i>
             Create Bins
         </button>
+        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
+            <i aria-hidden="true" class="fa fa-cubes" ></i>
+            Add Bin Inventory
+        </button>
+    </div>
+
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="binIdModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="binIdModalLabel">Created Bin Details.</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                    <div class="modal-body">
+                        <table class="table table-sm table-striped" id="new-bin-info-table" style="width:50%; margin:auto">
+                            <thead>
+                            <tr>
+                                <th scope="col" style="text-align:center;">Bin ID</th>
+                                <th scope="col" style="text-align:center;">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                    </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal -->
@@ -55,29 +90,7 @@
         </div>
     </div>
 
-    <div class="body-content">
-        <div class="table-display">
-            <table class="table table-sm table-striped" id="bin-table" style="width:70%; margin:auto">
-                <thead>
-                <tr>
-                    <th colspan="2">
-                        Bin Detail List &nbsp
-                        <button class="btn btn-primary" id="refresh-data" style="float: right; width:60" type="button">
-                            <i aria-hidden="true" class="fa fa-refresh"></i>
-                        </button>
-                    </th>
-                </tr>
-                <tr>
-                    <th scope="col" style="text-align:center;">ID</th>
-                    <th scope="col" style="text-align:center;">Status</th>
-                </tr>
-                </thead>
-                <tbody>
 
-                </tbody>
-            </table>
-        </div>
-    </div>
 </div>
 
 <footer th:replace="snippets.html :: footer"></footer>

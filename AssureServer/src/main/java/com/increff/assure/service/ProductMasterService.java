@@ -2,6 +2,7 @@ package com.increff.assure.service;
 
 import com.increff.assure.dao.ProductMasterDao;
 import com.increff.assure.pojo.ProductMasterPojo;
+import model.data.ProductMasterData;
 import model.form.ProductUpdateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class ProductMasterService extends AbstractService {
 
     private void checkIfProductExists(Long clientId, String clientSkuId) throws ApiException {
         ProductMasterPojo exists = productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId);
-        checkNull(exists, "ClientId:" + clientId + ", ClientSKU:" + clientSkuId + " already exists");
+        checkNull(exists, "Duplicate ClientSKUs present.");
     }
 
     public ProductMasterPojo getCheckId(Long id) throws ApiException {
@@ -55,5 +56,9 @@ public class ProductMasterService extends AbstractService {
         ProductMasterPojo exists = productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId);
         checkNotNull(exists, "Product with ClientID:"+clientId+" ClientSKUId:"+clientSkuId+" doesn't exist.");
         return exists;
+    }
+
+    public List<ProductMasterPojo> getByClientId(Long clientId) {
+        return productMasterDao.selectByClientId(clientId);
     }
 }

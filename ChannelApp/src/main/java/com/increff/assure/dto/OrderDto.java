@@ -8,6 +8,8 @@ import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ClientWrapper;
 import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
+import model.data.ChannelData;
+import model.data.ConsumerData;
 import model.data.OrderReceiptData;
 import model.form.OrderForm;
 import model.form.OrderItemValidationForm;
@@ -22,9 +24,8 @@ import java.util.List;
 public class OrderDto {
 
     public void add(@RequestBody ChannelAppOrderForm orderForm) throws ApiException {
-        OrderForm serverSideOrderForm = ClientWrapper.convert(orderForm);
-        //Autowire ClientWrapper
-        ClientWrapper.hitAddOrderApi(serverSideOrderForm);
+        OrderForm serverOrderForm = ClientWrapper.convert(orderForm);
+        ClientWrapper.hitAddOrderApi(serverOrderForm);
     }
 
     public ChannelAppOrderData get(@PathVariable Long id) throws ApiException {
@@ -48,7 +49,15 @@ public class OrderDto {
         ClientWrapper.hitOrderItemValidationApi(validationForm);
     }
 
-    public List<ChannelAppOrderData> getAll(Long channelId) {
+    public List<ChannelAppOrderData> getAll(Long channelId) throws ApiException {
         return ClientWrapper.hitGetOrdersByChannelApi(channelId);
+    }
+
+    public List<ConsumerData> getAllClients() {
+        return ClientWrapper.hitGetClientsApi();
+    }
+
+    public List<ChannelData> getAllChannels() {
+        return ClientWrapper.hitGetChannelsApi();
     }
 }

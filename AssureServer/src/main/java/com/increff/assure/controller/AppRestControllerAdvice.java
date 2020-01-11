@@ -1,5 +1,6 @@
 package com.increff.assure.controller;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.increff.assure.service.ApiException;
 import model.data.MessageData;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class AppRestControllerAdvice {
     public MessageData handle(ApiException e) {
         MessageData data = new MessageData();
         data.setMessage(e.getMessage());
-        System.out.println("Exception:ApiException-"+e.getMessage());
+        System.out.println("APIException: "+e.getMessage());
         return data;
     }
 
@@ -27,7 +28,14 @@ public class AppRestControllerAdvice {
     public MessageData handle(MethodArgumentNotValidException e) {
         MessageData data = new MessageData();
         data.setMessage("Invalid Input");
-        System.out.println("Exception:MethodArgumentNotValidException-"+e.getMessage());
+        return data;
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public MessageData handle(InvalidFormatException e) {
+        MessageData data = new MessageData();
+        data.setMessage("Invalid Data Type was passed: "+e.getMessage());
         return data;
     }
 
@@ -35,9 +43,10 @@ public class AppRestControllerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public MessageData handle(Throwable e) {
         MessageData data = new MessageData();
-        data.setMessage("An unknown error has occurred in Assure Server- " + e);
+        data.setMessage("Error: " + e.getMessage());
         e.printStackTrace();
-        System.out.println("Exception:InternalServerError-"+e.getMessage());
         return data;
     }
 }
+
+

@@ -10,9 +10,14 @@ import model.form.OrderForm;
 import model.form.OrderItemValidationForm;
 import model.form.OrderValidationForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Api
@@ -57,6 +62,10 @@ public class OrderController {
     public void validateOrder(@RequestBody OrderValidationForm validationForm) throws ApiException {
         orderDto.validateOrderForm(validationForm);
     }
+
+    @ApiOperation(value = "Gets list of all Orders for given Channel")
+    @RequestMapping(path = "/api/order/channel/{channelId}", method = RequestMethod.GET)
+    public List<OrderData> getByChannel(@PathVariable Long channelId) throws ApiException {
+        return orderDto.getByChannel(channelId);
+    }
 }
-
-

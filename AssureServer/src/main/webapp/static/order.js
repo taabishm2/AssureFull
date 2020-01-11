@@ -4,6 +4,21 @@ function getOrderApiUrl(){
 	return baseUrl + "/api/order";
 }
 
+function getClientNamesUrl(){
+    var baseUrl = $("meta[name=baseUrl]").attr("content")
+    return baseUrl + "/api/consumer/clients";
+}
+
+function getCustomerNamesUrl(){
+    var baseUrl = $("meta[name=baseUrl]").attr("content")
+    return baseUrl + "/api/consumer/customers";
+}
+
+function getChannelNamesUrl(){
+    var baseUrl = $("meta[name=baseUrl]").attr("content")
+    return baseUrl + "/api/channel";
+}
+
 //Add a order
 function addOrder(event){
 	var $form = $("#order-form");
@@ -16,17 +31,18 @@ function addOrder(event){
     var orderString = sessionStorage.getItem('orderIdentifier');
     var orderTrimmedString = orderString.substring(0,orderString.length-1) + ", \"orderItemList\":" + requestString + "}";
 
-    console.log("REEEEEEEQUESSSSSTTTT",orderTrimmedString);
+    console.log("Request: ",orderTrimmedString);
 
 	$.ajax({
 	   url: url,
 	   type: 'POST',
-	   data: json,
+	   data: orderTrimmedString,
 	   headers: {
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
 	   		getOrderList();
+	   		$('#exampleModal').modal('toggle');
 	   		getSuccessSnackbar("Order Placed.");
 	   },
 	   error: handleAjaxError
@@ -52,7 +68,7 @@ function validateOrder(event){
 	   		getOrderList();
 
 	   		sessionStorage.setItem("orderIdentifier",JSON.stringify(parsedJson));
-	   		toggleOrderCreateModify();
+	   		toggleOrderCreateToModify();
 
 	   		getSuccessSnackbar("Order Validated.");
 	   },
@@ -64,17 +80,22 @@ function validateOrder(event){
 sessionStorage.setItem('orderItems','[');
 sessionStorage.setItem('orderItemList', JSON.stringify([]));
 
-function toggleOrderCreateModify(){
+function toggleOrderCreateToModify(){
 document.getElementById('clientId').setAttribute('readonly','true');
-	   		document.getElementById('customerId').setAttribute('readonly','true');
-	   		document.getElementById('channelId').setAttribute('readonly','true');
-	   		document.getElementById('channelOrderId').setAttribute('readonly','true');
-
 	   		            document.getElementById("order-entry").style.display = "none";
                         document.getElementById("order-validate-button").style.display = "none";
 
                         document.getElementById("order-item-entry").style.display = "block";
                         document.getElementById("order-submit-button").style.display = "block";
+}
+
+function toggleOrderModifyToCreate(){
+document.getElementById('clientId').setAttribute('readonly','true');
+	   		            document.getElementById("order-entry").style.display = "block";
+                        document.getElementById("order-validate-button").style.display = "block";
+
+                        document.getElementById("order-item-entry").style.display = "none";
+                        document.getElementById("order-submit-button").style.display = "none";
 }
 
 function validateOrderItem(event){
@@ -149,12 +170,13 @@ function displayOrderList(data){
 
 	for(var i in data){
 		var e = data[i];
-		var infoButtonHtml = '<button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="displayOrderDetails(' + e.id + ')"><i class="fa fa-info-circle"></i>&nbspDetails</button>';
-		var allocateButtonHtml = '<button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="allocateOrder(' + e.id + ')"><i class="fa fa-link"></i>&nbspAllocate</button>';
-		var invoiceButtonHtml = '<button style="margin-right:2px;" class="btn btn-primary btn-sm" onclick="invoiceOrder(' + e.id + ')"><i class="fa fa-print"></i>&nbspInvoice</button>';
+		var infoButtonHtml = '<button style="margin-right:2px;" id="infobutton'+e.id+'" class="btn btn-primary btn-sm" onclick="displayOrderDetails(' + e.id + ')"><i class="fa fa-info-circle"></i>&nbspDetails</button>';
+		var allocateButtonHtml = '<button style="margin-right:2px;" id="allocbutton'+e.id+'" class="btn btn-primary btn-sm" onclick="allocateOrder(' + e.id + ')"><i class="fa fa-link"></i>&nbspAllocate</button>';
+		var invoiceButtonHtml = '<button style="margin-right:2px;" id="invoicebutton'+e.id+'" class="btn btn-primary btn-sm" onclick="invoiceOrder(' + e.id + ')"><i class="fa fa-print"></i>&nbspInvoice</button>';
 
 		var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
+		+ '<td>' + e.createdAt + '</td>'
 		+ '<td style="text-align:center;">' + e.clientId + '</td>'
 		+ '<td style="text-align:center;">' + e.customerId + '</td>'
 		+ '<td>' + e.channelId + '</td>'
@@ -163,6 +185,22 @@ function displayOrderList(data){
 	    + '<td align="right">' + infoButtonHtml + allocateButtonHtml + invoiceButtonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
+
+                if(e.status == "CREATED"){
+                document.getElementById("invoicebutton"+e.id).disabled = true;
+                document.getElementById("allocbutton"+e.id).disabled = false;
+                        }
+
+                if(e.status == "ALLOCATED"){
+                document.getElementById("invoicebutton"+e.id).disabled = false;
+                document.getElementById("allocbutton"+e.id).disabled = true;
+
+                }
+                if(e.status == "FULFILLED"){
+                document.getElementById("invoicebutton"+e.id).disabled = false;
+                document.getElementById("allocbutton"+e.id).disabled = true;
+
+                        }
 	}
 }
 
@@ -201,10 +239,87 @@ function invoiceOrder(orderId){
         	   success: function(response) {
         	       getOrderList();
             	   getSuccessSnackbar("Invoice Generated");
+            	   console.log("Displaying MODAL");
+            	   displayDownloadModal(orderId);
+            	   //alert("C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//"+orderId+".pdf");
         	   },
         	   error: handleAjaxError
         	});
         	return false;
+}
+
+function displayDownloadModal(orderId){
+	var $tbody = $('#invoice-link-table').find('tbody');
+	$tbody.empty();
+	var row = '<tr>'
+    		+ '<td style="text-align:center; font-weight: bold;">' + orderId + '</td>'
+    	    + '<td align="center">'
+    	    + '<a href="C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//'+orderId+'.pdf">'
+    	    + '<i class="fa fa-download" aria-hidden="true"></i>Download'
+    	    + '</a>'
+    	    + '</td>'
+    		+ '</tr>';
+	$tbody.append(row);
+	$('#downloadLinkModal').modal('show');
+}
+
+function loadClientNames(data){
+	var $clientDropdown = $('#clientId');
+	for(var client in data){
+        $clientDropdown.append('<option value=' + data[client].id + '>' + data[client].name + '</option>');
+	}
+}
+
+function loadCustomerNames(data){
+	var $customerDropdown = $('#customerId');
+	for(var customer in data){
+        $customerDropdown.append('<option value=' + data[customer].id + '>' + data[customer].name + '</option>');
+	}
+}
+
+function loadChannelNames(data){
+	var $channelDropdown = $('#channelId');
+	for(var channel in data){
+        $channelDropdown.append('<option value=' + data[channel].id + '>' + data[channel].name + '</option>');
+	}
+}
+
+function populateDropdown(){
+    var clientUrl = getClientNamesUrl();
+    var customerUrl = getCustomerNamesUrl();
+    var channelUrl = getChannelNamesUrl();
+    
+    $.ajax({
+           url: clientUrl,
+           type: 'GET',
+           success: function(data) {
+                loadClientNames(data);
+           },
+           error: handleAjaxError
+    });
+        
+        $.ajax({
+               url: customerUrl,
+               type: 'GET',
+               success: function(data) {
+                    loadCustomerNames(data);
+               },
+               error: handleAjaxError
+            });
+            
+     $.ajax({
+            url: channelUrl,
+            type: 'GET',
+            success: function(data) {
+                 loadChannelNames(data);
+            },
+            error: handleAjaxError
+         });
+}
+
+function resetOrderModal(){
+    sessionStorage.clear();
+    toggleOrderModifyToCreate();
 }
 
 //Initialization Code
@@ -219,4 +334,5 @@ function init(){
 
 $(document).ready(init);
 $(document).ready(getOrderList);
+$(document).ready(populateDropdown);
 

@@ -14,8 +14,10 @@ import java.time.ZonedDateTime;
 public class BaseEntity {
     @Version
     private Integer version;
+
     @CreationTimestamp
     private ZonedDateTime createdAt;
+
     @UpdateTimestamp
-    private ZonedDateTime modifiedAt;
+    private ZonedDateTime updatedAt;
 }

@@ -23,7 +23,7 @@ function updateProduct(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		getProductList();
+	   		getProductListByClient();
 	   		getSuccessSnackbar("Product Updated.");
 	   },
 	   error: handleAjaxError
@@ -31,16 +31,23 @@ function updateProduct(event){
 	return false;
 }
 
-function getProductList(){
-	var url = getProductUrl();
+function getProductListByClient(){
+        var $form = $("#productDisplayForm");
+    	var json = toJson($form);
+
+	var url = getProductUrl()+"/client/"+JSON.parse(json)['clientId'];
+	console.log(url);
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayProductList(data);  
+	        document.getElementById("product-table").style.visibility = "visible";
+	        document.getElementById("refresh-data").disabled = false;
+	   		displayProductList(data);
 	   },
 	   error: handleAjaxError
 	});
+	return false;
 }
 
 // FILE UPLOAD METHODS
@@ -61,20 +68,17 @@ function processData(){
 	clientId = obj["clientId"];
 
 	var file = $('#productFile')[0].files[0];
-	console.log("FILE: ",file);
 	readFileData(file, readFileDataCallback);
 	return false;
 }
 
 function readFileDataCallback(results){
 	fileData = results.data;
-	console.log("FILE DATA: ",fileData);
 	uploadRows();
 }
 
 function uploadRows(){
 	updateUploadDialog();
-	var url = getProductUrl()+"/list/"+clientId;
 
     var formList = [];
     var processCount;
@@ -82,17 +86,51 @@ function uploadRows(){
 	    formList.push(fileData[processCount]);
 	}
 
+	validateCsv(formList);
+}
+
+function validateCsv(formList){
+        var clientJson = toJson($("#product-form"));
+        clientId = JSON.parse(clientJson)["clientId"];
+        var url = getProductUrl()+"/validate/"+clientId;
+
+    	var json = JSON.stringify(formList);
+    	//Make ajax call
+    	$.ajax({
+    	   url: url,
+    	   type: 'POST',
+    	   data: json,
+    	   headers: {
+           	'Content-Type': 'application/json'
+           },
+    	   success: function(response) {
+    	        uploadProductMaster(formList, clientId);
+    	        getSuccessSnackbar("Product Master Uploaded");
+    	   },
+    	   error: function(response){
+    	        errorButtonActivate(JSON.parse(response.responseText)['message']);
+    	   		alert("Errors in CSV");
+    	   }
+    	});
+    	return false;
+}
+
+function errorButtonActivate(link){
+    document.getElementById("download-errors").disabled = false;
+    document.getElementById('error-file-link').href = link;
+}
+
+function uploadProductMaster(formList, clientId){
+    var url = getProductUrl()+"/list/"+clientId;
 	var json = JSON.stringify(formList);
-	//Make ajax call
 	$.ajax({
 	   url: url,
 	   type: 'POST',
 	   data: json,
 	   headers: {
        	'Content-Type': 'application/json'
-       },	   
+       },
 	   success: function(response) {
-	        getProductList();
 	        $('#exampleModal').modal('toggle');
 	   		getSuccessSnackbar("Products Added.");
 	   },
@@ -127,7 +165,6 @@ function displayProductList(data){
 		var buttonHtml =  '<button class="btn btn-primary btn-sm" onclick="displayEditProduct(' + e.clientId + ',\'' + e.clientSkuId + '\')"><i class="fa fa-wrench" aria-hidden="true"></i></button>'
 		var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
-		+ '<td style="text-align:center; font-weight: bold;">' + e.clientId + '</td>'
 		+ '<td>' + e.clientSkuId + '</td>'
 		+ '<td>'  + e.name + '</td>'
 		+ '<td>'  + e.brandId + '</td>'
@@ -194,12 +231,15 @@ function displayProduct(data){
 
 function loadClientNames(data){
 	var $clientDropdown = $('#clientId');
+	var $clientDisplayDropdown = $('#clientIdSelect');
+
 	for(var clientName in data){
 		var clientId = data[clientName];
 		var option = '<option value='+data[clientName].id+'>'
 		+ data[clientName].name
 		+ '</option>';
         $clientDropdown.append(option);
+        $clientDisplayDropdown.append(option);
 	}
 }
 
@@ -215,17 +255,19 @@ function populateDropdown(){
         });
 }
 
-//INITIALIZATION CODE
 function init(){
+    document.getElementById("product-table").style.visibility = "hidden";
+    document.getElementById("refresh-data").disabled = true;
+    document.getElementById("download-errors").disabled = true;
+
 	$('#product-edit-form').submit(updateProduct);
-	$('#refresh-data').click(getProductList);
+	$('#refresh-data').click(getProductListByClient);
 	$('#upload-data').click(displayUploadData);
 	$('#product-form').submit(processData);
 	$('#download-errors').click(downloadErrors);
-    $('#productFile').on('change', updateFileName)
-
+    $('#productFile').on('change', updateFileName);
+    $('#productDisplayForm').submit(getProductListByClient);
 }
 
 $(document).ready(init);
-$(document).ready(getProductList);
 $(document).ready(populateDropdown);

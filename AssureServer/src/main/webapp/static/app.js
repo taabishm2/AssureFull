@@ -49,7 +49,6 @@ function removeCustomAlert() {
     document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
 }
 
-
 //HELPER METHOD
 function toJson($form){
     var serialized = $form.serializeArray();

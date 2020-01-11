@@ -18,11 +18,14 @@ public class XmlGenerateUtil {
     public static void generate(OrderReceiptData orderItems) {
         try {
             String receiptFileName = orderItems.getOrderId() + ".xml";
-            File file = new File("AssureServer//src//main//resources//output//" + receiptFileName);
+            File file = new File("C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//" + receiptFileName);
+            System.out.println("FILE:"+file.getPath());
             JAXBContext jaxbContext = JAXBContext.newInstance(OrderReceiptData.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            System.out.println("MARSHALLED");
             jaxbMarshaller.marshal(orderItems, file);
+            System.out.println("XML FILE WRITTEN"+file.toString());
         } catch (JAXBException e) {
             e.printStackTrace();
         }

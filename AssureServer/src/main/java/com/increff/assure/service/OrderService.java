@@ -3,6 +3,7 @@ package com.increff.assure.service;
 import com.increff.assure.dao.OrderDao;
 import com.increff.assure.pojo.OrderPojo;
 import model.OrderStatus;
+import model.data.OrderData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,5 +45,9 @@ public class OrderService extends AbstractService {
 
     public Long getOrderClient(Long orderId) throws ApiException {
         return getCheckId(orderId).getClientId();
+    }
+
+    public List<OrderPojo> getByChannel(Long channelId) {
+        return orderDao.selectByChannel(channelId);
     }
 }

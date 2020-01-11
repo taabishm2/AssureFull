@@ -60,7 +60,7 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
             productService.add(duplicatePojo);
             fail("Duplicate Product was inserted");
         } catch (ApiException e) {
-            assertEquals(e.getMessage(), "ClientId:" + client.getId() + ", ClientSKU:PUMAX1SKU already exists");
+            assertEquals(e.getMessage(), "Duplicate ClientSKUs present.");
         }
     }
 
@@ -134,7 +134,7 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
             fail("Product AddList method not Transactional");
         }
         catch(ApiException e){
-            assertEquals("ClientId:" + client.getId() + ", ClientSKU:New-PUMAX1SKU4 already exists", e.getMessage());
+            assertEquals("Duplicate ClientSKUs present.", e.getMessage());
         }
     }
 

@@ -4,6 +4,7 @@ import com.increff.assure.dto.ProductMasterDto;
 import com.increff.assure.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import model.data.MessageData;
 import model.data.ProductMasterData;
 import model.form.ProductMasterForm;
 import model.form.ProductUpdateForm;
@@ -22,7 +23,6 @@ public class ProductMasterController {
     @ApiOperation(value = "Add a List of Products")
     @RequestMapping(path = "/api/product/list/{clientId}", method = RequestMethod.POST)
     public void addList(@PathVariable Long clientId, @Valid @RequestBody List<ProductMasterForm> formList) throws ApiException {
-        System.out.println("HIT THE API"+clientId);
         productMasterDto.addList(formList, clientId);
     }
 
@@ -48,5 +48,19 @@ public class ProductMasterController {
     @RequestMapping(path = "/api/product/{clientId}/{clientSku}", method = RequestMethod.PUT)
     public void update(@PathVariable Long clientId, @PathVariable String clientSku, @Valid @RequestBody ProductUpdateForm form) throws ApiException {
         productMasterDto.update(clientId, clientSku, form);
+    }
+
+    @ApiOperation(value = "Get list of all products by clientId")
+    @RequestMapping(path = "/api/product/client/{clientId}", method = RequestMethod.GET)
+    public List<ProductMasterData> getByClient(@PathVariable Long clientId) throws ApiException {
+        return productMasterDto.getByClientId(clientId);
+    }
+
+    @ApiOperation(value = "Validate products master list.")
+    @RequestMapping(path = "/api/product/validate/{clientId}", method = RequestMethod.POST)
+    public void validateList(@PathVariable Long clientId, @Valid @RequestBody List<ProductMasterForm> formList) throws ApiException {
+        System.out.println("Validating for client: "+clientId);
+        productMasterDto.validateList(formList, clientId);
+        System.out.println("Validating done");
     }
 }

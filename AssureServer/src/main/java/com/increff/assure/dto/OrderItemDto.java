@@ -55,6 +55,9 @@ public class OrderItemDto {
     }
 
     public void validateOrderItemForm(OrderItemValidationForm validationForm) throws ApiException {
+        if(validationForm.getOrderedQuantity() <= 0)
+            throw new ApiException("Quantity must be positive");
+
         ProductMasterPojo product = productService.getCheckId(validationForm.getGlobalSkuId());
         if(!product.getClientId().equals(validationForm.getClientId()))
             throw new ApiException("Client does not provide the mentioned Product");

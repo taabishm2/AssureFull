@@ -21,10 +21,28 @@ function addBin(event){
     	   getBinList();
     	   $('#exampleModal').modal('toggle');
     	   getSuccessSnackbar("Bins Created");
+    	   displayNewBinInfo(response);
 	   },
 	   error: handleAjaxError
 	});
 	return false;
+}
+
+function displayNewBinInfo(response){
+    	var $tbody = $('#new-bin-info-table').find('tbody');
+    	$tbody.empty();
+
+    	var arrayLength = response.length;
+        for (var i = 0; i < arrayLength; i++) {
+        console.log(i,response,response[i]);
+                	var row = '<tr>'
+                    		+ '<td style="text-align:center; font-weight: bold;">' + response[i] + '</td>'
+                    	     + '<td align="center" style="color:#4BB543"><i class="fa fa-check-circle-o"></i>&nbspCreated</td>'
+                    		+ '</tr>';
+                	$tbody.append(row);
+        }
+
+    	$('#binIdModal').modal('show');
 }
 
 //GET Method: Retrieve all Bins

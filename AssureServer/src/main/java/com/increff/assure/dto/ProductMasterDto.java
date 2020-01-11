@@ -6,8 +6,10 @@ import com.increff.assure.service.ConsumerService;
 import com.increff.assure.service.ProductMasterService;
 import com.increff.assure.util.CheckValid;
 import com.increff.assure.util.ConvertUtil;
+import com.increff.assure.util.FileWriteUtil;
 import com.increff.assure.util.NormalizeUtil;
 import model.ConsumerType;
+import model.data.MessageData;
 import model.data.ProductMasterData;
 import model.form.ProductMasterForm;
 import model.form.ProductUpdateForm;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProductMasterDto {
@@ -52,6 +55,7 @@ public class ProductMasterDto {
         List<ProductMasterPojo> productMasterPojoList = new ArrayList<>();
         for (ProductMasterForm productForm : formList) {
             normalizeAndValidateForm(productForm);
+
             productMasterPojoList.add(convertFormToPojo(productForm, clientId));
         }
         productService.addList(productMasterPojoList);
@@ -69,5 +73,31 @@ public class ProductMasterDto {
 
     public ProductMasterData getByClientAndClientSku(Long clientId, String clientSkuId) throws ApiException {
         return ConvertUtil.convert(productService.getByClientAndClientSku(clientId, clientSkuId), ProductMasterData.class);
+    }
+
+    public List<ProductMasterData> getByClientId(Long clientId) throws ApiException {
+        return ConvertUtil.convert(productService.getByClientId(clientId), ProductMasterData.class);
+    }
+
+    public void validateList(List<ProductMasterForm> formList, Long clientId) throws ApiException {
+        validateClient(clientId);
+        System.out.println("\tValidated Client");
+        List<MessageData> errorMessages = new ArrayList<>();
+        System.out.println("\tArray initialized");
+        for(int i=0; i<formList.size(); i++){
+            try {
+                System.out.println("\t\tValidating Form "+formList.get(i).getName()+" "+formList.get(i).getClientSkuId()+" "+formList.get(i).getBrandId()+" "+formList.get(i).getMrp()+" "+formList.get(i).getDescription());
+                CheckValid.validate((formList.get(i)));
+                System.out.println("\t\tCheck Valid Done");
+            } catch(ApiException e){
+                System.out.println("\t\tVALIDATION FAILURE: "+e.getMessage());
+                MessageData errorMessage = new MessageData();
+                errorMessage.setMessage("Error in Line: "+i+": "+e.getMessage()+"\n");
+                errorMessages.add(errorMessage);
+            }
+        }
+
+        if(errorMessages.size() != 0)
+            throw new ApiException(FileWriteUtil.writeErrorsToFile("productError"+formList.hashCode(),errorMessages));
     }
 }

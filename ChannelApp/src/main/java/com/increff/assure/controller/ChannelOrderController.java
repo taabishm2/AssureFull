@@ -7,6 +7,8 @@ import com.increff.assure.model.form.ChannelAppOrderForm;
 import com.increff.assure.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import model.data.ChannelData;
+import model.data.ConsumerData;
 import model.data.OrderReceiptData;
 import model.form.OrderItemValidationForm;
 import model.form.OrderValidationForm;
@@ -18,7 +20,7 @@ import java.util.List;
 
 @Api
 @RestController
-public class OrderApiController {
+public class ChannelOrderController {
 
     @Autowired
     private OrderDto orderDto;
@@ -57,5 +59,17 @@ public class OrderApiController {
     @RequestMapping(path = "/api/order/invoice", method = RequestMethod.POST)
     public void generateReceipt(@RequestBody OrderReceiptData orderReceiptData) throws ApiException {
         orderDto.generateReceipt(orderReceiptData);
+    }
+
+    @ApiOperation(value = "Gets a list of all Clients")
+    @RequestMapping(path = "/api/order/clients", method = RequestMethod.GET)
+    public List<ConsumerData> getAllClients() throws ApiException {
+        return orderDto.getAllClients();
+    }
+
+    @ApiOperation(value = "Gets a list of all Channels")
+    @RequestMapping(path = "/api/order/channels", method = RequestMethod.GET)
+    public List<ChannelData> getAllChannels() throws ApiException {
+        return orderDto.getAllChannels();
     }
 }
