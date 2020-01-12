@@ -8,6 +8,11 @@ function getChannelNamesUrl(){
     return baseUrl + "/api/channel";
 }
 
+function getClientNamesUrl(){
+    var baseUrl = $("meta[name=baseUrl]").attr("content")
+    return baseUrl + "/api/consumer/clients";
+}
+
 function getChannelListingList(){
 	var url = getChannelListingUrl();
 	$.ajax({
@@ -55,9 +60,13 @@ function validateCsv(formList){
 
     	var obj = JSON.parse(channelJson);
     	channelId = obj["channelId"];
+    	clientId = obj["clientId"];
 
-        var url = getChannelListingUrl() + "/validate/" + channelId;
+        var url = getChannelListingUrl() + "/validate/" + channelId + "/" + clientId;
+
+        console.log(json);
     	var json = JSON.stringify(formList);
+
     	//Make ajax call
     	$.ajax({
     	   url: url,
@@ -67,7 +76,7 @@ function validateCsv(formList){
            	'Content-Type': 'application/json'
            },
     	   success: function(response) {
-    	        uploadChannelListing(formList);
+    	        uploadChannelListing(formList, channelId, clientId);
     	   },
     	   error: function(response){
     	        errorButtonActivate(JSON.parse(response.responseText)['message']);
@@ -77,8 +86,8 @@ function validateCsv(formList){
     	return false;
 }
 
-function uploadChannelListing(formList){
-    var url = getChannelListingUrl()+"/list/"+channelId;
+function uploadChannelListing(formList, channelId, clientId){
+    var url = getChannelListingUrl() + "/list/" + channelId + "/" + clientId;
 	var json = JSON.stringify(formList);
     console.log(json);
 
@@ -167,13 +176,41 @@ function loadChannelNames(data){
 	}
 }
 
+function loadClientNames(data){
+	var clientDropdown = $('#clientId');
+	for(var client in data){
+		var clientId = data[client];
+		var option = '<option value='+data[client].id+'>'
+		+ data[client].name
+		+ '</option>';
+        clientDropdown.append(option);
+	}
+}
+
 function populateDropdown(){
+    populateChannelDropdown();
+    populateClientDropdown();
+}
+
+function populateChannelDropdown(){
     var channelUrl = getChannelNamesUrl();
     $.ajax({
            url: channelUrl,
            type: 'GET',
            success: function(data) {
                 loadChannelNames(data);
+           },
+           error: handleAjaxError
+        });
+}
+
+function populateClientDropdown(){
+    var channelUrl = getClientNamesUrl();
+    $.ajax({
+           url: channelUrl,
+           type: 'GET',
+           success: function(data) {
+                loadClientNames(data);
            },
            error: handleAjaxError
         });

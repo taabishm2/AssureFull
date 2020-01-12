@@ -67,13 +67,14 @@ public class ChannelListingDto {
         productService.getCheckId(listingPojo.getGlobalSkuId());
     }
 
-    public void addList(List<ChannelListingForm> formList, Long channelId) throws ApiException {
+    public void addList(List<ChannelListingForm> formList, Long channelId, Long clientId) throws ApiException {
         channelService.getCheckId(channelId);
+        consumerService.getCheckClient(clientId);
 
         List<ChannelListingPojo> channelListingPojos = new ArrayList<>();
         for (ChannelListingForm listingForm : formList) {
             normalizeAndValidateForm(listingForm);
-            channelListingPojos.add(convertFormToPojo(listingForm, channelId));
+            channelListingPojos.add(convertFormToPojo(listingForm, channelId, clientId));
         }
         channelListingService.addList(channelListingPojos);
     }
@@ -83,16 +84,19 @@ public class ChannelListingDto {
         CheckValid.validate((listingForm));
     }
 
-    private ChannelListingPojo convertFormToPojo(ChannelListingForm listingForm, Long channelId) throws ApiException {
+    private ChannelListingPojo convertFormToPojo(ChannelListingForm listingForm, Long channelId, Long clientId) throws ApiException {
         ChannelListingPojo listingPojo = ConvertUtil.convert(listingForm, ChannelListingPojo.class);
         listingPojo.setChannelId(channelId);
+        listingPojo.setClientId(clientId);
 
-        listingPojo.setGlobalSkuId(productService.getByClientAndClientSku(listingForm.getClientId(), listingForm.getClientSkuId()).getId());
+        listingPojo.setGlobalSkuId(productService.getByClientAndClientSku(clientId, listingForm.getClientSkuId()).getId());
         return listingPojo;
     }
 
-    public void validateList(List<ChannelListingForm> formList, Long channelId) throws ApiException {
+    public void validateList(List<ChannelListingForm> formList, Long channelId, Long clientId) throws ApiException {
         channelService.getCheckId(channelId);
+        consumerService.getCheckClient(clientId);
+
         List<MessageData> errorMessages = new ArrayList<>();
         HashSet<String> channelSkus = new HashSet<>();
         HashSet<String> clientAndClientSkus = new HashSet<>();
@@ -101,21 +105,16 @@ public class ChannelListingDto {
             try {
                 ChannelListingForm form = formList.get(i);
                 CheckValid.validate(form);
-                if (!consumerService.getCheckId(form.getClientId()).getType().equals(ConsumerType.CLIENT))
-                    throw new ApiException("Client ID Invalid");
 
                 if (channelSkus.contains(form.getChannelSkuId()))
                     throw new ApiException("Duplicate Channel SKU");
                 else
                     channelSkus.add(form.getChannelSkuId());
 
-                if (Objects.isNull(productService.getByClientAndClientSku(form.getClientId(), form.getClientSkuId())))
-                    throw new ApiException("Invalid Client, ClientSKU pair");
-
-                if (clientAndClientSkus.contains(form.getClientId() + "," + form.getClientSkuId()))
+                if (clientAndClientSkus.contains(clientId + "," + form.getClientSkuId()))
                     throw new ApiException("Duplicate Client, ClientSKU");
                 else
-                    clientAndClientSkus.add(form.getClientId() + "," + form.getClientSkuId());
+                    clientAndClientSkus.add(clientId + "," + form.getClientSkuId());
 
             } catch (ApiException e) {
                 MessageData errorMessage = new MessageData();
