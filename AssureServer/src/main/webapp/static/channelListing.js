@@ -29,12 +29,6 @@ var channelId;
 var addListRequestBody = [];
 
 function processData(){
-    var $form = $("#channelListing-form");
-	var channelJson = toJson($form);
-
-	var obj = JSON.parse(channelJson);
-	channelId = obj["channelId"];
-
 	var file = $('#channelListingFile')[0].files[0];
 	readFileData(file, readFileDataCallback);
 	return false;
@@ -46,14 +40,45 @@ function readFileDataCallback(results){
 }
 
 function uploadRows(){
-	var url = getChannelListingUrl()+"/list/"+channelId;
-
     var formList = [];
     var processCount;
 	for(processCount=0; processCount<fileData.length; processCount++){
 	    formList.push(fileData[processCount]);
 	}
 
+	validateCsv(formList);
+}
+
+function validateCsv(formList){
+        var $form = $("#channelListing-form");
+    	var channelJson = toJson($form);
+
+    	var obj = JSON.parse(channelJson);
+    	channelId = obj["channelId"];
+
+        var url = getChannelListingUrl() + "/validate/" + channelId;
+    	var json = JSON.stringify(formList);
+    	//Make ajax call
+    	$.ajax({
+    	   url: url,
+    	   type: 'POST',
+    	   data: json,
+    	   headers: {
+           	'Content-Type': 'application/json'
+           },
+    	   success: function(response) {
+    	        uploadChannelListing(formList);
+    	   },
+    	   error: function(response){
+    	        errorButtonActivate(JSON.parse(response.responseText)['message']);
+    	   		alert("Errors in CSV");
+    	   }
+    	});
+    	return false;
+}
+
+function uploadChannelListing(formList){
+    var url = getChannelListingUrl()+"/list/"+channelId;
 	var json = JSON.stringify(formList);
     console.log(json);
 
@@ -64,16 +89,12 @@ function uploadRows(){
 	   data: json,
 	   headers: {
        	'Content-Type': 'application/json'
-       },	   
+       },
 	   success: function(response) {
-	        getChannelListingList();
 	        $('#exampleModal').modal('toggle');
 	   		getSuccessSnackbar("Channel Listings Created.");
 	   },
 	   error: function(response){
-	   		//row.error=response.responseText
-	   		//errorData.push(row);
-	   		//uploadRows();
 	   		alert(response.responseText);
 	   }
 	});
@@ -106,6 +127,11 @@ function displayChannelListingList(data){
 		+ '</tr>';
         $tbody.append(row);
 	}
+}
+
+function errorButtonActivate(link){
+    document.getElementById("download-errors").disabled = false;
+    document.getElementById('error-file-link').href = link;
 }
 
 function resetUploadDialog(){
@@ -158,7 +184,8 @@ function init(){
 
 	$('#refresh-data').click(getChannelListingList);
 	$('#channelListing-form').submit(processData);
-    $('#channelListingFile').on('change', updateFileName)
+    $('#channelListingFile').on('change', updateFileName);
+    document.getElementById("download-errors").disabled = true;
 }
 
 $(document).ready(init);

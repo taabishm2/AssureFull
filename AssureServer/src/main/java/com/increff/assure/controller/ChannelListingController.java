@@ -27,7 +27,7 @@ public class ChannelListingController {
 
     @ApiOperation(value = "Gets a Channel-Listing by ID")
     @RequestMapping(path = "/api/channelListing/{id}", method = RequestMethod.GET)
-    public ChannelListingData get(@PathVariable long id) throws ApiException {
+    public ChannelListingData get(@PathVariable Long id) throws ApiException {
         return channelListingDto.get(id);
     }
 
@@ -35,5 +35,11 @@ public class ChannelListingController {
     @RequestMapping(path = "/api/channelListing", method = RequestMethod.GET)
     public List<ChannelListingData> getAll() throws ApiException {
         return channelListingDto.getAll();
+    }
+
+    @ApiOperation(value = "Validate List of Channel Listings for a Channel")
+    @RequestMapping(path = "/api/channelListing/validate/{channelId}", method = RequestMethod.POST)
+    public void validateList(@PathVariable Long channelId, @Valid @RequestBody List<ChannelListingForm> formList) throws ApiException {
+        channelListingDto.validateList(formList, channelId);
     }
 }

@@ -32,12 +32,53 @@ function addBin(event){
 	return false;
 }
 
-//Add a binSku
-function addBinSku(event){
-	var $form = $("#binSku-form");
-	var json = toJson($form);
-	var url = getBinSkuApiUrl();
+function processData(){
+	var file = $('#binSkuFile')[0].files[0];
+	readFileData(file, readFileDataCallback);
+	return false;
+}
 
+function readFileDataCallback(results){
+	fileData = results.data;
+	uploadRows();
+}
+
+function uploadRows(){
+    var formList = [];
+    var processCount;
+	for(processCount=0; processCount<fileData.length; processCount++){
+	    formList.push(fileData[processCount]);
+	}
+
+	validateCsv(formList);
+}
+
+function validateCsv(formList){
+
+        var url = getBinSkuApiUrl()+"/validate";
+    	var json = JSON.stringify(formList);
+    	//Make ajax call
+    	$.ajax({
+    	   url: url,
+    	   type: 'POST',
+    	   data: json,
+    	   headers: {
+           	'Content-Type': 'application/json'
+           },
+    	   success: function(response) {
+    	        uploadBinInventory(formList);
+    	   },
+    	   error: function(response){
+    	        errorButtonActivate(JSON.parse(response.responseText)['message']);
+    	   		alert("Errors in CSV");
+    	   }
+    	});
+    	return false;
+}
+
+function uploadBinInventory(formList){
+    var url = getBinSkuApiUrl()+"/list";
+	var json = JSON.stringify(formList);
 	$.ajax({
 	   url: url,
 	   type: 'POST',
@@ -46,13 +87,19 @@ function addBinSku(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		getBinSkuList();
-	   		$('#binInventoryModal').modal('toggle');
-	   		getSuccessSnackbar("Bin Inventory Item Created");
+	        $('#binInventoryModal').modal('toggle');
+	   		getSuccessSnackbar("Bin Inventory Uploaded");
 	   },
-	   error: handleAjaxError
+	   error: function(response){
+	   		alert(response.responseText);
+	   }
 	});
 	return false;
+}
+
+function errorButtonActivate(link){
+    document.getElementById("download-errors").disabled = false;
+    document.getElementById('error-file-link').href = link;
 }
 
 function displayNewBinInfo(response){
@@ -129,9 +176,11 @@ function displayBinInventoryData(data){
 //Initialization Code
 function init(){
 	$('#bin-form').submit(addBin);
-	$('#binSku-form').submit(addBinSku);
+	$('#binSku-form').submit(processData);
 	$('#search-param-form').submit(getSearchBinInventoryList);
+	$('#refresh-data').click(getSearchBinInventoryList);
 	document.getElementById("refresh-data").disabled = true;
+    document.getElementById("download-errors").disabled = true;
 }
 
 $(document).ready(init);

@@ -157,41 +157,17 @@
                 </div>
                 <form id="binSku-form">
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="binId">Bin ID</label>
-                            <input aria-describedby="binIdHelp" class="form-control" id="binId" name="binId"
-                                   pattern="[0-9]*" placeholder="Enter Bin ID" required title="This field is required"
-                                   type="text">
-                            <small class="form-text text-muted" id="binIdHelp">Bin ID should exist in created Bin
-                                table.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="globalSkuId">Global SKU ID</label>
-                            <input aria-describedby="globalSkuIdHelp" class="form-control" id="globalSkuId"
-                                   name="globalSkuId"
-                                   pattern="[0-9]*" placeholder="Enter GSKU ID" required title="This field is required"
-                                   type="text">
-                            <small class="form-text text-muted" id="globalSkuIdHelp">Product with GSKU must be
-                                registered.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="quantity">Product Quantity</label>
-                            <input class="form-control" id="quantity" name="quantity"
-                                   pattern="[0-9]*" placeholder="Enter Product Quantity" required
-                                   title="This field is required"
-                                   type="text">
-                        </div>
                         <div class="" role="document" style="margin-top:15px;">
                             <div class="">
-                                <label for="product-upload-modal-body">Bin Inventory:</label>
-                                <div class="modal-body" id="product-upload-modal-body" style="padding:0px; margin-bottom:35px">
-                                    <div class="product-file">
-                                        <input class="custom-file-input" id="productFile" required type="file">
-                                        <label class="custom-file-label" for="productFile" id="productFileName">Upload
+                                <label for="binSku-upload-modal-body">Bin Inventory:</label>
+                                <div class="modal-body" id="binSku-upload-modal-body" style="padding:0px; margin-bottom:35px">
+                                    <div class="binSku-file">
+                                        <input class="custom-file-input" id="binSkuFile" required type="file">
+                                        <label class="custom-file-label" for="binSkuFile" id="productFileName">Upload
                                             CSV
                                             File</label>
                                     </div>
-                                    <a target="_blank" th:href="@{/samples/productCsvSample.csv}" style="float:right; margin-top:5px;">
+                                    <a target="_blank" th:href="@{/samples/binSkuSample.csv}" style="float:right; margin-top:5px;">
                                         <i class="fa fa-download" aria-hidden="true"></i> Download CSV Sample
                                     </a>
                                 </div>
@@ -201,6 +177,10 @@
                     <div class="modal-footer">
                         <button class="btn btn-primary" id="add-binSku" type="submit">Submit</button>
                         <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                        <a id="error-file-link">
+                            <button class="btn btn-warning" id="download-errors" type="button">Download Errors
+                            </button>
+                        </a>
                     </div>
                 </form>
             </div>

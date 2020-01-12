@@ -13,6 +13,9 @@
             <br/>
             <span class="text-muted" style="font-size:0.9em;">Add, Display & Edit Channel Listing Details.</span>
         </p>
+        <button class="btn btn-primary" id="refresh-data" style="width:60" type="button">
+            <i aria-hidden="true" class="fa fa-refresh"></i>
+        </button>
         <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
             <i aria-hidden="true" class="fa fa-plus"></i>
             &nbspAdd Channel Listing
@@ -48,7 +51,7 @@
                             <div class="modal-header">
                                 <p class="modal-title">Upload Channel Listing CSV</p>
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-body" style="padding:0px; margin-bottom:35px">
                                 <div class="product-file">
                                     <input class="custom-file-input" id="channelListingFile" required type="file">
                                     <label class="custom-file-label" for="channelListingFile"
@@ -56,8 +59,9 @@
                                         CSV
                                         File</label>
                                 </div>
-                                <a target="_blank" th:href="@{AssureServer/src/main/resources/samples/channelListingCsvSample.csv}">Download Sample</a>
-
+                                <a target="_blank" th:href="@{/samples/channelListingCsvSample.csv}" style="float:right; margin-top:5px;">
+                                    <i class="fa fa-download" aria-hidden="true"></i> Download CSV Sample
+                                </a>
                             </div>
                         </div>
 
@@ -65,6 +69,10 @@
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
                         <button class="btn btn-primary" id="add-channelListing" type="submit">Submit</button>
+                        <a id="error-file-link">
+                            <button class="btn btn-warning" id="download-errors" type="button">Download Errors
+                            </button>
+                        </a>
                     </div>
                 </form>
             </div>
@@ -76,9 +84,6 @@
                 <thead>
                 <tr>
                     <th colspan="8">Channel Listings
-                        <button class="btn btn-primary" id="refresh-data" style="float: right; width:60" type="button">
-                            <i aria-hidden="true" class="fa fa-refresh"></i>
-                        </button>
                     </th>
                 </tr>
                 <tr>

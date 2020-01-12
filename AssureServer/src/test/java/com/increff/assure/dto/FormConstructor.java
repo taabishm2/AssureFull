@@ -14,7 +14,7 @@ public class FormConstructor {
 
     public static BinSkuForm getConstructBinSku(Long globalSku, Long binId, Long quantity) {
         BinSkuForm binSkuForm = new BinSkuForm();
-        binSkuForm.setClientSkuId(globalSku);
+        binSkuForm.setGlobalSkuId(globalSku);
         binSkuForm.setBinId(binId);
         binSkuForm.setQuantity(quantity);
         return binSkuForm;

@@ -41,7 +41,7 @@ public class BinSkuDtoTest extends AbstractUnitTest {
         productDao.insert(product);
         binDao.insert(bin);
 
-        binSkuForm = FormConstructor.getConstructBinSku(product.getClientId(), bin.getId(), 123L);
+        binSkuForm = FormConstructor.getConstructBinSku(product.getId(), bin.getId(), 123L);
     }
 
     @Test

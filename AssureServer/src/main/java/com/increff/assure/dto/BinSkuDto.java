@@ -4,14 +4,18 @@ import com.increff.assure.pojo.BinSkuPojo;
 import com.increff.assure.pojo.InventoryPojo;
 import com.increff.assure.service.*;
 import com.increff.assure.util.CheckValid;
+import com.increff.assure.util.FileWriteUtil;
 import model.data.BinSkuData;
+import model.data.MessageData;
 import model.form.BinSkuForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import static com.increff.assure.util.ConvertUtil.convert;
 
@@ -44,19 +48,9 @@ public class BinSkuDto {
     }
 
     @Transactional(rollbackFor = ApiException.class)
-    public void addList(List<BinSkuForm> formList, Long clientId) throws ApiException {
-        List<BinSkuPojo> binSkuMasterPojoList = convertFormToPojo(formList, clientId);
+    public void addList(List<BinSkuForm> formList) throws ApiException {
+        List<BinSkuPojo> binSkuMasterPojoList = convert(formList, BinSkuPojo.class);
         binSkuService.addList(binSkuMasterPojoList);
-    }
-
-    private List<BinSkuPojo> convertFormToPojo(List<BinSkuForm> formList, Long clientId) throws ApiException {
-        List<BinSkuPojo> pojoList = new ArrayList<>();
-        for(BinSkuForm form:formList){
-            BinSkuPojo pojo = convert(form, BinSkuPojo.class);
-            pojo.setGlobalSkuId(productService.getByClientAndClientSku(clientId, form.getClientSkuId()).getId());
-            pojoList.add(pojo);
-        }
-        return pojoList;
     }
 
     @Transactional(readOnly = true)
@@ -66,9 +60,9 @@ public class BinSkuDto {
     }
 
     @Transactional(readOnly = true)
-    public void validateProductAndBin(BinSkuForm binSkuPojo) throws ApiException {
-        productService.getByClientAndClientSku(binSkuPojo.getClientSkuId());
-        binService.getCheckId(binSkuPojo.getBinId());
+    public void validateProductAndBin(BinSkuForm binSkuForm) throws ApiException {
+        productService.getCheckId(binSkuForm.getGlobalSkuId());
+        binService.getCheckId(binSkuForm.getBinId());
     }
 
     @Transactional(rollbackFor = ApiException.class)
@@ -83,9 +77,42 @@ public class BinSkuDto {
     }
 
     public List<BinSkuData> getSearchByBinAndProduct(Long binId, Long globalSkuId) throws ApiException {
-        binService.getCheckId(binId);
-        productService.getCheckId(globalSkuId);
+        if(Objects.nonNull(binId))
+            binService.getCheckId(binId);
+
+        if(Objects.nonNull(globalSkuId))
+            productService.getCheckId(globalSkuId);
 
         return convert(binSkuService.getSearchByBinAndProduct(binId, globalSkuId), BinSkuData.class);
+    }
+
+    public void validateList(List<BinSkuForm> formList) throws ApiException {
+        List<MessageData> errorMessages = new ArrayList<>();
+        HashSet<String> binSkuSet = new HashSet<>();
+
+        for(int i=0; i<formList.size(); i++){
+            try {
+                BinSkuForm form = formList.get(i);
+
+                CheckValid.validate(formList.get(i));
+                productService.getCheckId(form.getGlobalSkuId());
+                binService.getCheckId(form.getBinId());
+                if(binSkuSet.contains(form.getBinId()+","+form.getGlobalSkuId()))
+                    throw new ApiException("Duplicate Bin, Product Entry");
+                else
+                    binSkuSet.add(form.getBinId()+","+form.getGlobalSkuId());
+            } catch(ApiException e){
+                MessageData errorMessage = new MessageData();
+                errorMessage.setMessage("Error in Line: "+i+": "+e.getMessage()+"\n");
+                errorMessages.add(errorMessage);
+            }
+        }
+
+        if(errorMessages.size() != 0)
+            throw new ApiException(FileWriteUtil.writeErrorsToFile("inventoryError"+formList.hashCode(),errorMessages));
+    }
+
+    private void checkDuplicates(List<BinSkuForm> formList) {
+
     }
 }

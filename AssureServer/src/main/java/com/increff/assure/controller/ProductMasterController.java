@@ -59,8 +59,6 @@ public class ProductMasterController {
     @ApiOperation(value = "Validate products master list.")
     @RequestMapping(path = "/api/product/validate/{clientId}", method = RequestMethod.POST)
     public void validateList(@PathVariable Long clientId, @Valid @RequestBody List<ProductMasterForm> formList) throws ApiException {
-        System.out.println("Validating for client: "+clientId);
         productMasterDto.validateList(formList, clientId);
-        System.out.println("Validating done");
     }
 }

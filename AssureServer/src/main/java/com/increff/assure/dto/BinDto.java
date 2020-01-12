@@ -18,6 +18,9 @@ public class BinDto {
 
     @Transactional(rollbackFor = ApiException.class)
     public ArrayList<Long> add(Integer numberOfBins) throws ApiException {
+        if(numberOfBins <= 0)
+            throw new ApiException("Bin Count must be positive");
+
         return binService.addBins(numberOfBins);
     }
 

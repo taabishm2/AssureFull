@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import model.data.BinSkuData;
 import model.form.BinSkuForm;
+import model.form.ProductMasterForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,9 @@ public class BinSkuController {
     private BinSkuDto binSkuDto;
 
    @ApiOperation(value = "Add a Bin Inventory List")
-    @RequestMapping(path = "/api/binSku/list/{clientId}", method = RequestMethod.POST)
-    public void addList(@PathVariable Long clientId, @Valid @RequestBody List<BinSkuForm> formList) throws ApiException {
-        binSkuDto.addList(formList, clientId);
+    @RequestMapping(path = "/api/binSku/list", method = RequestMethod.POST)
+    public void addList(@Valid @RequestBody List<BinSkuForm> formList) throws ApiException {
+        binSkuDto.addList(formList);
     }
 
     @ApiOperation(value = "Get a Bin-wise-Inventory item by ID")
@@ -39,6 +40,12 @@ public class BinSkuController {
     @ApiOperation(value = "Get list of all Bin-wise-Inventories")
     @RequestMapping(path = "/api/binSku/search", method = RequestMethod.POST)
     public List<BinSkuData> getSearchByBinAndProduct(@RequestBody BinSkuForm form) throws ApiException {
-        return binSkuDto.getSearchByBinAndProduct(form.getBinId(), form.getClientSkuId());
+        return binSkuDto.getSearchByBinAndProduct(form.getBinId(), form.getGlobalSkuId());
+    }
+
+    @ApiOperation(value = "Validate Bin Inventory list.")
+    @RequestMapping(path = "/api/binSku/validate", method = RequestMethod.POST)
+    public void validateList(@Valid @RequestBody List<BinSkuForm> formList) throws ApiException {
+        binSkuDto.validateList(formList);
     }
 }

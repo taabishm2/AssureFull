@@ -105,7 +105,6 @@ function validateCsv(formList){
            },
     	   success: function(response) {
     	        uploadProductMaster(formList, clientId);
-    	        getSuccessSnackbar("Product Master Uploaded");
     	   },
     	   error: function(response){
     	        errorButtonActivate(JSON.parse(response.responseText)['message']);
@@ -135,9 +134,6 @@ function uploadProductMaster(formList, clientId){
 	   		getSuccessSnackbar("Products Added.");
 	   },
 	   error: function(response){
-	   		//row.error=response.responseText
-	   		//errorData.push(row);
-	   		//uploadRows();
 	   		alert(response.responseText);
 	   }
 	});

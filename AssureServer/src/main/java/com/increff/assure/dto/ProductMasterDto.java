@@ -81,16 +81,12 @@ public class ProductMasterDto {
 
     public void validateList(List<ProductMasterForm> formList, Long clientId) throws ApiException {
         validateClient(clientId);
-        System.out.println("\tValidated Client");
         List<MessageData> errorMessages = new ArrayList<>();
-        System.out.println("\tArray initialized");
+
         for(int i=0; i<formList.size(); i++){
             try {
-                System.out.println("\t\tValidating Form "+formList.get(i).getName()+" "+formList.get(i).getClientSkuId()+" "+formList.get(i).getBrandId()+" "+formList.get(i).getMrp()+" "+formList.get(i).getDescription());
                 CheckValid.validate((formList.get(i)));
-                System.out.println("\t\tCheck Valid Done");
             } catch(ApiException e){
-                System.out.println("\t\tVALIDATION FAILURE: "+e.getMessage());
                 MessageData errorMessage = new MessageData();
                 errorMessage.setMessage("Error in Line: "+i+": "+e.getMessage()+"\n");
                 errorMessages.add(errorMessage);

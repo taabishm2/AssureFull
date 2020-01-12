@@ -1,21 +1,23 @@
 package com.increff.assure.dto;
 
 import com.increff.assure.pojo.ChannelListingPojo;
-import com.increff.assure.service.ApiException;
-import com.increff.assure.service.ChannelListingService;
-import com.increff.assure.service.ChannelService;
-import com.increff.assure.service.ProductMasterService;
+import com.increff.assure.service.*;
 import com.increff.assure.util.CheckValid;
 import com.increff.assure.util.ConvertUtil;
+import com.increff.assure.util.FileWriteUtil;
 import com.increff.assure.util.NormalizeUtil;
+import model.ConsumerType;
 import model.data.ChannelListingData;
+import model.data.MessageData;
 import model.form.ChannelListingForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import static com.increff.assure.util.ConvertUtil.convert;
 
@@ -27,6 +29,8 @@ public class ChannelListingDto {
     private ProductMasterService productService;
     @Autowired
     private ChannelListingService channelListingService;
+    @Autowired
+    private ConsumerService consumerService;
 
     @Transactional(readOnly = true)
     public ChannelListingData get(Long id) throws ApiException {
@@ -85,5 +89,42 @@ public class ChannelListingDto {
 
         listingPojo.setGlobalSkuId(productService.getByClientAndClientSku(listingForm.getClientId(), listingForm.getClientSkuId()).getId());
         return listingPojo;
+    }
+
+    public void validateList(List<ChannelListingForm> formList, Long channelId) throws ApiException {
+        channelService.getCheckId(channelId);
+        List<MessageData> errorMessages = new ArrayList<>();
+        HashSet<String> channelSkus = new HashSet<>();
+        HashSet<String> clientAndClientSkus = new HashSet<>();
+
+        for (int i = 0; i < formList.size(); i++) {
+            try {
+                ChannelListingForm form = formList.get(i);
+                CheckValid.validate(form);
+                if (!consumerService.getCheckId(form.getClientId()).getType().equals(ConsumerType.CLIENT))
+                    throw new ApiException("Client ID Invalid");
+
+                if (channelSkus.contains(form.getChannelSkuId()))
+                    throw new ApiException("Duplicate Channel SKU");
+                else
+                    channelSkus.add(form.getChannelSkuId());
+
+                if (Objects.isNull(productService.getByClientAndClientSku(form.getClientId(), form.getClientSkuId())))
+                    throw new ApiException("Invalid Client, ClientSKU pair");
+
+                if (clientAndClientSkus.contains(form.getClientId() + "," + form.getClientSkuId()))
+                    throw new ApiException("Duplicate Client, ClientSKU");
+                else
+                    clientAndClientSkus.add(form.getClientId() + "," + form.getClientSkuId());
+
+            } catch (ApiException e) {
+                MessageData errorMessage = new MessageData();
+                errorMessage.setMessage("Error in Line: " + i + ": " + e.getMessage() + "\n");
+                errorMessages.add(errorMessage);
+            }
+        }
+
+        if (errorMessages.size() != 0)
+            throw new ApiException(FileWriteUtil.writeErrorsToFile("channelListing" + formList.hashCode(), errorMessages));
     }
 }
