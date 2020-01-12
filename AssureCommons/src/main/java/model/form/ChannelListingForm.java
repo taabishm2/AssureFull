@@ -15,7 +15,4 @@ public class ChannelListingForm {
 
     @Size(min=1)
     private String channelSkuId;
-
-    @NotNull
-    private Long clientId;
 }

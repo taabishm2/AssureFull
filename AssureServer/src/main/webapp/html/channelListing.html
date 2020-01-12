@@ -35,10 +35,22 @@
                 <form id="channelListing-form">
                     <div class="modal-body">
 
-                        <div class="form-group" id="client-dropdown">
+                        <div class="form-group" id="channel-dropdown">
                             <div class="" role="document">
                                 <label for="channelId">Channel:</label>
                                 <select class="form-control" id="channelId" name="channelId" required
+                                        title="Enter a ChannelID">
+                                    <option disabled hidden selected value="">
+                                        Select an Option
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="client-dropdown">
+                            <div class="" role="document">
+                                <label for="clientId">Client:</label>
+                                <select class="form-control" id="clientId" name="clientId" required
                                         title="Enter a ClientID">
                                     <option disabled hidden selected value="">
                                         Select an Option

@@ -56,9 +56,8 @@ public class CheckValid {
     }
 
     public static void validate(ChannelListingForm listingForm) throws ApiException {
-        if(listingForm.getClientSkuId().isEmpty() ||
-                listingForm.getChannelSkuId().isEmpty() ||
-                Objects.isNull(listingForm.getClientId())
+        if (listingForm.getClientSkuId().isEmpty() ||
+                listingForm.getChannelSkuId().isEmpty()
         )
             throw new ApiException("Some fields are EMPTY");
 

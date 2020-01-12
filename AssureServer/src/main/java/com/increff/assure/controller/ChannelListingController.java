@@ -19,10 +19,10 @@ public class ChannelListingController {
     @Autowired
     private ChannelListingDto channelListingDto;
 
-    @ApiOperation(value = "Add a List of Channel Listings for a Channel")
-    @RequestMapping(path = "/api/channelListing/list/{channelId}", method = RequestMethod.POST)
-    public void addList(@PathVariable Long channelId, @Valid @RequestBody List<ChannelListingForm> formList) throws ApiException {
-        channelListingDto.addList(formList, channelId);
+    @ApiOperation(value = "Add a Channel Listings for given Channel and Client")
+    @RequestMapping(path = "/api/channelListing/list/{channelId}/{clientId}", method = RequestMethod.POST)
+    public void addList(@PathVariable Long channelId, @PathVariable Long clientId, @Valid @RequestBody List<ChannelListingForm> formList) throws ApiException {
+        channelListingDto.addList(formList, channelId, clientId);
     }
 
     @ApiOperation(value = "Gets a Channel-Listing by ID")
@@ -38,8 +38,8 @@ public class ChannelListingController {
     }
 
     @ApiOperation(value = "Validate List of Channel Listings for a Channel")
-    @RequestMapping(path = "/api/channelListing/validate/{channelId}", method = RequestMethod.POST)
-    public void validateList(@PathVariable Long channelId, @Valid @RequestBody List<ChannelListingForm> formList) throws ApiException {
-        channelListingDto.validateList(formList, channelId);
+    @RequestMapping(path = "/api/channelListing/validate/{channelId}/{clientId}", method = RequestMethod.POST)
+    public void validateList(@PathVariable Long channelId, @PathVariable Long clientId, @Valid @RequestBody List<ChannelListingForm> formList) throws ApiException {
+        channelListingDto.validateList(formList, channelId, clientId);
     }
 }
