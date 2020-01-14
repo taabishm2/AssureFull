@@ -77,6 +77,11 @@ label.error {
   display: inline;
 }
 
+.modal-body {
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
+}
+
 #modalContainer {
   background-color:rgba(0, 0, 0, 0.3);
   position:absolute;

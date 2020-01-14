@@ -37,7 +37,7 @@ public class BinSkuController {
         return binSkuDto.getAll();
     }
 
-    @ApiOperation(value = "Get list of all Bin-wise-Inventories")
+    @ApiOperation(value = "Search Bin Inventory")
     @RequestMapping(path = "/api/binSku/search", method = RequestMethod.POST)
     public List<BinSkuData> getSearchByBinAndProduct(@RequestBody BinSkuForm form) throws ApiException {
         return binSkuDto.getSearchByBinAndProduct(form.getBinId(), form.getGlobalSkuId());

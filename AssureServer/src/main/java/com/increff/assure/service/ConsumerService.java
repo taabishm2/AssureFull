@@ -36,6 +36,11 @@ public class ConsumerService extends AbstractService {
             throw new ApiException("Invalid Client");
     }
 
+    public void getCheckCustomer(Long id) throws ApiException {
+        if(!getCheckId(id).getType().equals(ConsumerType.CUSTOMER))
+            throw new ApiException("Invalid Customer");
+    }
+
     public List<ConsumerPojo> getAll() {
         return consumerDao.selectAll();
     }

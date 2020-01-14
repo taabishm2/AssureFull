@@ -8,21 +8,9 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class OrderItemValidationForm {
+public class ChannelOrderItemForm {
     @NotEmpty
     private String channelSkuId;
-
-    @NotNull
-    private Long clientId;
-
-    @NotNull
-    private Long customerId;
-
-    @NotNull
-    private Long channelId;
-
-    @NotEmpty
-    private String channelOrderId;
 
     @NotNull
     private Long orderedQuantity;

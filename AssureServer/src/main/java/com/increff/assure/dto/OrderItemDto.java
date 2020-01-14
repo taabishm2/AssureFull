@@ -2,16 +2,14 @@ package com.increff.assure.dto;
 
 import com.increff.assure.pojo.ChannelListingPojo;
 import com.increff.assure.pojo.OrderItemPojo;
-import com.increff.assure.pojo.ProductMasterPojo;
 import com.increff.assure.service.*;
 import model.data.OrderItemData;
 import model.form.OrderItemForm;
 import model.form.OrderItemValidationForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +27,8 @@ public class OrderItemDto {
     private ChannelListingService channelListingService;
     @Autowired
     private InventoryService inventoryService;
+    @Autowired
+    private ChannelService channelService;
 
     public void add(OrderItemForm form) throws ApiException {
         OrderItemPojo orderItemPojo = convert(form, OrderItemPojo.class);
@@ -45,7 +45,6 @@ public class OrderItemDto {
         return convert(orderItemService.getAll(), OrderItemData.class);
     }
 
-
     private void validateOrderItem(OrderItemPojo orderItemPojo) throws ApiException {
         orderService.getCheckId(orderItemPojo.getOrderId());
         productService.getCheckId(orderItemPojo.getGlobalSkuId());
@@ -54,23 +53,34 @@ public class OrderItemDto {
             throw new ApiException("Invalid Client for Product(ID: " + orderItemPojo.getGlobalSkuId() + ").");
     }
 
-    public void validateOrderItemForm(OrderItemValidationForm validationForm) throws ApiException {
-        if(validationForm.getOrderedQuantity() <= 0)
+    public List<OrderItemData> getByOrderId(Long orderId) throws ApiException {
+        List<OrderItemData> orderItemDataList = new ArrayList<>();
+        for (OrderItemPojo pojo : orderItemService.getByOrderId(orderId)) {
+            OrderItemData orderData = convert(pojo, OrderItemData.class);
+            orderData.setClientSkuId(productService.getCheckId(pojo.getGlobalSkuId()).getClientSkuId());
+            orderData.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(orderService.getCheckId(orderId).getChannelId(), pojo.getGlobalSkuId()).getChannelSkuId());
+            orderItemDataList.add(orderData);
+        }
+        return orderItemDataList;
+    }
+
+    public void validateChannelOrderItemForm(OrderItemValidationForm validationForm) throws ApiException {
+        ChannelListingPojo listing = channelListingService.getUnique(validationForm.getChannelId(), validationForm.getChannelSkuId(), validationForm.getClientId());
+        if (Objects.isNull(listing))
+            throw new ApiException("Channel listing does not exist");
+
+        Long globalSkuId = listing.getGlobalSkuId();
+
+        if (validationForm.getOrderedQuantity() <= 0)
             throw new ApiException("Quantity must be positive");
 
-        ProductMasterPojo product = productService.getCheckId(validationForm.getGlobalSkuId());
-        if(!product.getClientId().equals(validationForm.getClientId()))
-            throw new ApiException("Client does not provide the mentioned Product");
+         productService.getCheckId(globalSkuId);
 
-        ChannelListingPojo channelListing = channelListingService.getByChannelIdAndGlobalSku(validationForm.getChannelId(), validationForm.getGlobalSkuId());
-        if(Objects.isNull(channelListing))
-            throw new ApiException("Channel does not provide the mentioned Product");
+        if(Objects.isNull(inventoryService.getByGlobalSku(globalSkuId)))
+            throw new ApiException("Product Not in Inventory");
 
-        if(!channelListing.getChannelId().equals(validationForm.getChannelId()))
-            throw new ApiException("Channel does not provide the mentioned Product");
+        if (validationForm.getOrderedQuantity() > inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity())
+            throw new ApiException("Insufficient Stock" + inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity() + " items left");
 
-        System.out.println("");
-        if(validationForm.getOrderedQuantity() > inventoryService.getByGlobalSku(product.getId()).getAvailableQuantity())
-            throw new ApiException("Insufficient Stock.");
     }
 }

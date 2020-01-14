@@ -42,6 +42,7 @@ public class ChannelListingDto {
         ChannelListingData listingData = convert(channelListingPojo, ChannelListingData.class);
         listingData.setClientSkuId(productService.getCheckId(channelListingPojo.getGlobalSkuId()).getClientSkuId());
         listingData.setChannelName(channelService.getCheckId(channelListingPojo.getChannelId()).getName());
+        listingData.setClientName(consumerService.getCheckId(channelListingPojo.getClientId()).getName());
         return listingData;
     }
 

@@ -1,5 +1,6 @@
 package com.increff.assure.dao;
 
+import com.increff.assure.pojo.BinSkuPojo;
 import com.increff.assure.pojo.OrderPojo;
 import model.data.OrderData;
 import org.springframework.stereotype.Repository;
@@ -53,5 +54,17 @@ public class OrderDao extends AbstractDao<OrderPojo> {
         TypedQuery<OrderPojo> typedQuery = entityManager.createQuery(q);
         typedQuery.setParameter(channelIdParam, channelId);
         return typedQuery.getResultList();
+    }
+
+    public List<OrderPojo> getSearch(Long clientId, Long customerId, Long channelId, String fromDate, String toDate) {
+        String queryStr = "SELECT c FROM OrderPojo c WHERE (:clientId is null or c.clientId = :clientId) and " +
+                "(:customerId is null or c.customerId = :customerId) and " +
+                "(:channelId is null or c.channelId = :channelId)";
+
+        TypedQuery<OrderPojo> query = entityManager.createQuery(queryStr, OrderPojo.class);
+        query.setParameter("clientId", clientId);
+        query.setParameter("customerId", customerId);
+        query.setParameter("channelId", channelId);
+        return query.getResultList();
     }
 }

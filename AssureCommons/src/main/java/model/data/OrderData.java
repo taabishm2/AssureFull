@@ -14,5 +14,9 @@ public class OrderData extends OrderForm {
 
     private OrderStatus status;
 
-    private ZonedDateTime createdAt;
+    private String dateCreated;
+
+    private String clientName;
+    private String customerName;
+    private String channelName;
 }

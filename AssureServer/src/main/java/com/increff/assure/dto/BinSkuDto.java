@@ -50,7 +50,14 @@ public class BinSkuDto {
     @Transactional(rollbackFor = ApiException.class)
     public void addList(List<BinSkuForm> formList) throws ApiException {
         List<BinSkuPojo> binSkuMasterPojoList = convert(formList, BinSkuPojo.class);
-        binSkuService.addList(binSkuMasterPojoList);
+        for(BinSkuForm form:formList){
+            CheckValid.validate(form);
+            validateProductAndBin(form);
+
+            BinSkuPojo binSkuPojo = convert(form, BinSkuPojo.class);
+            binSkuService.addOrUpdate(binSkuPojo);
+            addOrUpdateInventory(binSkuPojo);
+        }
     }
 
     @Transactional(readOnly = true)

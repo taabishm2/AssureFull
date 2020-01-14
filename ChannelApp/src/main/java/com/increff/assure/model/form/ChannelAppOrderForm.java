@@ -1,17 +1,16 @@
-package model.form;
+package com.increff.assure.model.form;
 
 import lombok.Getter;
 import lombok.Setter;
+import model.form.OrderItemForm;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
-public class OrderItemValidationForm {
-    @NotEmpty
-    private String channelSkuId;
-
+public class ChannelAppOrderForm {
     @NotNull
     private Long clientId;
 
@@ -25,5 +24,5 @@ public class OrderItemValidationForm {
     private String channelOrderId;
 
     @NotNull
-    private Long orderedQuantity;
+    private List<ChannelOrderItemForm> orderItemList;
 }

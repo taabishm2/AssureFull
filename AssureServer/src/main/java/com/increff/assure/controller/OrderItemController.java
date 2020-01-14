@@ -37,9 +37,15 @@ public class OrderItemController {
         return orderItemDto.getAll();
     }
 
-    @ApiOperation(value = "Validate Order Details")
-    @RequestMapping(path = "/api/orderitem/validate", method = RequestMethod.POST)
-    public void validateOrderItem(@RequestBody OrderItemValidationForm validationForm) throws ApiException {
-        orderItemDto.validateOrderItemForm(validationForm);
+    @ApiOperation(value = "Validate Channel Order Details")
+    @RequestMapping(path = "/api/orderitem/channel/validate", method = RequestMethod.POST)
+    public void validateChannelOrderItem(@RequestBody OrderItemValidationForm validationForm) throws ApiException {
+        orderItemDto.validateChannelOrderItemForm(validationForm);
+    }
+
+    @ApiOperation(value = "Gets list of all Order-Items")
+    @RequestMapping(path = "/api/orderItem/orderId/{orderId}", method = RequestMethod.GET)
+    public List<OrderItemData> getAll(@PathVariable Long orderId) throws ApiException {
+        return orderItemDto.getByOrderId(orderId);
     }
 }

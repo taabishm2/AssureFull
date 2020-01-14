@@ -20,6 +20,6 @@ public class ClientWrapper {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<String> request = new HttpEntity<String>(jsonStr, headers);
-        String response = restTemplate.postForObject("http://localhost:7070/channel/api/order/invoice", request, String.class);
+        String url = restTemplate.postForObject("http://localhost:7070/channel/api/order/invoice", request, String.class);
     }
 }

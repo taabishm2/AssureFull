@@ -64,4 +64,22 @@ public class CheckValid {
         if (listingForm.getChannelSkuId().length() < 1)
             throw new ApiException("Channel Sku is too Short. Min. length is 1");
     }
+
+    public static void validate(OrderItemForm validationForm) throws ApiException {
+        if(validationForm.getClientSkuId().isEmpty() ||
+                Objects.isNull(validationForm.getOrderedQuantity())
+        )
+            throw new ApiException("Some fields are EMPTY");
+
+        if(validationForm.getOrderedQuantity() <= 0)
+            throw new ApiException("Quantity must be positive");
+    }
+
+    public static void validate(ChannelOrderForm orderForm) throws ApiException {
+        if (orderForm.getChannelOrderId().length() < 1)
+            throw new ApiException("Name is too Short. Min. length is 1");
+
+        if (orderForm.getChannelOrderId().length() > 255)
+            throw new ApiException("Name is too Long. Max. length is 255");
+    }
 }

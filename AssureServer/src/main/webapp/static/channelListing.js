@@ -79,7 +79,7 @@ function validateCsv(formList){
     	        uploadChannelListing(formList, channelId, clientId);
     	   },
     	   error: function(response){
-    	        errorButtonActivate(JSON.parse(response.responseText)['message']);
+    	        errorButtonActivate("http://127.0.0.1:9090/"+JSON.parse(response.responseText)['message']);
     	   		alert("Errors in CSV");
     	   }
     	});
@@ -130,7 +130,7 @@ function displayChannelListingList(data){
 	var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.channelName + '</td>'
-		+ '<td style="text-align:center;">' + e.clientId + '</td>'
+		+ '<td style="text-align:center;">' + e.clientName + '</td>'
 		+ '<td>' + e.channelSkuId + '</td>'
 		+ '<td>'  + e.clientSkuId + '</td>'
 		+ '</tr>';
@@ -172,7 +172,9 @@ function loadChannelNames(data){
 		var option = '<option value='+data[channel].id+'>'
 		+ data[channel].name
 		+ '</option>';
-        $channelDropdown.append(option);
+		if(data[channel].name != "INTERNAL"){
+		    $channelDropdown.append(option);
+		}
 	}
 }
 

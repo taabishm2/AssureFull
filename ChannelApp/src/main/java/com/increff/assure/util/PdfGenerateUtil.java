@@ -19,20 +19,16 @@ public class PdfGenerateUtil {
     public static final String OUTPUT_DIR;
 
     static {
-        RESOURCES_DIR = "src//main//resources//";
-        OUTPUT_DIR = "src//main//resources//output//";
+        RESOURCES_DIR = "C://Users//Tabish//Documents//Repos//Increff//ChannelApp//src//main//resources//";
+        OUTPUT_DIR = "C://Users//Tabish//Documents//Repos//Increff//ChannelApp//src//main//resources//output//";
     }
 
     public static void generate(Long orderId) throws ApiException {
         PdfGenerateUtil fOPPdfDemo = new PdfGenerateUtil();
         try {
             fOPPdfDemo.convertToPDF(orderId);
-        } catch (FOPException e) {
-            throw new ApiException("Couldn't generate PDF: FOP Exception:" + e.getMessage());
-        } catch (IOException e) {
-            throw new ApiException("Couldn't generate PDF: IO Exception:" + e.getMessage());
-        } catch (TransformerException e) {
-            throw new ApiException("Couldn't generate PDF: Transformer Exception:" + e.getMessage());
+        } catch (Exception e) {
+            throw new ApiException("Couldn't generate Invoice PDF:" + e.getMessage());
         }
     }
 

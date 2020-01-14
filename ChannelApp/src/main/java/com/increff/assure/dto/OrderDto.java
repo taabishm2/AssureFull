@@ -8,9 +8,8 @@ import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ClientWrapper;
 import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
-import model.data.ChannelData;
-import model.data.ConsumerData;
-import model.data.OrderReceiptData;
+import model.data.*;
+import model.form.ChannelOrderForm;
 import model.form.OrderForm;
 import model.form.OrderItemValidationForm;
 import model.form.OrderValidationForm;
@@ -24,7 +23,7 @@ import java.util.List;
 public class OrderDto {
 
     public void add(@RequestBody ChannelAppOrderForm orderForm) throws ApiException {
-        OrderForm serverOrderForm = ClientWrapper.convert(orderForm);
+        ChannelOrderForm serverOrderForm = ClientWrapper.convert(orderForm);
         ClientWrapper.hitAddOrderApi(serverOrderForm);
     }
 
@@ -35,11 +34,18 @@ public class OrderDto {
     public void generateReceipt(OrderReceiptData orderReceiptData) throws ApiException {
 
         ChannelOrderReceiptData orderReceipt = ClientWrapper.convert(orderReceiptData);
+        System.out.println("GENERATING XML");
+        System.out.println(orderReceipt.getOrderId());
+        System.out.println(orderReceipt.getChannelName());
+        System.out.println(orderReceipt.getChannelOrderId());
+        System.out.println(orderReceipt.getClientDetails());
+        System.out.println(orderReceipt.getCustomerDetails());
+        System.out.println(orderReceipt.getOrderCreationTime());
+        System.out.println(orderReceipt.getOrderItems());
         XmlGenerateUtil.generate(orderReceipt);
+        System.out.println("GENERATED XML");
         PdfGenerateUtil.generate(orderReceipt.getOrderId());
-
-        ClientWrapper.sendOrderInvoice(orderReceipt.getOrderId());
-    }
+        }
 
     public void validateOrder(OrderValidationForm validationForm) throws ApiException {
         ClientWrapper.hitOrderValidationApi(validationForm);
@@ -49,15 +55,19 @@ public class OrderDto {
         ClientWrapper.hitOrderItemValidationApi(validationForm);
     }
 
-    public List<ChannelAppOrderData> getAll(Long channelId) throws ApiException {
-        return ClientWrapper.hitGetOrdersByChannelApi(channelId);
-    }
-
     public List<ConsumerData> getAllClients() {
         return ClientWrapper.hitGetClientsApi();
     }
 
     public List<ChannelData> getAllChannels() {
         return ClientWrapper.hitGetChannelsApi();
+    }
+
+    public List<OrderData> getByChannel(Long channelId) throws ApiException {
+        return ClientWrapper.hitGetOrdersByChannelApi(channelId);
+    }
+
+    public List<OrderItemData> getByOrderId(Long orderId) {
+        return ClientWrapper.hitGetOrderItemsApi(orderId);
     }
 }

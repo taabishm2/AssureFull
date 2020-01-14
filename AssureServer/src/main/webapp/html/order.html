@@ -13,11 +13,88 @@
             <br/>
             <span class="text-muted" style="font-size:0.9em;">Add and View the created Orders.</span>
         </p>
-        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
-            Create Orders
+        <button class="btn btn-primary" id="refresh-data" style="width:60" type="button">
+            <i aria-hidden="true" class="fa fa-refresh"></i>
         </button>
+        <button class="btn btn-primary" data-target="#orderModal" data-toggle="modal" type="button">
+            <i aria-hidden="true" class="fa fa-plus"></i>
+            &nbspCreate Orders
+        </button>
+
+        <!--Search Param Form-->
+        <hr style="margin-top:25px">
+        <div id="search-param-div" style="margin-top:15px">
+            <form id="search-param-form">
+                <div style="font-size: 1.3em">
+                    <i aria-hidden="true" class="fa fa-filter"></i> Filter
+                </div>
+
+                <div class="row" style="margin-top:10px;">
+
+                    <div class="form-group col-md-4">
+                        <label for="clientIdSearch" style="font-weight: bold;">Client:</label>
+                        <select class="form-control" id="clientIdSearch" name="clientId"
+                                title="Select a Client" style="border:0px; border-bottom:1px solid #2B7A78;">
+                            <option disabled hidden selected value="">
+                                Select a Client
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="customerIdSearch" style="font-weight: bold;">Customer:</label>
+                        <select class="form-control" id="customerIdSearch" name="customerId"
+                                title="Select a Client" style="border:0px; border-bottom:1px solid #2B7A78;">
+                            <option disabled hidden selected value="">
+                                Select a Customer
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="channelIdSearch" style="font-weight: bold;">Channel:</label>
+                        <select class="form-control" id="channelIdSearch" name="channelId"
+                                title="Select a Channel" style="border:0px; border-bottom:1px solid #2B7A78;">
+                            <option disabled hidden selected value="">
+                                Select a Channel
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:10px;">
+
+                    <div class="form-group col-md-4">
+                        <label for="fromDateSearch" style="font-weight: bold;">From:</label>
+                        <input class="form-control" id="fromDateSearch" name="fromDate"
+                               placeholder="From Date" type="date" style="border:0px; border-bottom:1px solid #2B7A78;">
+                        <br>
+                    </div>
+
+
+                    <div class="form-group col-md-4">
+                        <label for="toDateSearch" style="font-weight: bold;">To:</label>
+                        <input class="form-control" id="toDateSearch" name="toDate"
+                               placeholder="To Date" type="date" style="border:0px; border-bottom:1px solid #2B7A78;">
+                        <br>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <button class="btn btn-primary" id="search-button" type="submit">
+                            <i aria-hidden="true" class="fa fa-search"></i>
+                            &nbspSearch
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
     </div>
 
+    <!-- Link Download Modal-->
     <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="downloadLinkModal" role="dialog"
          tabindex="-1">
         <div class="modal-dialog" role="document">
@@ -28,42 +105,79 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                    <div class="modal-body">
-                        <table class="table table-sm table-striped" id="invoice-link-table" style="width:50%; margin:auto">
-                            <thead>
-                            <tr>
-                                <th scope="col" style="text-align:center;">Order ID</th>
-                                <th scope="col" style="text-align:center;">Invoice PDF Link</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                <div class="modal-body">
+                    <table class="table table-sm table-striped" id="invoice-link-table" style="width:50%; margin:auto">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="text-align:center;">Order ID</th>
+                            <th scope="col" style="text-align:center;">Invoice PDF Link</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                    </div>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
+    <!-- Order Details Modal-->
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="orderDetailsModal" role="dialog"
          tabindex="-1">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Create New Order</h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button" onclick="resetOrderModal()">
+                    <h6 class="modal-title" id="orderDetailsModalLabel">Order Details.</h6>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="order-entry">
-                        <form id="order-form">
+                    <table class="table table-sm table-striped" id="order-detail-table" style="margin:auto">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="text-align:center;">OrderItem ID</th>
+                            <th scope="col">Client SKU</th>
+                            <th scope="col">Ordered Qty</th>
+                            <th scope="col">Allocated Qty</th>
+                            <th scope="col">Fulfilled Qty</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Order Modal -->
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="orderModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderModalLabel">Create New Order</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="order-form" style="padding:10px; padding-bottom:20px;">
+                    <div class="modal-body">
+                        <div id="order-entry">
+
                             <div class=row>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="clientId">Client:</label>
                                     <select class="form-control" id="clientId" name="clientId" required
                                             title="Select a Client">
@@ -72,7 +186,7 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="customerId">Customer:</label>
                                     <select class="form-control" id="customerId" name="customerId" required
                                             title="Select a Customer">
@@ -81,88 +195,96 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="channelId">Channel:</label>
-                                    <select class="form-control" id="channelId" name="channelId" required
-                                            title="Select a Channel">
-                                        <option disabled hidden selected value="">
-                                            Select a Channel
-                                        </option>
-                                    </select>
+                                <input type="hidden" id="channelId" name="channelId" value="1">
+                            </div>
+                            <div class="row" style="margin-bottom:15px">
+                                <div class="form-group col-md-12">
+                                    <label for="channelOrderId">Channel Order ID</label>
+                                    <input aria-describedby="channelOrderIdHelp" class="form-control"
+                                           id="channelOrderId"
+                                           name="channelOrderId"
+                                           placeholder="Enter Channel Order ID" required title="This field is required"
+                                           type="text">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="channelOrderId">Channel Order ID</label>
-                                <input aria-describedby="channelOrderIdHelp" class="form-control" id="channelOrderId"
-                                       name="channelOrderId"
-                                       placeholder="Enter Channel Order ID" required title="This field is required"
-                                       type="text">
-                            </div>
-                        </form>
+
+                        </div>
+                        <div class="modal-footer" id="order-validate-button">
+                            <button class="btn btn-secondary" data-dismiss="modal" style="float:right;" type="button">
+                                Close
+                            </button>
+                            <button class="btn btn-primary" id="submit-order" style="float:right;" type="submit">
+                                Validate
+                                Order
+                            </button>
+                        </div>
                     </div>
-                    <div id="order-item-entry">
-                        <form id="order-item-form">
-                            <div class="modal-header">
-                                <h6 class="modal-title">Add Order Items</h6>
-                            </div>
-                            <div class="form-group row" style="margin-top:20px">
-                                <div class="col-md-2">
-                                </div>
-                                <div class="col-md-3">
-                                    <input aria-describedby="globalSkuIdHelp" class="form-control" id="globalSkuId"
-                                           name="globalSkuId"
-                                           placeholder="Enter Product SKU ID" required pattern="[0-9]*" style="width: 100%"
-                                           title="This field is required" type="text">
-                                </div>
-                                <div class="col-md-3">
-                                    <input aria-describedby="quantityHelp" class="form-control" id="orderedQuantity"
-                                           name="orderedQuantity"
-                                           placeholder="Enter Quantity" required pattern="[0-9]*" style="width: 100%"
-                                           title="This field is required" type="text">
-                                </div>
-                                <div class="col-md-2">
-                                    <button class="btn btn-primary" id="add-order-item" style="width:100%;"
-                                            type="click">
-                                        <i aria-hidden="true" class="fa fa-plus"></i>&nbspAdd
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer" id="order-validate-button">
-                    <button class="btn btn-secondary" data-dismiss="modal" style="float:right;" type="button">Close
-                    </button>
-                    <button class="btn btn-primary" id="validate-order" style="float:right;" type="submit">Validate
-                        Order
-                    </button>
-                </div>
-                <div class="modal-footer" id="order-submit-button">
-                    <button class="btn btn-secondary" data-dismiss="modal" style="float:right;" type="button">Close
-                    </button>
-                    <button class="btn btn-primary" id="add-order" style="float:right;" type="button">Submit Order
-                    </button>
-                </div>
+                </form>
+
             </div>
         </div>
     </div>
+
+    <!-- Order Item Modal -->
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="orderItemModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Upload Order Items</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="order-item-form">
+                    <div class="modal-body">
+
+                        <div class="">
+                            <div>
+                                <p class="modal-title">Upload Order Item CSV</p>
+                            </div>
+                            <div class="modal-body" style="padding:0px; margin-bottom:35px">
+                                <div class="orderItem-file">
+                                    <input class="custom-file-input" id="orderItemFile" required type="file">
+                                    <label class="custom-file-label" for="orderItemFile"
+                                           id="orderItemFileName">Choose
+                                        CSV
+                                        File</label>
+                                </div>
+                                <a target="_blank" th:href="@{/samples/orderItemCsvSample.csv}" style="float:right; margin-top:5px;">
+                                    <i class="fa fa-download" aria-hidden="true"></i> Download CSV Sample
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-primary" id="add-orderItems" type="submit">Submit</button>
+                        <a id="error-file-link">
+                            <button class="btn btn-warning" id="download-errors" type="button">Download Errors
+                            </button>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="body-content">
         <div class="table-display">
-            <table class="table table-sm table-striped" id="order-table" style="width:100%; margin:auto">
+            <table class="table table-sm table-striped" id="order-table" style="width:100%; margin:auto; visibility:hidden">
                 <thead>
                 <tr>
-                    <th colspan="7">
+                    <th colspan="8">
                         Order Detail List &nbsp
-                        <button class="btn btn-primary" id="refresh-data" style="float: right; width:60" type="button">
-                            <i aria-hidden="true" class="fa fa-refresh"></i>
-                        </button>
                     </th>
                 </tr>
                 <tr>
                     <th scope="col" style="text-align:center;">ID</th>
-                    <th scope="col" style="text-align:center;">Client ID</th>
-                    <th scope="col" style="text-align:center;">Customer ID</th>
-                    <th scope="col">Channel ID</th>
+                    <th scope="col">Created</th>
+                    <th scope="col" style="text-align:center;">Client</th>
+                    <th scope="col" style="text-align:center;">Customer</th>
+                    <th scope="col">Channel</th>
                     <th scope="col">Channel Order ID</th>
                     <th scope="col">Order Status</th>
                     <th scope="col" style="text-align:right">Actions</th>

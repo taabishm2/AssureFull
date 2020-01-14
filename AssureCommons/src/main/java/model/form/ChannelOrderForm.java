@@ -5,13 +5,11 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
-public class OrderItemValidationForm {
-    @NotEmpty
-    private String channelSkuId;
-
+public class ChannelOrderForm {
     @NotNull
     private Long clientId;
 
@@ -25,5 +23,5 @@ public class OrderItemValidationForm {
     private String channelOrderId;
 
     @NotNull
-    private Long orderedQuantity;
+    private List<ChannelOrderItemForm> orderItemList;
 }

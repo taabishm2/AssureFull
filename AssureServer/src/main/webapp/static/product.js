@@ -260,7 +260,6 @@ function init(){
 	$('#refresh-data').click(getProductListByClient);
 	$('#upload-data').click(displayUploadData);
 	$('#product-form').submit(processData);
-	$('#download-errors').click(downloadErrors);
     $('#productFile').on('change', updateFileName);
     $('#productDisplayForm').submit(getProductListByClient);
 }

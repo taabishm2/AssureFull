@@ -10,4 +10,6 @@ public class ChannelListingData extends ChannelListingForm {
     private Long id;
 
     private String channelName;
+
+    private String clientName;
 }

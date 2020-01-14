@@ -6,10 +6,8 @@ import com.increff.assure.model.data.ChannelOrderReceiptData;
 import com.increff.assure.model.data.ChannelAppOrderData;
 import com.increff.assure.model.form.ChannelAppOrderForm;
 import com.increff.assure.util.ConvertUtil;
-import model.data.ChannelData;
-import model.data.ConsumerData;
-import model.data.OrderData;
-import model.data.OrderReceiptData;
+import model.data.*;
+import model.form.ChannelOrderForm;
 import model.form.OrderForm;
 import model.form.OrderItemValidationForm;
 import model.form.OrderValidationForm;
@@ -22,7 +20,7 @@ import java.util.List;
 
 @Component
 public class ClientWrapper {
-    public static void hitAddOrderApi(OrderForm orderForm) throws ApiException {
+    public static void hitAddOrderApi(ChannelOrderForm orderForm) throws ApiException {
         ObjectMapper mapper = new ObjectMapper();
 
         String jsonStr;
@@ -38,7 +36,7 @@ public class ClientWrapper {
 
         System.out.println("Sending request: "+jsonStr);
         HttpEntity<String> request = new HttpEntity<>(jsonStr, headers);
-        restTemplate.postForObject("http://localhost:6060/assure/api/order", request, String.class);
+        restTemplate.postForObject("http://localhost:6060/assure/api/order/channel", request, String.class);
         System.out.println("Request Completed");
     }
 
@@ -51,8 +49,8 @@ public class ClientWrapper {
     public static void sendOrderInvoice(Long orderId) {
     }
 
-    public static OrderForm convert(ChannelAppOrderForm channelOrderForm) throws ApiException {
-        return ConvertUtil.convert(channelOrderForm, OrderForm.class);
+    public static ChannelOrderForm convert(ChannelAppOrderForm channelOrderForm) throws ApiException {
+        return ConvertUtil.convert(channelOrderForm, ChannelOrderForm.class);
     }
 
     public static ChannelOrderReceiptData convert(OrderReceiptData orderReceiptData) throws ApiException {
@@ -92,10 +90,10 @@ public class ClientWrapper {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<String> request = new HttpEntity<String>(jsonStr, headers);
-        restTemplate.postForObject("http://localhost:6060/assure/api/orderitem/validate", request, String.class);
+        restTemplate.postForObject("http://localhost:6060/assure/api/orderitem/channel/validate", request, String.class);
     }
 
-    public static List<ChannelAppOrderData> hitGetOrdersByChannelApi(Long channelId) throws ApiException {
+    public static List<OrderData> hitGetOrdersByChannelApi(Long channelId) throws ApiException {
         String urlGETList = "http://localhost:6060/assure/api/order/channel/"+channelId;
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<OrderData[]> responseEntity = restTemplate.getForEntity(urlGETList, OrderData[].class);
@@ -103,7 +101,7 @@ public class ClientWrapper {
         MediaType contentType = responseEntity.getHeaders().getContentType();
         HttpStatus statusCode = responseEntity.getStatusCode();
         List<OrderData> orderDataList = Arrays.asList(objects);
-        return ConvertUtil.convert(orderDataList, ChannelAppOrderData.class);
+        return ConvertUtil.convert(orderDataList, OrderData.class);
     }
 
     public static List<ConsumerData> hitGetClientsApi() {
@@ -121,6 +119,16 @@ public class ClientWrapper {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<ChannelData[]> responseEntity = restTemplate.getForEntity(urlGETList, ChannelData[].class);
         ChannelData[] objects = responseEntity.getBody();
+        MediaType contentType = responseEntity.getHeaders().getContentType();
+        HttpStatus statusCode = responseEntity.getStatusCode();
+        return Arrays.asList(objects);
+    }
+
+    public static List<OrderItemData> hitGetOrderItemsApi(Long orderId) {
+        String urlGETList = "http://localhost:6060/assure/api/orderItem/orderId/"+orderId;
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<OrderItemData[]> responseEntity = restTemplate.getForEntity(urlGETList, OrderItemData[].class);
+        OrderItemData[] objects = responseEntity.getBody();
         MediaType contentType = responseEntity.getHeaders().getContentType();
         HttpStatus statusCode = responseEntity.getStatusCode();
         return Arrays.asList(objects);

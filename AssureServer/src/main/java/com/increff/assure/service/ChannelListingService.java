@@ -52,4 +52,8 @@ public class ChannelListingService extends AbstractService {
         for (ChannelListingPojo pojo : channelListingPojos)
             add(pojo);
     }
+
+    public ChannelListingPojo getUnique(Long channelId, String channelSkuId, Long clientId) {
+        return channelListingDao.selectUnique(channelId, channelSkuId, clientId);
+    }
 }

@@ -73,7 +73,6 @@ function init(){
 	$('#consumer-form').submit(addConsumer);
 	$('#refresh-data').click(getSearchConsumerList);
 	$('#search-param-form').submit(getSearchConsumerList);
-	document.getElementById("refresh-data").disabled = true;
 }
 
 $(document).ready(init);

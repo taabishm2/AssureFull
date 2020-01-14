@@ -69,7 +69,7 @@ function validateCsv(formList){
     	        uploadBinInventory(formList);
     	   },
     	   error: function(response){
-    	        errorButtonActivate(JSON.parse(response.responseText)['message']);
+    	        errorButtonActivate("http://127.0.0.1:9090/"+JSON.parse(response.responseText)['message']);
     	   		alert("Errors in CSV");
     	   }
     	});
@@ -122,6 +122,12 @@ function displayNewBinInfo(response){
 function getSearchBinInventoryList(){
     var $form = $("#search-param-form");
     var json = JSON.parse(toJson($form));
+
+    if (json['binId'] == '' && json['globalSkuId'] == '') {
+        alert('All search params cannot be empty');
+        return false;
+    }
+
     json['quantity'] = "0";
     json = JSON.stringify(json);
 

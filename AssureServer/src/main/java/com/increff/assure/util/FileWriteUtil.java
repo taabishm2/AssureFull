@@ -10,7 +10,7 @@ import java.util.List;
 public class FileWriteUtil {
     public static String writeErrorsToFile(String filename, List<MessageData> messageDataList) throws ApiException {
         FileWriter fileWriter;
-        String fileUrl = "C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//"+filename+".txt";
+        String fileUrl = filename+".txt";
         try{
             fileWriter = new FileWriter(fileUrl);
             for(MessageData message:messageDataList)

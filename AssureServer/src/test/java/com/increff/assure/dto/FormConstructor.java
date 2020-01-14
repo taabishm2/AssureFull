@@ -51,9 +51,9 @@ public class FormConstructor {
         return inventory;
     }
 
-    public static OrderItemForm getConstructOrderItem(Long globalSku, Long orderedQty) {
+    public static OrderItemForm getConstructOrderItem(String clientSku, Long orderedQty) {
         OrderItemForm orderItemPojo = new OrderItemForm();
-        orderItemPojo.setGlobalSkuId(globalSku);
+        orderItemPojo.setClientSkuId(clientSku);
         orderItemPojo.setOrderedQuantity(orderedQty);
         return orderItemPojo;
     }

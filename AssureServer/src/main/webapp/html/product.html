@@ -17,22 +17,22 @@
             <i aria-hidden="true" class="fa fa-refresh"></i>
         </button>
         <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
-            <i aria-hidden="true" class="fa fa-plus" ></i>
+            <i aria-hidden="true" class="fa fa-plus"></i>
             &nbspAdd Product List
         </button>
         <div style="margin-top:8px;">
-        <form id="productDisplayForm">
-            <select class="form-control" id="clientIdSelect" name="clientId" required
-                    title="Select a Client" style="width:30%; float:left; margin-right:5px;">
-                <option disabled hidden selected value="">
-                    Select a Client
-                </option>
-            </select>
-            <button class="btn btn-primary" type="submit" style="float:left">
-                <i aria-hidden="true" class="fa fa-list-ul"></i>
-                &nbspList Products
-            </button>
-        </form>
+            <form id="productDisplayForm">
+                <select class="form-control" id="clientIdSelect" name="clientId" required
+                        style="width:30%; float:left; margin-right:5px;" title="Select a Client">
+                    <option disabled hidden selected value="">
+                        Select a Client
+                    </option>
+                </select>
+                <button class="btn btn-primary" style="float:left" type="submit">
+                    <i aria-hidden="true" class="fa fa-list-ul"></i>
+                    &nbspList Products
+                </button>
+            </form>
         </div>
     </div>
     <!-- Modal -->
@@ -61,15 +61,17 @@
                             <div class="" role="document" style="margin-top:15px;">
                                 <div class="">
                                     <label for="product-upload-modal-body">Product Master:</label>
-                                    <div class="modal-body" id="product-upload-modal-body" style="padding:0px; margin-bottom:35px">
+                                    <div class="modal-body" id="product-upload-modal-body"
+                                         style="padding:0px; margin-bottom:35px">
                                         <div class="product-file">
                                             <input class="custom-file-input" id="productFile" required type="file">
                                             <label class="custom-file-label" for="productFile" id="productFileName">Upload
                                                 CSV
                                                 File</label>
                                         </div>
-                                        <a target="_blank" th:href="@{/samples/productCsvSample.csv}" style="float:right; margin-top:5px;">
-                                            <i class="fa fa-download" aria-hidden="true"></i> Download CSV Sample
+                                        <a style="float:right; margin-top:5px;" target="_blank"
+                                           href="http://127.0.0.1:9090/sample/productCsvSample.csv">
+                                            <i aria-hidden="true" class="fa fa-download"></i> Download CSV Sample
                                         </a>
                                     </div>
                                 </div>

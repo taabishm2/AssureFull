@@ -11,14 +11,13 @@
         <p class="page-header">
             <span style="font-size: 20px">Channel Listing Page</span>
             <br/>
-            <span class="text-muted" style="font-size:0.9em;">Add, Display & Edit Channel Listing Details.</span>
+            <span class="text-muted" style="font-size:0.9em;">Manage Channel Listing Details</span>
         </p>
         <button class="btn btn-primary" id="refresh-data" style="width:60" type="button">
             <i aria-hidden="true" class="fa fa-refresh"></i>
         </button>
         <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
             <i aria-hidden="true" class="fa fa-plus"></i>
-            &nbspAdd Channel Listing
         </button>
     </div>
     <!-- Modal -->
@@ -37,11 +36,11 @@
 
                         <div class="form-group" id="channel-dropdown">
                             <div class="" role="document">
-                                <label for="channelId">Channel:</label>
+                                <label for="channelId" class="font-weight-bold">Channel:</label>
                                 <select class="form-control" id="channelId" name="channelId" required
                                         title="Enter a ChannelID">
                                     <option disabled hidden selected value="">
-                                        Select an Option
+                                        Select a Channel
                                     </option>
                                 </select>
                             </div>
@@ -49,20 +48,18 @@
 
                         <div class="form-group" id="client-dropdown">
                             <div class="" role="document">
-                                <label for="clientId">Client:</label>
+                                <label for="clientId" class="font-weight-bold">Client:</label>
                                 <select class="form-control" id="clientId" name="clientId" required
                                         title="Enter a ClientID">
                                     <option disabled hidden selected value="">
-                                        Select an Option
+                                        Select a Client
                                     </option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="">
-                            <div class="modal-header">
-                                <p class="modal-title">Upload Channel Listing CSV</p>
-                            </div>
+                            <label for="clientId" class="font-weight-bold">Channel Listing CSV:</label>
                             <div class="modal-body" style="padding:0px; margin-bottom:35px">
                                 <div class="product-file">
                                     <input class="custom-file-input" id="channelListingFile" required type="file">
@@ -71,7 +68,7 @@
                                         CSV
                                         File</label>
                                 </div>
-                                <a target="_blank" th:href="@{/samples/channelListingCsvSample.csv}" style="float:right; margin-top:5px;">
+                                <a target="_blank" href="http://127.0.0.1:9090/channelListingCsvSample.csv" style="float:right; margin-top:5px;">
                                     <i class="fa fa-download" aria-hidden="true"></i> Download CSV Sample
                                 </a>
                             </div>
@@ -80,7 +77,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-primary" id="add-channelListing" type="submit">Submit</button>
+                        <button class="btn btn-primary" id="add-channelListing" type="submit">Add</button>
                         <a id="error-file-link">
                             <button class="btn btn-warning" id="download-errors" type="button">Download Errors
                             </button>
@@ -101,7 +98,7 @@
                 <tr>
                     <th scope="col" style="text-align:center">ID</th>
                     <th scope="col" style="text-align:center">Channel ID</th>
-                    <th scope="col" style="text-align:center">Client ID</th>
+                    <th scope="col" style="text-align:center">Client</th>
                     <th scope="col">Channel SKU ID</th>
                     <th scope="col">Client SKU ID</th>
                 </tr>

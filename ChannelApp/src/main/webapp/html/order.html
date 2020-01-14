@@ -13,49 +13,81 @@
             <br/>
             <span class="text-muted" style="font-size:0.9em;">Add and View the created Orders.</span>
         </p>
-        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
-            Create Orders
-        </button>
-    </div>
-
-    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="downloadLinkModal" role="dialog"
-         tabindex="-1">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title" id="downloadLinkModalLabel">Invoice Download Link.</h6>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                        <span aria-hidden="true">&times;</span>
+        <hr/>
+        <div class="row" style="margin-top:8px;">
+            <div class="col-md-12">
+                <form id="channelSelectForm">
+                    <select class="form-control" id="channelIdSelect" name="channelId" required
+                            style="width:30%; float:left; margin-right:5px;" title="Select a Channel">
+                        <option disabled hidden selected value="">
+                            Select a Channel
+                        </option>
+                    </select>
+                    <button class="btn btn-primary" type="submit" id="channel-select-btn">
+                        <i aria-hidden="true" class="fa fa-check-circle-o"></i>
+                        &nbspConfirm
                     </button>
-                </div>
-                    <div class="modal-body">
-                        <table class="table table-sm table-striped" id="invoice-link-table" style="width:50%; margin:auto">
-                            <thead>
-                            <tr>
-                                <th scope="col" style="text-align:center;">Order ID</th>
-                                <th scope="col" style="text-align:center;">Invoice PDF Link</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                    </div>
+                </form>
+            </div>
+        </div>
+        <br/>
+        <div class="row" id="create-order-div" style="visibility:hidden;">
+            <div class="col-md-12">
+                <button class="btn btn-primary" id="refresh-data" style="width:60" type="button">
+                    <i aria-hidden="true" class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" id="create-order-btn"
+                        type="button">
+                    Create Orders
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
+    <!-- Order Details Modal-->
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="orderDetailsModal" role="dialog"
          tabindex="-1">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h6 class="modal-title" id="orderDetailsModalLabel">Order Details.</h6>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm table-striped" id="order-detail-table" style="margin:auto">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="text-align:center;">OrderItem ID</th>
+                            <th scope="col">Channel SKU</th>
+                            <th scope="col">Ordered Qty</th>
+                            <th scope="col">Allocated Qty</th>
+                            <th scope="col">Fulfilled Qty</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Create New Order</h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button" onclick="resetOrderModal()">
+                    <button aria-label="Close" class="close" data-dismiss="modal" onclick="toggleOrderModifyToCreate()"
+                            type="button">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -63,8 +95,8 @@
                     <div id="order-entry">
                         <form id="order-form">
                             <div class=row>
-                                <div class="form-group col-md-6">
-                                    <label for="clientId">Client:</label>
+                                <div class="form-group col-md-12">
+                                    <label for="clientId" class="font-weight-bold">Client:</label>
                                     <select class="form-control" id="clientId" name="clientId" required
                                             title="Select a Client">
                                         <option disabled hidden selected value="">
@@ -72,18 +104,9 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="channelId">Channel:</label>
-                                    <select class="form-control" id="channelId" name="channelId" required
-                                            title="Select a Channel">
-                                        <option disabled hidden selected value="">
-                                            Select a Channel
-                                        </option>
-                                    </select>
-                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="channelOrderId">Channel Order ID</label>
+                                <label for="channelOrderId" class="font-weight-bold">Channel Order ID</label>
                                 <input aria-describedby="channelOrderIdHelp" class="form-control" id="channelOrderId"
                                        name="channelOrderId"
                                        placeholder="Enter Channel Order ID" required title="This field is required"
@@ -97,24 +120,25 @@
                                 <h6 class="modal-title">Add Order Items</h6>
                             </div>
                             <div class="form-group row" style="margin-top:20px">
-                                <div class="col-md-2">
-                                </div>
-                                <div class="col-md-3">
-                                    <input aria-describedby="globalSkuIdHelp" class="form-control" id="globalSkuId"
-                                           name="globalSkuId"
-                                           placeholder="Enter Product SKU ID" required pattern="[0-9]*" style="width: 100%"
+                                <div class="col-md-7">
+                                    <label for="channelSkuId" class="font-weight-bold">Channel SKU:</label>
+                                    <input aria-describedby="channelSkuIdHelp" class="form-control" id="channelSkuId"
+                                           name="channelSkuId"
+                                           placeholder="Enter Channel SKU ID" required
+                                           style="width: 100%"
                                            title="This field is required" type="text">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
+                                    <label for="channelSkuId" class="font-weight-bold">Quantity:</label>
                                     <input aria-describedby="quantityHelp" class="form-control" id="orderedQuantity"
                                            name="orderedQuantity"
-                                           placeholder="Enter Quantity" required pattern="[0-9]*" style="width: 100%"
+                                           pattern="[0-9]*" placeholder="Enter Quantity" required style="width: 100%"
                                            title="This field is required" type="text">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <button class="btn btn-primary" id="add-order-item" style="width:100%;"
                                             type="click">
-                                        <i aria-hidden="true" class="fa fa-plus"></i>&nbspAdd
+                                        <i aria-hidden="true" class="fa fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
@@ -122,16 +146,18 @@
                     </div>
                 </div>
                 <div class="modal-footer" id="order-validate-button">
-                    <button class="btn btn-secondary" data-dismiss="modal" style="float:right;" type="button">Close
+                    <button class="btn btn-secondary" data-dismiss="modal" onclick="toggleOrderModifyToCreate()" style="float:right;"
+                            type="button">Close
                     </button>
                     <button class="btn btn-primary" id="validate-order" style="float:right;" type="submit">Validate
                         Order
                     </button>
                 </div>
                 <div class="modal-footer" id="order-submit-button">
-                    <button class="btn btn-secondary" data-dismiss="modal" style="float:right;" type="button">Close
+                    <button class="btn btn-secondary" data-dismiss="modal" onclick="toggleOrderModifyToCreate()" style="float:right;"
+                            type="button">Close
                     </button>
-                    <button class="btn btn-primary" id="add-order" style="float:right;" type="button">Submit Order
+                    <button class="btn btn-primary" id="add-order" style="float:right;" type="button">Submit
                     </button>
                 </div>
             </div>
@@ -139,21 +165,18 @@
     </div>
     <div class="body-content">
         <div class="table-display">
-            <table class="table table-sm table-striped" id="order-table" style="width:100%; margin:auto">
+            <table class="table table-sm table-striped" id="order-table" style="width:100%; margin:auto; visibility:hidden">
                 <thead>
                 <tr>
                     <th colspan="7">
                         Order Detail List &nbsp
-                        <button class="btn btn-primary" id="refresh-data" style="float: right; width:60" type="button">
-                            <i aria-hidden="true" class="fa fa-refresh"></i>
-                        </button>
                     </th>
                 </tr>
                 <tr>
                     <th scope="col" style="text-align:center;">ID</th>
-                    <th scope="col" style="text-align:center;">Client ID</th>
-                    <th scope="col" style="text-align:center;">Customer ID</th>
-                    <th scope="col">Channel ID</th>
+                    <th scope="col">Created</th>
+                    <th scope="col" style="text-align:center;">Client</th>
+                    <th scope="col" style="text-align:center;">Customer</th>
                     <th scope="col">Channel Order ID</th>
                     <th scope="col">Order Status</th>
                     <th scope="col" style="text-align:right">Actions</th>
