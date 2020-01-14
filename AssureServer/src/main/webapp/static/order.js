@@ -136,10 +136,15 @@ function uploadOrder(formList){
 function getSearchOrderList(){
     var $form = $("#search-param-form");
 
-    var startDate = new Date(Date.parse(document.getElementById("fromDateSearch").value + 'T00:00'));
-    var endDate = new Date(Date.parse(document.getElementById("toDateSearch").value + 'T24:00'));
+//    var fromDate = new Date(Date.parse(document.getElementById("fromDateSearch").value + 'T00:00'));
+//    var toDate = new Date(Date.parse(document.getElementById("toDateSearch").value + 'T24:00'))
+    var json = JSON.parse(toJson($form));
+//    json["fromDate"] = fromDate.toISOString();
+//    json["toDate"] = toDate.toISOString();
 
-    var json = JSON.stringify(JSON.parse(toJson($form)));
+    json = JSON.stringify(json);
+    console.log(json);
+
 	var url = getOrderApiUrl() + '/search';
 
     	$.ajax({

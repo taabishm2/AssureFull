@@ -1,6 +1,7 @@
 package com.increff.assure.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.increff.assure.model.data.ChannelOrderItemReceiptData;
 import com.increff.assure.model.data.ChannelOrderReceiptData;
 import com.increff.assure.model.data.ChannelAppOrderData;
 import com.increff.assure.model.form.ChannelAppOrderForm;
@@ -41,7 +42,9 @@ public class OrderDto {
         System.out.println(orderReceipt.getClientDetails());
         System.out.println(orderReceipt.getCustomerDetails());
         System.out.println(orderReceipt.getOrderCreationTime());
-        System.out.println(orderReceipt.getOrderItems());
+        for(ChannelOrderItemReceiptData r: orderReceipt.getOrderItems())
+            System.out.println(r.getChannelSkuId()+","+r.getMrp());
+
         XmlGenerateUtil.generate(orderReceipt);
         System.out.println("GENERATED XML");
         PdfGenerateUtil.generate(orderReceipt.getOrderId());

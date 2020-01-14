@@ -54,10 +54,6 @@ public class OrderDto extends AbstractService {
     @Autowired
     private ClientWrapper clientWrapper;
 
-    public static void main(String[] args) {
-
-    }
-
     @Transactional(rollbackFor = ApiException.class)
     public void add(OrderForm orderForm) throws ApiException {
         CheckValid.validate(orderForm);
@@ -232,16 +228,12 @@ public class OrderDto extends AbstractService {
         if (order.getStatus().equals(OrderStatus.FULFILLED))
             return;
 
-/*        File f = new File("C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//" + orderId + ".pdf");
-        if (f.exists() && !f.isDirectory())
-            return;*/
-
         if (channelService.getCheckId(order.getChannelId()).getInvoiceType().equals(InvoiceType.SELF)) {
             generateInvoicePdf(order);
-            fulfillOrderItems(orderId);
         } else {
             clientWrapper.fetchInvoiceFromChannel(createOrderInvoice(order));
         }
+        fulfillOrderItems(orderId);
 
         order.setStatus(OrderStatus.FULFILLED);
     }
@@ -283,6 +275,8 @@ public class OrderDto extends AbstractService {
             ProductMasterPojo product = productMasterService.getCheckId(orderItem.getGlobalSkuId());
             orderItemReceipt.setMrp(product.getMrp());
             orderItemReceipt.setTotal((long) (orderItem.getAllocatedQuantity() * product.getMrp()));
+
+            orderItemReceipt.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(),product.getId()).getChannelSkuId());
 
             orderItems.add(orderItemReceipt);
         }
@@ -339,7 +333,7 @@ public class OrderDto extends AbstractService {
             throw new ApiException(FileWriteUtil.writeErrorsToFile("orderError" + formList.hashCode(), errorMessages));
     }
 
-    public List<OrderData> getSearch(Long clientId, Long customerId, Long channelId, ZonedDateTime fromDate, ZonedDateTime toDate) throws ApiException {
+    public List<OrderData> getSearch(Long clientId, Long customerId, Long channelId, String fromDate, String toDate) throws ApiException {
         if (Objects.nonNull(clientId))
             consumerService.getCheckClient(clientId);
 
@@ -349,13 +343,26 @@ public class OrderDto extends AbstractService {
         if (Objects.nonNull(channelId))
             channelService.getCheckId(channelId);
 
-        checkDateFilters(fromDate, toDate);
+/*        ZonedDateTime fromDateObject = ZonedDateTime.parse(fromDate);
+        ZonedDateTime toDateObject = ZonedDateTime.parse(toDate);
 
-            List<OrderPojo> searchResults = orderService.getSearch(clientId, customerId, channelId, fromDate, toDate);
+        checkDateFilters(fromDateObject, toDateObject);
+
+        if (Objects.isNull(fromDateObject) || Objects.isNull(toDateObject)) {
+            if (Objects.nonNull(fromDateObject))
+                toDateObject = ZonedDateTime.now();
+            else
+                fromDateObject = toDateObject.minusMonths(1L);
+
+                fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"))
+        }*/
+
+        List<OrderPojo> searchResults = orderService.getSearch(clientId, customerId, channelId,fromDate,toDate);
+
         return convertOrderPojoToOrderData(searchResults);
     }
 
-    private void checkDateFilters(ZonedDateTime fromDate, ZonedDateTime toDate) {
+    private void checkDateFilters(ZonedDateTime fromDate, ZonedDateTime toDate) throws ApiException {
         if (Objects.nonNull(fromDate))
             if (fromDate.isAfter(ZonedDateTime.now()))
                 throw new ApiException("Invalid \"From\" Date");
@@ -363,5 +370,9 @@ public class OrderDto extends AbstractService {
         if (Objects.nonNull(toDate))
             if (fromDate.isAfter(ZonedDateTime.now()))
                 throw new ApiException("Invalid \"To\" Date");
+
+        if (Objects.nonNull(fromDate) && Objects.nonNull(toDate))
+            if (fromDate.isAfter(toDate))
+                throw new ApiException("\"From\" date cannot be after \"To\" date");
     }
 }

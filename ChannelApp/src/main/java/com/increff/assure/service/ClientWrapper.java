@@ -2,6 +2,7 @@ package com.increff.assure.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.increff.assure.model.data.ChannelOrderItemReceiptData;
 import com.increff.assure.model.data.ChannelOrderReceiptData;
 import com.increff.assure.model.data.ChannelAppOrderData;
 import com.increff.assure.model.form.ChannelAppOrderForm;
@@ -15,8 +16,11 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.increff.assure.util.ConvertUtil.*;
 
 @Component
 public class ClientWrapper {
@@ -54,7 +58,15 @@ public class ClientWrapper {
     }
 
     public static ChannelOrderReceiptData convert(OrderReceiptData orderReceiptData) throws ApiException {
-        return ConvertUtil.convert(orderReceiptData, ChannelOrderReceiptData.class);
+        ChannelOrderReceiptData channelInvoice = ConvertUtil.convert(orderReceiptData, ChannelOrderReceiptData.class);
+        List<ChannelOrderItemReceiptData> channelInvoiceItemList = new ArrayList<>();
+        for(OrderItemReceiptData invoiceItem:orderReceiptData.getOrderItems()) {
+            ChannelOrderItemReceiptData channelInvoiceItem = ConvertUtil.convert(invoiceItem, ChannelOrderItemReceiptData.class);
+            channelInvoiceItem.setChannelSkuId(invoiceItem.getChannelSkuId());
+            channelInvoiceItemList.add(channelInvoiceItem);
+        }
+        channelInvoice.setOrderItems(channelInvoiceItemList);
+        return channelInvoice;
     }
 
     public static void hitOrderValidationApi(OrderValidationForm validationForm) throws ApiException {

@@ -10,15 +10,15 @@ import java.util.List;
 public class FileWriteUtil {
     public static String writeErrorsToFile(String filename, List<MessageData> messageDataList) throws ApiException {
         FileWriter fileWriter;
-        String fileUrl = filename+".txt";
-        try{
+        String fileUrl = "C:\\Users\\Tabish\\Documents\\Repos\\Increff\\AssureServer\\src\\main\\resources\\output\\" + filename + ".txt";
+        try {
             fileWriter = new FileWriter(fileUrl);
-            for(MessageData message:messageDataList)
+            for (MessageData message : messageDataList)
                 fileWriter.write(message.getMessage());
             fileWriter.close();
-        } catch(IOException e){
+        } catch (IOException e) {
             throw new ApiException("Could not generate Error File.");
         }
-        return fileUrl;
+        return filename + ".txt";
     }
 }

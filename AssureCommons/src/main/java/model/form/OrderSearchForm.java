@@ -18,9 +18,7 @@ public class OrderSearchForm {
 
     private Long channelId;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private ZonedDateTime fromDate;
+    private String fromDate;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private ZonedDateTime toDate;
+    private String toDate;
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<orderReceiptData>
+    <channelName>INTERNAL</channelName>
+    <channelOrderId>ORDERA</channelOrderId>
+    <clientDetails>PUMA</clientDetails>
+    <customerDetails>TABISH</customerDetails>
+    <orderCreationTime>01/14/2020 15:04:29</orderCreationTime>
+    <orderId>5</orderId>
+    <orderItems>
+        <clientSkuId>Ravisku2</clientSkuId>
+        <mrp>5000.0</mrp>
+        <orderItemId>9</orderItemId>
+        <quantity>5</quantity>
+        <total>25000</total>
+    </orderItems>
+    <orderItems>
+        <clientSkuId>Vishalsku2</clientSkuId>
+        <mrp>5000.0</mrp>
+        <orderItemId>10</orderItemId>
+        <quantity>5</quantity>
+        <total>25000</total>
+    </orderItems>
+</orderReceiptData>

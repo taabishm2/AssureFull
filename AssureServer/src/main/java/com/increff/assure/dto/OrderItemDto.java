@@ -58,7 +58,8 @@ public class OrderItemDto {
         for (OrderItemPojo pojo : orderItemService.getByOrderId(orderId)) {
             OrderItemData orderData = convert(pojo, OrderItemData.class);
             orderData.setClientSkuId(productService.getCheckId(pojo.getGlobalSkuId()).getClientSkuId());
-            orderData.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(orderService.getCheckId(orderId).getChannelId(), pojo.getGlobalSkuId()).getChannelSkuId());
+            if(!channelService.getCheckId(orderService.getCheckId(orderId).getChannelId()).getName().equals("INTERNAL"))
+                orderData.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(orderService.getCheckId(orderId).getChannelId(), pojo.getGlobalSkuId()).getChannelSkuId());
             orderItemDataList.add(orderData);
         }
         return orderItemDataList;

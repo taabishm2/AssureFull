@@ -61,7 +61,7 @@ function validateOrder(event) {
     console.log("XX:",sessionStorage.getItem('channelId'));
     parsedJson['channelId'] = sessionStorage.getItem('channelId');
     console.log("XX:",sessionStorage.getItem('channelId'));
-    parsedJson['customerId'] = '4';
+    parsedJson['customerId'] = '1';
 
     json = JSON.stringify(parsedJson);
     var url = getOrderApiUrl() + "/validate";

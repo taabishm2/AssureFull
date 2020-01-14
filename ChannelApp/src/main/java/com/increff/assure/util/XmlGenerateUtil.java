@@ -21,16 +21,4 @@ public class XmlGenerateUtil {
             e.printStackTrace();
         }
     }
-
-    public static void main(String[] args) {
-        ChannelOrderReceiptData data = new ChannelOrderReceiptData();
-        data.setChannelName("Channel name");
-        data.setChannelOrderId("Channel Order ID");
-        data.setClientDetails("Client");
-        data.setCustomerDetails("Customer");
-        data.setOrderCreationTime("Created At");
-        data.setOrderId(3243L);
-        data.setOrderItems(null);
-        generate(data);
-    }
 }

@@ -82,7 +82,7 @@
     <!-- Modal -->
     <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
          tabindex="-1">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Create New Order</h5>
@@ -120,7 +120,7 @@
                                 <h6 class="modal-title">Add Order Items</h6>
                             </div>
                             <div class="form-group row" style="margin-top:20px">
-                                <div class="col-md-7">
+                                <div class="col-md-6">
                                     <label for="channelSkuId" class="font-weight-bold">Channel SKU:</label>
                                     <input aria-describedby="channelSkuIdHelp" class="form-control" id="channelSkuId"
                                            name="channelSkuId"
@@ -135,7 +135,9 @@
                                            pattern="[0-9]*" placeholder="Enter Quantity" required style="width: 100%"
                                            title="This field is required" type="text">
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
+                                    <label for="add-order-item">&nbsp;</label>
+                                    <br />
                                     <button class="btn btn-primary" id="add-order-item" style="width:100%;"
                                             type="click">
                                         <i aria-hidden="true" class="fa fa-plus"></i>

@@ -8,6 +8,7 @@ import lombok.Setter;
 public class OrderItemReceiptData {
     Long orderItemId;
     String clientSkuId;
+    String channelSkuId;
     Long quantity;
     Double mrp;
     Long total;
