@@ -20,7 +20,7 @@ public class PdfGenerateUtil {
 
     static {
         RESOURCES_DIR = "C://Users//Tabish//Documents//Repos//Increff//ChannelApp//src//main//resources//";
-        OUTPUT_DIR = "C://Users//Tabish//Documents//Repos//Increff//ChannelApp//src//main//resources//output//";
+        OUTPUT_DIR = "C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//";
     }
 
     public static void generate(Long orderId) throws ApiException {

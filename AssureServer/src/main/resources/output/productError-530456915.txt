@@ -1,3 +1,0 @@
-Error in Line: 0: Some fields are EMPTY
-Error in Line: 1: MRP must be non-zero and positive.
-Error in Line: 2: Some fields are EMPTY
