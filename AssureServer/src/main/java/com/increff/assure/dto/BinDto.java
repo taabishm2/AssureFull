@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class BinDto {
+public class BinDto extends AbstractDto {
     @Autowired
     private BinService binService;
 

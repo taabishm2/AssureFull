@@ -17,7 +17,7 @@ import java.util.List;
 import static com.increff.assure.util.ConvertUtil.convert;
 
 @Service
-public class ChannelDto {
+public class ChannelDto extends AbstractDto {
     @Autowired
     private ChannelService channelService;
 

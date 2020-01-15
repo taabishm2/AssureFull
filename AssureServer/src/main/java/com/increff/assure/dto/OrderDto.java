@@ -32,7 +32,7 @@ import java.util.Objects;
 import static com.increff.assure.util.ConvertUtil.convert;
 
 @Service
-public class OrderDto extends AbstractService {
+public class OrderDto extends AbstractDto {
     @Autowired
     private OrderService orderService;
     @Autowired

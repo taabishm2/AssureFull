@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class ProductMasterDto {
+public class ProductMasterDto extends AbstractDto {
     @Autowired
     private ProductMasterService productService;
     @Autowired

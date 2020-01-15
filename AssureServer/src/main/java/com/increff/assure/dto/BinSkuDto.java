@@ -20,7 +20,7 @@ import java.util.Objects;
 import static com.increff.assure.util.ConvertUtil.convert;
 
 @Service
-public class BinSkuDto {
+public class BinSkuDto extends AbstractDto {
     @Autowired
     private BinService binService;
     @Autowired
@@ -50,7 +50,7 @@ public class BinSkuDto {
     @Transactional(rollbackFor = ApiException.class)
     public void addList(List<BinSkuForm> formList) throws ApiException {
         List<BinSkuPojo> binSkuMasterPojoList = convert(formList, BinSkuPojo.class);
-        for(BinSkuForm form:formList){
+        for (BinSkuForm form : formList) {
             CheckValid.validate(form);
             validateProductAndBin(form);
 
@@ -84,10 +84,10 @@ public class BinSkuDto {
     }
 
     public List<BinSkuData> getSearchByBinAndProduct(Long binId, Long globalSkuId) throws ApiException {
-        if(Objects.nonNull(binId))
+        if (Objects.nonNull(binId))
             binService.getCheckId(binId);
 
-        if(Objects.nonNull(globalSkuId))
+        if (Objects.nonNull(globalSkuId))
             productService.getCheckId(globalSkuId);
 
         return convert(binSkuService.getSearchByBinAndProduct(binId, globalSkuId), BinSkuData.class);
@@ -97,26 +97,26 @@ public class BinSkuDto {
         List<MessageData> errorMessages = new ArrayList<>();
         HashSet<String> binSkuSet = new HashSet<>();
 
-        for(int i=0; i<formList.size(); i++){
+        for (int i = 0; i < formList.size(); i++) {
             try {
                 BinSkuForm form = formList.get(i);
 
                 CheckValid.validate(formList.get(i));
                 productService.getCheckId(form.getGlobalSkuId());
                 binService.getCheckId(form.getBinId());
-                if(binSkuSet.contains(form.getBinId()+","+form.getGlobalSkuId()))
+                if (binSkuSet.contains(form.getBinId() + "," + form.getGlobalSkuId()))
                     throw new ApiException("Duplicate Bin, Product Entry");
                 else
-                    binSkuSet.add(form.getBinId()+","+form.getGlobalSkuId());
-            } catch(ApiException e){
+                    binSkuSet.add(form.getBinId() + "," + form.getGlobalSkuId());
+            } catch (ApiException e) {
                 MessageData errorMessage = new MessageData();
-                errorMessage.setMessage("Error in Line: "+i+": "+e.getMessage()+"\n");
+                errorMessage.setMessage("Error in Line: " + i + ": " + e.getMessage() + "\n");
                 errorMessages.add(errorMessage);
             }
         }
 
-        if(errorMessages.size() != 0)
-            throw new ApiException(FileWriteUtil.writeErrorsToFile("inventoryError"+formList.hashCode(),errorMessages));
+        if (errorMessages.size() != 0)
+            throw new ApiException(FileWriteUtil.writeErrorsToFile("inventoryError" + formList.hashCode(), errorMessages));
     }
 
     private void checkDuplicates(List<BinSkuForm> formList) {

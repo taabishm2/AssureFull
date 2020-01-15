@@ -6,12 +6,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import model.data.BinSkuData;
 import model.form.BinSkuForm;
-import model.form.ProductMasterForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
 
 @Api
 @RestController
@@ -19,7 +19,7 @@ public class BinSkuController {
     @Autowired
     private BinSkuDto binSkuDto;
 
-   @ApiOperation(value = "Add a Bin Inventory List")
+    @ApiOperation(value = "Add a Bin Inventory List")
     @RequestMapping(path = "/api/binSku/list", method = RequestMethod.POST)
     public void addList(@Valid @RequestBody List<BinSkuForm> formList) throws ApiException {
         binSkuDto.addList(formList);

@@ -16,7 +16,7 @@ import java.util.Objects;
 import static com.increff.assure.util.ConvertUtil.convert;
 
 @Service
-public class OrderItemDto {
+public class OrderItemDto extends AbstractDto {
     @Autowired
     private OrderService orderService;
     @Autowired

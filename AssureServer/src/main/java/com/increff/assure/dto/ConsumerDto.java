@@ -17,7 +17,7 @@ import java.util.List;
 import static com.increff.assure.util.ConvertUtil.convert;
 
 @Service
-public class ConsumerDto {
+public class ConsumerDto extends AbstractDto {
     @Autowired
     private ConsumerService consumerService;
 

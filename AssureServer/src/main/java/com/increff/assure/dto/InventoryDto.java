@@ -16,7 +16,7 @@ import java.util.List;
 import static com.increff.assure.util.ConvertUtil.convert;
 
 @Service
-public class InventoryDto {
+public class InventoryDto extends AbstractDto {
     @Autowired
     private InventoryService inventoryService;
 
