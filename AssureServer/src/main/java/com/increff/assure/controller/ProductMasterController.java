@@ -22,7 +22,7 @@ public class ProductMasterController {
 
     @ApiOperation(value = "Add a List of Products")
     @RequestMapping(path = "/api/product/list/{clientId}", method = RequestMethod.POST)
-    public void addList(@PathVariable Long clientId, @Valid @RequestBody List<ProductMasterForm> formList) throws ApiException {
+    public void addList(@PathVariable Long clientId, @RequestBody List<ProductMasterForm> formList) throws ApiException {
         productMasterDto.addList(formList, clientId);
     }
 
@@ -46,7 +46,7 @@ public class ProductMasterController {
 
     @ApiOperation(value = "Update a product entry")
     @RequestMapping(path = "/api/product/{clientId}/{clientSku}", method = RequestMethod.PUT)
-    public void update(@PathVariable Long clientId, @PathVariable String clientSku, @Valid @RequestBody ProductUpdateForm form) throws ApiException {
+    public void update(@PathVariable Long clientId, @PathVariable String clientSku, @RequestBody ProductUpdateForm form) throws ApiException {
         productMasterDto.update(clientId, clientSku, form);
     }
 
@@ -58,7 +58,7 @@ public class ProductMasterController {
 
     @ApiOperation(value = "Validate products master list.")
     @RequestMapping(path = "/api/product/validate/{clientId}", method = RequestMethod.POST)
-    public void validateList(@PathVariable Long clientId, @Valid @RequestBody List<ProductMasterForm> formList) throws ApiException {
+    public void validateList(@PathVariable Long clientId, @RequestBody List<ProductMasterForm> formList) throws ApiException {
         productMasterDto.validateList(formList, clientId);
     }
 }

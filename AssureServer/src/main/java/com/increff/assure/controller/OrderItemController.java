@@ -21,7 +21,7 @@ public class OrderItemController {
 
     @ApiOperation(value = "Adds an Order-Item")
     @RequestMapping(path = "/api/orderItem", method = RequestMethod.POST)
-    public void add(@Valid @RequestBody OrderItemForm form) throws ApiException {
+    public void add(@RequestBody OrderItemForm form) throws ApiException {
         orderItemDto.add(form);
     }
 

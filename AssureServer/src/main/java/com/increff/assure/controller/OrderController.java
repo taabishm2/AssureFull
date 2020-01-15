@@ -28,13 +28,13 @@ public class OrderController {
 
     @ApiOperation(value = "Adds an Order")
     @RequestMapping(path = "/api/order", method = RequestMethod.POST)
-    public void add(@Valid @RequestBody OrderForm form) throws ApiException {
+    public void add(@RequestBody OrderForm form) throws ApiException {
         orderDto.add(form);
     }
 
     @ApiOperation(value = "Adds an Order from Channel")
     @RequestMapping(path = "/api/order/channel", method = RequestMethod.POST)
-    public void addChannelOrder(@Valid @RequestBody ChannelOrderForm form) throws ApiException {
+    public void addChannelOrder(@RequestBody ChannelOrderForm form) throws ApiException {
         orderDto.add(form);
     }
 

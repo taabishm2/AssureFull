@@ -20,7 +20,7 @@ public class ConsumerController {
 
     @ApiOperation(value = "Add a Consumer")
     @RequestMapping(path = "/api/consumer", method = RequestMethod.POST)
-    public void add(@Valid @RequestBody ConsumerForm consumerForm) throws ApiException {
+    public void add(@RequestBody ConsumerForm consumerForm) throws ApiException {
         consumerDto.add(consumerForm);
     }
 

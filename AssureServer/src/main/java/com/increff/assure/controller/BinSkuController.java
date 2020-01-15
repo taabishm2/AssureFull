@@ -9,7 +9,6 @@ import model.form.BinSkuForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 
@@ -21,7 +20,7 @@ public class BinSkuController {
 
     @ApiOperation(value = "Add a Bin Inventory List")
     @RequestMapping(path = "/api/binSku/list", method = RequestMethod.POST)
-    public void addList(@Valid @RequestBody List<BinSkuForm> formList) throws ApiException {
+    public void addList(@RequestBody List<BinSkuForm> formList) throws ApiException {
         binSkuDto.addList(formList);
     }
 
@@ -45,7 +44,7 @@ public class BinSkuController {
 
     @ApiOperation(value = "Validate Bin Inventory list.")
     @RequestMapping(path = "/api/binSku/validate", method = RequestMethod.POST)
-    public void validateList(@Valid @RequestBody List<BinSkuForm> formList) throws ApiException {
+    public void validateList(@RequestBody List<BinSkuForm> formList) throws ApiException {
         binSkuDto.validateList(formList);
     }
 }

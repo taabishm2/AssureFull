@@ -21,7 +21,7 @@ public class ChannelController {
 
     @ApiOperation(value = "Add a Channel")
     @RequestMapping(path = "/api/channel", method = RequestMethod.POST)
-    public void add(@Valid @RequestBody ChannelForm form) throws ApiException {
+    public void add(@RequestBody ChannelForm form) throws ApiException {
         channelDto.initializeInternalChannel();
         channelDto.add(form);
     }
