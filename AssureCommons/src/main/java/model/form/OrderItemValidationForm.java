@@ -5,11 +5,13 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 public class OrderItemValidationForm {
-    @NotEmpty
+    @Size(min=1, max=255)
     private String channelSkuId;
 
     @NotNull
@@ -21,9 +23,10 @@ public class OrderItemValidationForm {
     @NotNull
     private Long channelId;
 
-    @NotEmpty
+    @Size(min=1, max=255)
     private String channelOrderId;
 
     @NotNull
+    @Positive
     private Long orderedQuantity;
 }
