@@ -20,21 +20,6 @@ public class ChannelDto extends AbstractDto {
     @Autowired
     private ChannelService channelService;
 
-    @Transactional(rollbackFor = ApiException.class)
-    public void initializeInternalChannel() throws ApiException {
-        ChannelPojo internalChannel = new ChannelPojo();
-        internalChannel.setName("INTERNAL");
-        internalChannel.setInvoiceType(InvoiceType.SELF);
-
-        try {
-            channelService.checkDuplicateChannelName("INTERNAL");
-            channelService.add(internalChannel);
-        } catch (ApiException e) {
-            if (!e.getMessage().equals("Channel (NAME:INTERNAL) already exists."))
-                throw e;
-        }
-    }
-
     @Transactional(readOnly = true)
     public ChannelData get(Long id) throws ApiException {
         return convert(channelService.getCheckId(id), ChannelData.class);
@@ -43,7 +28,7 @@ public class ChannelDto extends AbstractDto {
     @Transactional(rollbackFor = ApiException.class)
     public void add(ChannelForm channelForm) throws ApiException {
         NormalizeUtil.normalize(channelForm);
-        validate(channelForm);
+        checkValid(channelForm);
 
         channelService.add(convert(channelForm, ChannelPojo.class));
     }

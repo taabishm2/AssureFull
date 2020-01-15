@@ -41,7 +41,6 @@ public class BinSkuService extends AbstractService {
     }
 
     @Transactional(rollbackFor = ApiException.class)
-    //Allocate as many items as can be removed from BinSKU. Returns deficit.
     public Long removeFromBin(BinSkuPojo targetBin, Long requiredQuantity) {
         Long deduction = 0L;
         deduction = min(targetBin.getQuantity(), requiredQuantity);

@@ -55,7 +55,7 @@ public class OrderDto extends AbstractDto {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(OrderForm orderForm) throws ApiException {
-        validate(orderForm);
+        checkValid(orderForm);
 
         OrderPojo orderPojo = convert(orderForm, OrderPojo.class);
         validateOrder(orderPojo);
@@ -66,7 +66,7 @@ public class OrderDto extends AbstractDto {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(ChannelOrderForm orderForm) throws ApiException {
-        validate(orderForm);
+        checkValid(orderForm);
 
         OrderPojo orderPojo = convert(orderForm, OrderPojo.class);
         validateOrder(orderPojo);
@@ -242,6 +242,7 @@ public class OrderDto extends AbstractDto {
             orderItemReceipt.setMrp(product.getMrp());
             orderItemReceipt.setTotal((long) (orderItem.getAllocatedQuantity() * product.getMrp()));
 
+            if(!channelService.getCheckId(order.getChannelId()).getName().equals("INTERNAL"))
             orderItemReceipt.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(), product.getId()).getChannelSkuId());
 
             orderItems.add(orderItemReceipt);
@@ -269,7 +270,7 @@ public class OrderDto extends AbstractDto {
         for (int i = 0; i < formList.size(); i++) {
             try {
                 OrderItemForm form = formList.get(i);
-                validate((form));
+                checkValid((form));
 
                 if (clientSkus.contains(form.getClientSkuId()))
                     throw new ApiException("Duplicate Client SKU");
@@ -309,10 +310,12 @@ public class OrderDto extends AbstractDto {
         if (Objects.nonNull(channelId))
             channelService.getCheckId(channelId);
 
-/*        ZonedDateTime fromDateObject = ZonedDateTime.parse(fromDate);
+        ZonedDateTime fromDateObject = ZonedDateTime.parse(fromDate);
         ZonedDateTime toDateObject = ZonedDateTime.parse(toDate);
+        System.out.println(fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss")));
+        System.out.println(toDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss")));
 
-        checkDateFilters(fromDateObject, toDateObject);
+/*        checkDateFilters(fromDateObject, toDateObject);
 
         if (Objects.isNull(fromDateObject) || Objects.isNull(toDateObject)) {
             if (Objects.nonNull(fromDateObject))
@@ -320,7 +323,7 @@ public class OrderDto extends AbstractDto {
             else
                 fromDateObject = toDateObject.minusMonths(1L);
 
-                fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"))
+                fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"));
         }*/
 
         List<OrderPojo> searchResults = orderService.getSearch(clientId, customerId, channelId, fromDate, toDate);

@@ -58,7 +58,7 @@ public class ChannelListingDto extends AbstractDto {
         List<ChannelListingPojo> channelListingPojos = new ArrayList<>();
         for (ChannelListingForm listingForm : formList) {
             NormalizeUtil.normalize(listingForm);
-            validate((listingForm));
+            checkValid((listingForm));
 
             channelListingPojos.add(convertFormToPojo(listingForm, channelId, clientId));
         }
@@ -85,7 +85,7 @@ public class ChannelListingDto extends AbstractDto {
         for (int index = 0; index < formList.size(); index++) {
             try {
                 ChannelListingForm form = formList.get(index);
-                validate(form);
+                checkValid(form);
 
                 if (channelSkus.contains(form.getChannelSkuId()))
                     throw new ApiException("Duplicate Channel SKU");

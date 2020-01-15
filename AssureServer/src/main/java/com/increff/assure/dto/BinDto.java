@@ -25,7 +25,7 @@ public class BinDto extends AbstractDto {
     }
 
     @Transactional(readOnly = true)
-    public List<Long> getAll() throws ApiException {
+    public List<Long> getAll() {
         return binService.getAll().stream().map(BinPojo::getId).collect(Collectors.toList());
     }
 }

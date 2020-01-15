@@ -38,14 +38,16 @@ public class ChannelListingServiceTest extends AbstractUnitTest {
     @Before
     public void init() {
         consumerPojo = PojoConstructor.getConstructConsumer("PUMA", ConsumerType.CLIENT);
-        productMasterPojo = PojoConstructor.getConstructProduct("PUMAX", consumerPojo.getId(), "BrandID", 200D, "SKUID", "Descriiption");
-        channelPojo = PojoConstructor.getConstructChannel("FLIPKART", InvoiceType.CHANNEL);
-
         consumerDao.insert(consumerPojo);
+        System.out.println("CONSUMER "+consumerPojo.getId());
+
+        productMasterPojo = PojoConstructor.getConstructProduct("PUMAX", consumerPojo.getId(), "BrandID", 200D, "SKUID", "Descriiption");
         productMasterDao.insert(productMasterPojo);
+
+        channelPojo = PojoConstructor.getConstructChannel("FLIPKART", InvoiceType.CHANNEL);
         channelDao.insert(channelPojo);
 
-        channelListingPojo = PojoConstructor.getConstructChannelListing(productMasterPojo.getId(), channelPojo.getId(), "ChannelSKU");
+        channelListingPojo = PojoConstructor.getConstructChannelListing(productMasterPojo.getId(), channelPojo.getId(), "ChannelSKU", consumerPojo.getId());
     }
 
     @Test
@@ -55,14 +57,14 @@ public class ChannelListingServiceTest extends AbstractUnitTest {
         assertEquals(1, channelListingDao.selectAll().size() - initialCount);
 
         try {
-            channelListingService.add(PojoConstructor.getConstructChannelListing(123L, channelPojo.getId(), "ChannelSKU"));
+            channelListingService.add(PojoConstructor.getConstructChannelListing(123L, channelPojo.getId(), "ChannelSKU", consumerPojo.getId()));
             fail("Duplicate Channel & Channel ID inserted");
         } catch (ApiException e) {
             assertEquals("Channel has already registered the Channel-SKU-ID: ChannelSKU", e.getMessage());
         }
 
         try {
-            channelListingService.add(PojoConstructor.getConstructChannelListing(productMasterPojo.getId(), channelPojo.getId(), "ChannelSKUNew"));
+            channelListingService.add(PojoConstructor.getConstructChannelListing(productMasterPojo.getId(), channelPojo.getId(), "ChannelSKUNew", consumerPojo.getId()));
             fail("Duplicate Channel & Channel ID inserted");
         } catch (ApiException e) {
             assertEquals("ChannelID " + channelPojo.getId() + " and GSKU " + productMasterPojo.getId() + " pair already exists", e.getMessage());

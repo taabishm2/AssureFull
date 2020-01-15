@@ -23,7 +23,7 @@ public class ConsumerDto extends AbstractDto {
     @Transactional(rollbackFor = ApiException.class)
     public void add(ConsumerForm consumerForm) throws ApiException {
         NormalizeUtil.normalize(consumerForm);
-        validate(consumerForm);
+        checkValid(consumerForm);
 
         consumerService.add(convert(consumerForm, ConsumerPojo.class));
     }

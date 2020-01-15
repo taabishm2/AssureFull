@@ -31,7 +31,7 @@ public class OrderItemDto extends AbstractDto {
     private ChannelService channelService;
 
     public void add(OrderItemForm form) throws ApiException {
-        validate(form);
+        checkValid(form);
 
         OrderItemPojo orderItemPojo = convert(form, OrderItemPojo.class);
         validateOrderItem(orderItemPojo);
@@ -71,7 +71,7 @@ public class OrderItemDto extends AbstractDto {
     }
 
     public void validateChannelOrderItemForm(OrderItemValidationForm validationForm) throws ApiException {
-        validate(validationForm);
+        checkValid(validationForm);
 
         ChannelListingPojo listing = channelListingService.getUnique(validationForm.getChannelId(), validationForm.getChannelSkuId(), validationForm.getClientId());
         if (Objects.isNull(listing))

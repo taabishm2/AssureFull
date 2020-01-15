@@ -32,7 +32,7 @@ public class ProductMasterDto extends AbstractDto {
 
     public void normalizeAndValidateForm(ProductMasterForm productForm) throws ApiException {
         NormalizeUtil.normalize(productForm);
-        validate(productForm);
+        checkValid(productForm);
     }
 
     private void validateClient(Long clientId) throws ApiException {
@@ -82,7 +82,7 @@ public class ProductMasterDto extends AbstractDto {
 
         for (int index = 0; index < formList.size(); index++) {
             try {
-                validate((formList.get(index)));
+                checkValid((formList.get(index)));
             } catch (ApiException e) {
                 MessageData errorMessage = new MessageData();
                 errorMessage.setMessage("Error in Line: " + index + ": " + e.getMessage() + "\n");

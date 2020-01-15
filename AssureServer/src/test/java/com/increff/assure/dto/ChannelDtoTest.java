@@ -19,17 +19,6 @@ public class ChannelDtoTest extends AbstractUnitTest {
     ChannelDao channelDao;
 
     @Test
-    public void testInit() throws ApiException {
-        channelDto.initializeInternalChannel();
-        channelDto.initializeInternalChannel();
-        ChannelPojo internalChannel = channelDao.selectByName("INTERNAL");
-
-        assertEquals(1, channelDao.selectAll().size());
-        assertNotNull(internalChannel);
-        assertEquals(InvoiceType.SELF, internalChannel.getInvoiceType());
-    }
-
-    @Test
     public void testGet() throws ApiException {
         ChannelPojo newChannel = PojoConstructor.getConstructChannel("SNAPDEAL",InvoiceType.CHANNEL);
         channelDao.insert(newChannel);

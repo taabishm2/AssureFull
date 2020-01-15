@@ -134,16 +134,19 @@ function uploadOrder(formList){
 }
 
 function getSearchOrderList(){
-    var $form = $("#search-param-form");
+    var json = JSON.parse(toJson($("#search-param-form")));
 
-//    var fromDate = new Date(Date.parse(document.getElementById("fromDateSearch").value + 'T00:00'));
-//    var toDate = new Date(Date.parse(document.getElementById("toDateSearch").value + 'T24:00'))
-    var json = JSON.parse(toJson($form));
-//    json["fromDate"] = fromDate.toISOString();
-//    json["toDate"] = toDate.toISOString();
+    if(document.getElementById("fromDateSearch").value != ''){
+        var fromDate = new Date(Date.parse(document.getElementById("fromDateSearch").value + 'T00:00'));
+        json["fromDate"] = fromDate.toISOString();
+    }
+
+    if(document.getElementById("toDateSearch").value != ''){
+        var toDate = new Date(Date.parse(document.getElementById("toDateSearch").value + 'T24:00'));
+        json["toDate"] = toDate.toISOString();
+    }
 
     json = JSON.stringify(json);
-    console.log(json);
 
 	var url = getOrderApiUrl() + '/search';
 
@@ -162,7 +165,6 @@ function getSearchOrderList(){
     	return false;
 }
 
-//Display table of Orders
 function displayOrderList(data){
 	var $tbody = $('#order-table').find('tbody');
 	$tbody.empty();
