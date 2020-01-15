@@ -2,11 +2,9 @@ package com.increff.assure.dto;
 
 import com.increff.assure.pojo.ChannelListingPojo;
 import com.increff.assure.service.*;
-import com.increff.assure.util.CheckValid;
 import com.increff.assure.util.ConvertUtil;
 import com.increff.assure.util.FileWriteUtil;
 import com.increff.assure.util.NormalizeUtil;
-import model.ConsumerType;
 import model.data.ChannelListingData;
 import model.data.MessageData;
 import model.form.ChannelListingForm;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 import static com.increff.assure.util.ConvertUtil.convert;
 
@@ -34,8 +31,7 @@ public class ChannelListingDto extends AbstractDto {
 
     @Transactional(readOnly = true)
     public ChannelListingData get(Long id) throws ApiException {
-        ChannelListingPojo channelListingPojo = channelListingService.getCheckId(id);
-        return convertPojoToData(channelListingPojo);
+        return convertPojoToData(channelListingService.getCheckId(id));
     }
 
     private ChannelListingData convertPojoToData(ChannelListingPojo channelListingPojo) throws ApiException {
@@ -46,14 +42,6 @@ public class ChannelListingDto extends AbstractDto {
         return listingData;
     }
 
-    @Transactional(rollbackFor = ApiException.class)
-    public void add(ChannelListingForm channelListingForm) throws ApiException {
-        ChannelListingPojo channelListingPojo = convert(channelListingForm, ChannelListingPojo.class);
-        validateChannelListing(channelListingPojo);
-
-        channelListingService.add(channelListingPojo);
-    }
-
     @Transactional(readOnly = true)
     public List<ChannelListingData> getAll() throws ApiException {
         List<ChannelListingData> allListingData = new ArrayList<>();
@@ -62,11 +50,6 @@ public class ChannelListingDto extends AbstractDto {
         return allListingData;
     }
 
-    @Transactional(readOnly = true)
-    private void validateChannelListing(ChannelListingPojo listingPojo) throws ApiException {
-        channelService.getCheckId(listingPojo.getChannelId());
-        productService.getCheckId(listingPojo.getGlobalSkuId());
-    }
 
     public void addList(List<ChannelListingForm> formList, Long channelId, Long clientId) throws ApiException {
         channelService.getCheckId(channelId);
@@ -74,27 +57,24 @@ public class ChannelListingDto extends AbstractDto {
 
         List<ChannelListingPojo> channelListingPojos = new ArrayList<>();
         for (ChannelListingForm listingForm : formList) {
-            normalizeAndValidateForm(listingForm);
+            NormalizeUtil.normalize(listingForm);
+            validate((listingForm));
+
             channelListingPojos.add(convertFormToPojo(listingForm, channelId, clientId));
         }
         channelListingService.addList(channelListingPojos);
-    }
-
-    public void normalizeAndValidateForm(ChannelListingForm listingForm) throws ApiException {
-        NormalizeUtil.normalize(listingForm);
-        CheckValid.validate((listingForm));
     }
 
     private ChannelListingPojo convertFormToPojo(ChannelListingForm listingForm, Long channelId, Long clientId) throws ApiException {
         ChannelListingPojo listingPojo = ConvertUtil.convert(listingForm, ChannelListingPojo.class);
         listingPojo.setChannelId(channelId);
         listingPojo.setClientId(clientId);
-
         listingPojo.setGlobalSkuId(productService.getByClientAndClientSku(clientId, listingForm.getClientSkuId()).getId());
+
         return listingPojo;
     }
 
-    public void validateList(List<ChannelListingForm> formList, Long channelId, Long clientId) throws ApiException {
+    public void validateFormList(List<ChannelListingForm> formList, Long channelId, Long clientId) throws ApiException {
         channelService.getCheckId(channelId);
         consumerService.getCheckClient(clientId);
 
@@ -102,10 +82,10 @@ public class ChannelListingDto extends AbstractDto {
         HashSet<String> channelSkus = new HashSet<>();
         HashSet<String> clientAndClientSkus = new HashSet<>();
 
-        for (int i = 0; i < formList.size(); i++) {
+        for (int index = 0; index < formList.size(); index++) {
             try {
-                ChannelListingForm form = formList.get(i);
-                CheckValid.validate(form);
+                ChannelListingForm form = formList.get(index);
+                validate(form);
 
                 if (channelSkus.contains(form.getChannelSkuId()))
                     throw new ApiException("Duplicate Channel SKU");
@@ -119,7 +99,7 @@ public class ChannelListingDto extends AbstractDto {
 
             } catch (ApiException e) {
                 MessageData errorMessage = new MessageData();
-                errorMessage.setMessage("Error in Line: " + i + ": " + e.getMessage() + "\n");
+                errorMessage.setMessage("Error in Line: " + index + ": " + e.getMessage() + "\n");
                 errorMessages.add(errorMessage);
             }
         }

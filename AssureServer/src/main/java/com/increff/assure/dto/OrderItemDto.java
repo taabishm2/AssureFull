@@ -31,14 +31,16 @@ public class OrderItemDto extends AbstractDto {
     private ChannelService channelService;
 
     public void add(OrderItemForm form) throws ApiException {
+        validate(form);
+
         OrderItemPojo orderItemPojo = convert(form, OrderItemPojo.class);
         validateOrderItem(orderItemPojo);
+
         orderItemService.add(orderItemPojo);
     }
 
     public OrderItemData get(Long id) throws ApiException {
-        OrderItemPojo orderItemPojo = orderItemService.getCheckId(id);
-        return convert(orderItemPojo, OrderItemData.class);
+        return convert(orderItemService.getCheckId(id), OrderItemData.class);
     }
 
     public List<OrderItemData> getAll() throws ApiException {
@@ -55,29 +57,31 @@ public class OrderItemDto extends AbstractDto {
 
     public List<OrderItemData> getByOrderId(Long orderId) throws ApiException {
         List<OrderItemData> orderItemDataList = new ArrayList<>();
+
         for (OrderItemPojo pojo : orderItemService.getByOrderId(orderId)) {
             OrderItemData orderData = convert(pojo, OrderItemData.class);
             orderData.setClientSkuId(productService.getCheckId(pojo.getGlobalSkuId()).getClientSkuId());
-            if(!channelService.getCheckId(orderService.getCheckId(orderId).getChannelId()).getName().equals("INTERNAL"))
+
+            if (!channelService.getCheckId(orderService.getCheckId(orderId).getChannelId()).getName().equals("INTERNAL"))
                 orderData.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(orderService.getCheckId(orderId).getChannelId(), pojo.getGlobalSkuId()).getChannelSkuId());
+
             orderItemDataList.add(orderData);
         }
         return orderItemDataList;
     }
 
     public void validateChannelOrderItemForm(OrderItemValidationForm validationForm) throws ApiException {
+        validate(validationForm);
+
         ChannelListingPojo listing = channelListingService.getUnique(validationForm.getChannelId(), validationForm.getChannelSkuId(), validationForm.getClientId());
         if (Objects.isNull(listing))
             throw new ApiException("Channel listing does not exist");
 
         Long globalSkuId = listing.getGlobalSkuId();
 
-        if (validationForm.getOrderedQuantity() <= 0)
-            throw new ApiException("Quantity must be positive");
+        productService.getCheckId(globalSkuId);
 
-         productService.getCheckId(globalSkuId);
-
-        if(Objects.isNull(inventoryService.getByGlobalSku(globalSkuId)))
+        if (Objects.isNull(inventoryService.getByGlobalSku(globalSkuId)))
             throw new ApiException("Product Not in Inventory");
 
         if (validationForm.getOrderedQuantity() > inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity())

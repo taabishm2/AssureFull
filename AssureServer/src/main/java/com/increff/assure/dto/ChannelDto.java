@@ -3,7 +3,6 @@ package com.increff.assure.dto;
 import com.increff.assure.pojo.ChannelPojo;
 import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ChannelService;
-import com.increff.assure.util.CheckValid;
 import com.increff.assure.util.NormalizeUtil;
 import model.InvoiceType;
 import model.data.ChannelData;
@@ -22,7 +21,7 @@ public class ChannelDto extends AbstractDto {
     private ChannelService channelService;
 
     @Transactional(rollbackFor = ApiException.class)
-    public void initializeInternalChannel() {
+    public void initializeInternalChannel() throws ApiException {
         ChannelPojo internalChannel = new ChannelPojo();
         internalChannel.setName("INTERNAL");
         internalChannel.setInvoiceType(InvoiceType.SELF);
@@ -30,23 +29,23 @@ public class ChannelDto extends AbstractDto {
         try {
             channelService.checkDuplicateChannelName("INTERNAL");
             channelService.add(internalChannel);
-        } catch (ApiException ignored) {
+        } catch (ApiException e) {
+            if (!e.getMessage().equals("Channel (NAME:INTERNAL) already exists."))
+                throw e;
         }
     }
 
     @Transactional(readOnly = true)
     public ChannelData get(Long id) throws ApiException {
-        ChannelPojo channelPojo = channelService.getCheckId(id);
-        return convert(channelPojo, ChannelData.class);
+        return convert(channelService.getCheckId(id), ChannelData.class);
     }
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(ChannelForm channelForm) throws ApiException {
-        CheckValid.validate(channelForm);
-        ChannelPojo channelPojo = convert(channelForm, ChannelPojo.class);
-        NormalizeUtil.normalize(channelPojo);
+        NormalizeUtil.normalize(channelForm);
+        validate(channelForm);
 
-        channelService.add(channelPojo);
+        channelService.add(convert(channelForm, ChannelPojo.class));
     }
 
     @Transactional(readOnly = true)

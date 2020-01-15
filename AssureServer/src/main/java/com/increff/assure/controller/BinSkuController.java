@@ -45,6 +45,6 @@ public class BinSkuController {
     @ApiOperation(value = "Validate Bin Inventory list.")
     @RequestMapping(path = "/api/binSku/validate", method = RequestMethod.POST)
     public void validateList(@RequestBody List<BinSkuForm> formList) throws ApiException {
-        binSkuDto.validateList(formList);
+        binSkuDto.validateFormList(formList);
     }
 }

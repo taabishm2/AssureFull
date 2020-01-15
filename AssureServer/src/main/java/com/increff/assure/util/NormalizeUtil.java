@@ -2,6 +2,7 @@ package com.increff.assure.util;
 
 import com.increff.assure.pojo.ChannelPojo;
 import com.increff.assure.pojo.ConsumerPojo;
+import model.form.ChannelForm;
 import model.form.ChannelListingForm;
 import model.form.ConsumerForm;
 import model.form.ProductMasterForm;
@@ -11,8 +12,8 @@ public class NormalizeUtil {
         consumerPojo.setName(StringUtil.toUpperCase(consumerPojo.getName()));
     }
 
-    public static void normalize(ChannelPojo channelPojo) {
-        channelPojo.setName(StringUtil.toUpperCase(channelPojo.getName()));
+    public static void normalize(ChannelForm channelForm) {
+        channelForm.setName(StringUtil.toUpperCase(channelForm.getName()));
     }
 
     public static void normalize(ConsumerForm consumerForm) {

@@ -3,7 +3,6 @@ package com.increff.assure.dto;
 import com.increff.assure.pojo.ConsumerPojo;
 import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ConsumerService;
-import com.increff.assure.util.CheckValid;
 import com.increff.assure.util.NormalizeUtil;
 import model.ConsumerType;
 import model.data.ConsumerData;
@@ -24,10 +23,9 @@ public class ConsumerDto extends AbstractDto {
     @Transactional(rollbackFor = ApiException.class)
     public void add(ConsumerForm consumerForm) throws ApiException {
         NormalizeUtil.normalize(consumerForm);
-        CheckValid.validate(consumerForm);
+        validate(consumerForm);
 
-        ConsumerPojo consumerPojo = convert(consumerForm, ConsumerPojo.class);
-        consumerService.add(consumerPojo);
+        consumerService.add(convert(consumerForm, ConsumerPojo.class));
     }
 
     @Transactional(readOnly = true)

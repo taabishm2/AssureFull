@@ -4,7 +4,6 @@ import com.increff.assure.pojo.ProductMasterPojo;
 import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ConsumerService;
 import com.increff.assure.service.ProductMasterService;
-import com.increff.assure.util.CheckValid;
 import com.increff.assure.util.ConvertUtil;
 import com.increff.assure.util.FileWriteUtil;
 import com.increff.assure.util.NormalizeUtil;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ProductMasterDto extends AbstractDto {
@@ -29,13 +27,12 @@ public class ProductMasterDto extends AbstractDto {
     private ConsumerService consumerService;
 
     public ProductMasterData get(Long id) throws ApiException {
-        ProductMasterPojo productPojo = productService.getCheckId(id);
-        return ConvertUtil.convert(productPojo, ProductMasterData.class);
+        return ConvertUtil.convert(productService.getCheckId(id), ProductMasterData.class);
     }
 
     public void normalizeAndValidateForm(ProductMasterForm productForm) throws ApiException {
         NormalizeUtil.normalize(productForm);
-        CheckValid.validate((productForm));
+        validate(productForm);
     }
 
     private void validateClient(Long clientId) throws ApiException {
@@ -83,17 +80,17 @@ public class ProductMasterDto extends AbstractDto {
         validateClient(clientId);
         List<MessageData> errorMessages = new ArrayList<>();
 
-        for(int i=0; i<formList.size(); i++){
+        for (int index = 0; index < formList.size(); index++) {
             try {
-                CheckValid.validate((formList.get(i)));
-            } catch(ApiException e){
+                validate((formList.get(index)));
+            } catch (ApiException e) {
                 MessageData errorMessage = new MessageData();
-                errorMessage.setMessage("Error in Line: "+i+": "+e.getMessage()+"\n");
+                errorMessage.setMessage("Error in Line: " + index + ": " + e.getMessage() + "\n");
                 errorMessages.add(errorMessage);
             }
         }
 
-        if(errorMessages.size() != 0)
-            throw new ApiException(FileWriteUtil.writeErrorsToFile("productError"+formList.hashCode(),errorMessages));
+        if (errorMessages.size() != 0)
+            throw new ApiException(FileWriteUtil.writeErrorsToFile("productError" + formList.hashCode(), errorMessages));
     }
 }

@@ -6,11 +6,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import model.data.ChannelListingData;
 import model.form.ChannelListingForm;
-import model.form.ProductMasterForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Api
@@ -40,6 +38,6 @@ public class ChannelListingController {
     @ApiOperation(value = "Validate List of Channel Listings for a Channel")
     @RequestMapping(path = "/api/channelListing/validate/{channelId}/{clientId}", method = RequestMethod.POST)
     public void validateList(@PathVariable Long channelId, @PathVariable Long clientId, @RequestBody List<ChannelListingForm> formList) throws ApiException {
-        channelListingDto.validateList(formList, channelId, clientId);
+        channelListingDto.validateFormList(formList, channelId, clientId);
     }
 }

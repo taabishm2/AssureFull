@@ -8,8 +8,6 @@ import model.form.InventoryForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -22,14 +20,12 @@ public class InventoryDto extends AbstractDto {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(InventoryForm form) throws ApiException {
-        InventoryPojo inventoryPojo = convert(form, InventoryPojo.class);
-        inventoryService.addOrUpdate(inventoryPojo);
+        inventoryService.addOrUpdate(convert(form, InventoryPojo.class));
     }
 
     @Transactional(readOnly = true)
     public InventoryData get(Long id) throws ApiException {
-        InventoryPojo inventoryPojo = inventoryService.getCheckId(id);
-        return convert(inventoryPojo, InventoryData.class);
+        return convert(inventoryService.getCheckId(id), InventoryData.class);
     }
 
     @Transactional(readOnly = true)

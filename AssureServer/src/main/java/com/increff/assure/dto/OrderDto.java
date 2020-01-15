@@ -6,7 +6,6 @@ import com.increff.assure.pojo.OrderItemPojo;
 import com.increff.assure.pojo.OrderPojo;
 import com.increff.assure.pojo.ProductMasterPojo;
 import com.increff.assure.service.*;
-import com.increff.assure.util.CheckValid;
 import com.increff.assure.util.FileWriteUtil;
 import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
@@ -56,10 +55,10 @@ public class OrderDto extends AbstractDto {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(OrderForm orderForm) throws ApiException {
-        CheckValid.validate(orderForm);
+        validate(orderForm);
+
         OrderPojo orderPojo = convert(orderForm, OrderPojo.class);
         validateOrder(orderPojo);
-
         orderService.add(orderPojo);
 
         addOrderItemsForOrder(orderForm.getOrderItemList(), orderPojo.getId(), orderPojo.getClientId());
@@ -67,33 +66,13 @@ public class OrderDto extends AbstractDto {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(ChannelOrderForm orderForm) throws ApiException {
-        CheckValid.validate(orderForm);
+        validate(orderForm);
+
         OrderPojo orderPojo = convert(orderForm, OrderPojo.class);
         validateOrder(orderPojo);
-
         orderService.add(orderPojo);
 
-        addChanelOrderItemsForOrder(orderForm.getOrderItemList(), orderForm.getChannelId(), orderPojo.getId(), orderPojo.getClientId());
-    }
-
-    private void addChanelOrderItemsForOrder(List<ChannelOrderItemForm> orderItemFormList, Long channelId, Long orderId, Long clientId) throws ApiException {
-        List<OrderItemPojo> orderItemList = convertFormToPojo(orderItemFormList, channelId, orderId, clientId);
-        for (OrderItemPojo orderItem : orderItemList)
-            validateOrderItem(orderItem, clientId);
-
-        orderItemService.addList(orderItemList);
-    }
-
-    private List<OrderItemPojo> convertFormToPojo(List<ChannelOrderItemForm> orderItemFormList, Long channelId, Long orderId, Long clientId) {
-        List<OrderItemPojo> orderItemList = new ArrayList<>();
-        for (ChannelOrderItemForm form : orderItemFormList) {
-            OrderItemPojo pojo = new OrderItemPojo();
-            pojo.setOrderId(orderId);
-            pojo.setGlobalSkuId(channelListingService.getUnique(channelId, form.getChannelSkuId(), clientId).getGlobalSkuId());
-            pojo.setOrderedQuantity(form.getOrderedQuantity());
-            orderItemList.add(pojo);
-        }
-        return orderItemList;
+        addChannelOrderItemsForOrder(orderForm.getOrderItemList(), orderForm.getChannelId(), orderPojo.getId(), orderPojo.getClientId());
     }
 
     private void validateOrder(OrderPojo orderPojo) throws ApiException {
@@ -109,24 +88,21 @@ public class OrderDto extends AbstractDto {
     }
 
     @Transactional(rollbackFor = ApiException.class)
-    private void addOrderItemsForOrder(List<OrderItemForm> orderItemFormList, Long orderId, Long clientId) throws ApiException {
-        List<OrderItemPojo> orderItemList = convertFormToPojo(orderItemFormList, orderId, clientId);
+    private void addChannelOrderItemsForOrder(List<ChannelOrderItemForm> orderItemFormList, Long channelId, Long orderId, Long clientId) throws ApiException {
+        List<OrderItemPojo> orderItemList = convertFormToPojo(orderItemFormList, channelId, orderId, clientId);
         for (OrderItemPojo orderItem : orderItemList)
             validateOrderItem(orderItem, clientId);
 
         orderItemService.addList(orderItemList);
     }
 
-    private List<OrderItemPojo> convertFormToPojo(List<OrderItemForm> orderItemFormList, Long orderId, Long clientId) throws ApiException {
-        List<OrderItemPojo> orderItemList = new ArrayList<>();
-        for (OrderItemForm form : orderItemFormList) {
-            OrderItemPojo pojo = new OrderItemPojo();
-            pojo.setOrderId(orderId);
-            pojo.setGlobalSkuId(productMasterService.getByClientAndClientSku(clientId, form.getClientSkuId()).getId());
-            pojo.setOrderedQuantity(form.getOrderedQuantity());
-            orderItemList.add(pojo);
-        }
-        return orderItemList;
+    @Transactional(rollbackFor = ApiException.class)
+    private void addOrderItemsForOrder(List<OrderItemForm> orderItemFormList, Long orderId, Long clientId) throws ApiException {
+        List<OrderItemPojo> orderItemList = convertFormToPojo(orderItemFormList, orderId, clientId);
+        for (OrderItemPojo orderItem : orderItemList)
+            validateOrderItem(orderItem, clientId);
+
+        orderItemService.addList(orderItemList);
     }
 
     @Transactional(readOnly = true)
@@ -139,28 +115,18 @@ public class OrderDto extends AbstractDto {
 
     @Transactional(readOnly = true)
     public OrderData get(Long id) throws ApiException {
-        return convertOrderPojoToOrderData(orderService.getCheckId(id));
-    }
-
-    private OrderData convertOrderPojoToOrderData(OrderPojo order) throws ApiException {
-        OrderData orderData = convert(order, OrderData.class);
-        orderData.setOrderItemList(convert(orderItemService.getByOrderId(order.getId()), OrderItemForm.class));
-        orderData.setDateCreated(order.getCreatedAt().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")));
-        orderData.setClientName(consumerService.getCheckId(order.getClientId()).getName());
-        orderData.setCustomerName(consumerService.getCheckId(order.getCustomerId()).getName());
-        orderData.setChannelName(channelService.getCheckId(order.getChannelId()).getName());
-        return orderData;
+        return convertPojoToData(orderService.getCheckId(id));
     }
 
     @Transactional(readOnly = true)
     public List<OrderData> getAll() throws ApiException {
-        return convertOrderPojoToOrderData(orderService.getAll());
+        return convertPojoToData(orderService.getAll());
     }
 
-    private List<OrderData> convertOrderPojoToOrderData(List<OrderPojo> orderPojoList) throws ApiException {
+    private List<OrderData> convertPojoToData(List<OrderPojo> orderPojoList) throws ApiException {
         List<OrderData> orderDataList = new ArrayList<>();
         for (OrderPojo pojo : orderPojoList)
-            orderDataList.add(convertOrderPojoToOrderData(pojo));
+            orderDataList.add(convertPojoToData(pojo));
         return orderDataList;
     }
 
@@ -276,7 +242,7 @@ public class OrderDto extends AbstractDto {
             orderItemReceipt.setMrp(product.getMrp());
             orderItemReceipt.setTotal((long) (orderItem.getAllocatedQuantity() * product.getMrp()));
 
-            orderItemReceipt.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(),product.getId()).getChannelSkuId());
+            orderItemReceipt.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(), product.getId()).getChannelSkuId());
 
             orderItems.add(orderItemReceipt);
         }
@@ -291,7 +257,7 @@ public class OrderDto extends AbstractDto {
 
     public List<OrderData> getByChannel(Long channelId) throws ApiException {
         channelService.getCheckId(channelId);
-        return convertOrderPojoToOrderData(orderService.getByChannel(channelId));
+        return convertPojoToData(orderService.getByChannel(channelId));
     }
 
     public void validateList(List<OrderItemForm> formList, Long clientId, Long channelId) throws ApiException {
@@ -303,7 +269,7 @@ public class OrderDto extends AbstractDto {
         for (int i = 0; i < formList.size(); i++) {
             try {
                 OrderItemForm form = formList.get(i);
-                CheckValid.validate((form));
+                validate((form));
 
                 if (clientSkus.contains(form.getClientSkuId()))
                     throw new ApiException("Duplicate Client SKU");
@@ -316,12 +282,12 @@ public class OrderDto extends AbstractDto {
                     throw new ApiException("Quantity must be positive");
 
                 if (!channelService.getCheckId(channelId).getName().equals("INTERNAL"))
-                    if (Objects.isNull(channelListingService.getByChannelIdAndGlobalSku(channelId, globalSkuId)))
-                        throw new ApiException("Channel does not provide the mentioned Product");
+                    checkNotNull(channelListingService.getByChannelIdAndGlobalSku(channelId, globalSkuId), "Channel does not provide the mentioned Product");
 
                 checkNotNull(inventoryService.getByGlobalSku(globalSkuId), "Product not in Inventory");
                 if (form.getOrderedQuantity() > inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity())
                     throw new ApiException("Insufficient Stock. " + inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity() + " items left");
+
             } catch (ApiException e) {
                 MessageData errorMessage = new MessageData();
                 errorMessage.setMessage("Error in Line: " + i + ": " + e.getMessage() + "\n");
@@ -357,9 +323,9 @@ public class OrderDto extends AbstractDto {
                 fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"))
         }*/
 
-        List<OrderPojo> searchResults = orderService.getSearch(clientId, customerId, channelId,fromDate,toDate);
+        List<OrderPojo> searchResults = orderService.getSearch(clientId, customerId, channelId, fromDate, toDate);
 
-        return convertOrderPojoToOrderData(searchResults);
+        return convertPojoToData(searchResults);
     }
 
     private void checkDateFilters(ZonedDateTime fromDate, ZonedDateTime toDate) throws ApiException {
@@ -374,5 +340,39 @@ public class OrderDto extends AbstractDto {
         if (Objects.nonNull(fromDate) && Objects.nonNull(toDate))
             if (fromDate.isAfter(toDate))
                 throw new ApiException("\"From\" date cannot be after \"To\" date");
+    }
+
+    private List<OrderItemPojo> convertFormToPojo(List<ChannelOrderItemForm> orderItemFormList, Long channelId, Long orderId, Long clientId) {
+        List<OrderItemPojo> orderItemList = new ArrayList<>();
+        for (ChannelOrderItemForm form : orderItemFormList) {
+            OrderItemPojo pojo = new OrderItemPojo();
+            pojo.setOrderId(orderId);
+            pojo.setGlobalSkuId(channelListingService.getUnique(channelId, form.getChannelSkuId(), clientId).getGlobalSkuId());
+            pojo.setOrderedQuantity(form.getOrderedQuantity());
+            orderItemList.add(pojo);
+        }
+        return orderItemList;
+    }
+
+    private List<OrderItemPojo> convertFormToPojo(List<OrderItemForm> orderItemFormList, Long orderId, Long clientId) throws ApiException {
+        List<OrderItemPojo> orderItemList = new ArrayList<>();
+        for (OrderItemForm form : orderItemFormList) {
+            OrderItemPojo pojo = new OrderItemPojo();
+            pojo.setOrderId(orderId);
+            pojo.setGlobalSkuId(productMasterService.getByClientAndClientSku(clientId, form.getClientSkuId()).getId());
+            pojo.setOrderedQuantity(form.getOrderedQuantity());
+            orderItemList.add(pojo);
+        }
+        return orderItemList;
+    }
+
+    private OrderData convertPojoToData(OrderPojo order) throws ApiException {
+        OrderData orderData = convert(order, OrderData.class);
+        orderData.setOrderItemList(convert(orderItemService.getByOrderId(order.getId()), OrderItemForm.class));
+        orderData.setDateCreated(order.getCreatedAt().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")));
+        orderData.setClientName(consumerService.getCheckId(order.getClientId()).getName());
+        orderData.setCustomerName(consumerService.getCheckId(order.getCustomerId()).getName());
+        orderData.setChannelName(channelService.getCheckId(order.getChannelId()).getName());
+        return orderData;
     }
 }

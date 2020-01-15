@@ -8,6 +8,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -23,5 +24,15 @@ public class AbstractDto {
     public static <T> void validate(Collection<T> formList) throws ApiException {
         for (T form : formList)
             validate(form);
+    }
+
+    public void checkNull(Object object, String message) throws ApiException {
+        if (Objects.nonNull(object))
+            throw new ApiException(message);
+    }
+
+    public void checkNotNull(Object object, String message) throws ApiException {
+        if (Objects.isNull(object))
+            throw new ApiException(message);
     }
 }
