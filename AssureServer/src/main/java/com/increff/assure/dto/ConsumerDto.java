@@ -30,8 +30,7 @@ public class ConsumerDto extends AbstractDto {
 
     @Transactional(readOnly = true)
     public ConsumerData get(Long id) throws ApiException {
-        ConsumerPojo consumerPojo = consumerService.getCheckId(id);
-        return convert(consumerPojo, ConsumerData.class);
+        return convert(consumerService.getCheckId(id), ConsumerData.class);
     }
 
     @Transactional(readOnly = true)
