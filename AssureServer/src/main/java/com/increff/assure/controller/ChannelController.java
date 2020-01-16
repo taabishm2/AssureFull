@@ -25,12 +25,6 @@ public class ChannelController {
         channelDto.add(form);
     }
 
-    @ApiOperation(value = "Get a channel by ID")
-    @RequestMapping(path = "/api/channel/{id}", method = RequestMethod.GET)
-    public ChannelData get(@PathVariable Long id) throws ApiException {
-        return channelDto.get(id);
-    }
-
     @ApiOperation(value = "Get list of all channels")
     @RequestMapping(path = "/api/channel", method = RequestMethod.GET)
     public List<ChannelData> getAll() throws ApiException {
