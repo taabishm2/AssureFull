@@ -15,6 +15,7 @@ public class ProductUpdateForm {
     @Positive
     private Double mrp;
 
+    @NotNull
     @Size(min=1, max=255)
     private String name;
 

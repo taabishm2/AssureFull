@@ -9,15 +9,15 @@ import model.form.ProductMasterForm;
 
 public class NormalizeUtil {
     public static void normalize(ConsumerPojo consumerPojo) {
-        consumerPojo.setName(StringUtil.toUpperCase(consumerPojo.getName()));
+        consumerPojo.setName(StringUtil.toLowerCase(consumerPojo.getName()));
     }
 
     public static void normalize(ChannelForm channelForm) {
-        channelForm.setName(StringUtil.toUpperCase(channelForm.getName()));
+        channelForm.setName(StringUtil.toLowerCase(channelForm.getName()));
     }
 
     public static void normalize(ConsumerForm consumerForm) {
-        consumerForm.setName(StringUtil.toUpperCase(consumerForm.getName()));
+        consumerForm.setName(StringUtil.toLowerCase(consumerForm.getName()));
     }
 
     public static void normalize(ProductMasterForm productForm) {

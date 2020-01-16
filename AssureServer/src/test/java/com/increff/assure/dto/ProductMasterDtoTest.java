@@ -14,7 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ProductMasterDtoTest extends AbstractUnitTest {
 
@@ -26,93 +27,110 @@ public class ProductMasterDtoTest extends AbstractUnitTest {
     ConsumerDao consumerDao;
 
     private ConsumerPojo client;
-    private ConsumerPojo customer;
-    private ProductMasterForm productMasterForm;
     private ProductMasterPojo productPojo;
 
     @Before
     public void init() {
-        //TODO: Create general class. Autowire all DAOs and write methods prepare_for_test
         client = TestPojo.getConsumerPojo("PUMA", ConsumerType.CLIENT);
-        customer = TestPojo.getConsumerPojo("NAME", ConsumerType.CUSTOMER);
-
+        ConsumerPojo customer = TestPojo.getConsumerPojo("NAME", ConsumerType.CUSTOMER);
         consumerDao.insert(client);
         consumerDao.insert(customer);
 
-        productMasterForm = FormConstructor.getConstructProduct("PUMAX", client.getId(), "BRAND", 100D, "CSKU1", "Description");
-        productPojo = TestPojo.getConstructProduct("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU1", "Description");
-    }
-
-//    @Test
-//    public void testAdd() throws ApiException {
-//        int initialCount = productDao.selectAll().size();
-//        productDto.add(FormConstructor.getConstructProduct("PUMAX", client.getId(), "BRAND", 100D, "CSKU1", "Description"));
-//
-//        assertEquals(1, productDao.selectAll().size() - initialCount);
-//        assertNotNull(productDao.selectByClientIdAndClientSku(client.getId(), "CSKU1"));
-//
-//        try {
-//            productDto.add(FormConstructor.getConstructProduct("PUMAX", customer.getId(), "BRAND", 100D, "CSKU1", "Description"));
-//        } catch (ApiException e) {
-//            assertEquals("Client (ClientID:" + customer.getId() + ") not registered.", e.getMessage());
-//        }
-//
-//        try {
-//            productDto.add(FormConstructor.getConstructProduct("PUMAX", customer.getId(), "BRAND", -300D, "CSKU1", "Description"));
-//        } catch (ApiException e) {
-//            assertEquals("MRP must be non-zero and positive.", e.getMessage());
-//        }
-//
-//        try {
-//            productDto.add(productMasterForm);
-//            productDto.add(productMasterForm);
-//        } catch (ApiException e) {
-//
-//        }
-//    }
-
-    @Test
-    public void testGet() throws ApiException {
-        productDao.insert(productPojo);
-
-        assertEquals("PUMAXPOJO", productDto.get(productPojo.getId()).getName());
+        ProductMasterForm productMasterForm = TestForm.getProductForm("PUMAX", "BRAND", 100D, "CSKU1", "Description");
+        productPojo = TestPojo.getProductPojo("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU1", "Description");
     }
 
     @Test
-    public void testAddList() throws ApiException {
-        assertEquals(0, productDao.selectAll().size());
+    public void testAddListWithValidList() throws ApiException {
         List<ProductMasterForm> productList = new ArrayList<>();
-        productList.add(FormConstructor.getConstructProduct("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU1", "Description"));
-        productList.add(FormConstructor.getConstructProduct("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU2", "Description"));
-        productList.add(FormConstructor.getConstructProduct("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU3", "Description"));
+        productList.add(TestForm.getProductForm("PUMAXPOJO", "BRAND", 100D, "CSKU1", "Description"));
+        productList.add(TestForm.getProductForm("PUMAXPOJO", "BRAND", 100D, "CSKU2", "Description"));
+        productList.add(TestForm.getProductForm("PUMAXPOJO", "BRAND", 100D, "CSKU3", "Description"));
 
         productDto.addList(productList, client.getId());
         assertEquals(3, productDao.selectAll().size());
     }
 
-//    @Test(expected = ApiException.class)
-//    public void testAddListTransactionality() throws ApiException {
-//        assertEquals(0, productDao.selectAll().size());
-//        List<ProductMasterForm> productList = new ArrayList<>();
-//        productList.add(FormConstructor.getConstructProduct("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU1", "Description"));
-//        productList.add(FormConstructor.getConstructProduct("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU2", "Description"));
-//        productList.add(FormConstructor.getConstructProduct("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU3", "Description"));
-//
-//        productDto.addList(productList);
-//
-//        List<ProductMasterForm> invalidProductList = new ArrayList<>();
-//        invalidProductList.add(FormConstructor.getConstructProduct("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU4", "Description"));
-//        invalidProductList.add(FormConstructor.getConstructProduct("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU4", "Description"));
-//
-//        try {
-//            productDto.addList(invalidProductList);
-//            fail("failed");
-//        } catch (ApiException e) {
-//        }
-//
-//        for(ProductMasterPojo product:productDao.selectAll())
-//            System.out.println(product.getClientSkuId());
-//
-//        assertEquals(3, productDao.selectAll().size());
-//    }
+    @Test
+    public void testAddListWithDuplicateSKU() {
+        List<ProductMasterForm> productList = new ArrayList<>();
+        productList.add(TestForm.getProductForm("PUMAXPOJO", "BRAND", 100D, "CSKU2", "Description"));
+        productList.add(TestForm.getProductForm("PUMAXPOJO", "BRAND", 100D, "CSKU2", "Description"));
+
+        try {
+            productDto.addList(productList, client.getId());
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testAddListWithInvalidFields() {
+        List<ProductMasterForm> productList = new ArrayList<>();
+        productList.add(TestForm.getProductForm("PUMAXPOJO", "BRAND", 100D, "CSKU2", "Description"));
+        productList.add(TestForm.getProductForm("    ", "BRAND", 100D, "CSK32", "Description"));
+
+        try {
+            productDto.addList(productList, client.getId());
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testGet() throws ApiException {
+        productDao.insert(productPojo);
+
+        assertEquals(productPojo.getClientId(), productDto.get(productPojo.getId()).getClientId());
+        assertEquals(productPojo.getClientSkuId(), productDto.get(productPojo.getId()).getClientSkuId());
+    }
+
+    @Test
+    public void testGetAll() throws ApiException {
+        productDao.insert(TestPojo.getProductPojo("A", 123L, "AB", 12D, "XYZ", "DES"));
+        assertEquals(1, productDto.getAll().size());
+
+        productDao.insert(TestPojo.getProductPojo("A", 123L, "AB", 12D, "PYZ", "DES"));
+        assertEquals(2, productDto.getAll().size());
+    }
+
+    @Test
+    public void testGetByClientId() throws ApiException {
+        productDao.insert(TestPojo.getProductPojo("A", 1L, "B", 1D, "X", "D"));
+        assertEquals(1, productDto.getByClientId(1L).size());
+
+        productDao.insert(TestPojo.getProductPojo("A", 1L, "B", 1D, "Y", "D"));
+        assertEquals(2, productDto.getByClientId(1L).size());
+
+        productDao.insert(TestPojo.getProductPojo("A", 345L, "B", 1D, "Y", "D"));
+        assertEquals(2, productDto.getByClientId(1L).size());
+        assertEquals(1, productDto.getByClientId(345L).size());
+        assertEquals(0, productDto.getByClientId(789L).size());
+    }
+
+    @Test
+    public void testValidateFormListWithInvalidField() {
+        List<ProductMasterForm> productList = new ArrayList<>();
+        productList.add(TestForm.getProductForm("PUMAXPOJO", "BRAND", 100D, "CSKU2", "Description"));
+        productList.add(TestForm.getProductForm("    ", "BRAND", 100D, "CSKU4", "Description"));
+
+        try {
+            productDto.validateFormList(productList, client.getId());
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testValidateFormListWithInvalidClient() {
+        List<ProductMasterForm> productList = new ArrayList<>();
+        productList.add(TestForm.getProductForm("PumPojo", "BRAND", 100D, "CSKU2", "Description"));
+        productList.add(TestForm.getProductForm("PumPojo", "BRAND", 100D, "CSKU2", "Description"));
+
+        try {
+            productDto.validateFormList(productList, 1234L);
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
+    }
 }

@@ -158,7 +158,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="binInvModalLabel">Add Bin Inventory Item</h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button" onclick="resetModal()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -170,7 +170,7 @@
                                 <div class="modal-body" id="binSku-upload-modal-body" style="padding:0px; margin-bottom:35px">
                                     <div class="binSku-file">
                                         <input class="custom-file-input" id="binSkuFile" required type="file">
-                                        <label class="custom-file-label" for="binSkuFile" id="productFileName">Upload CSV File
+                                        <label class="custom-file-label" for="binSkuFile" id="binSkuFileName">Upload CSV File
                                         </label>
                                     </div>
                                     <a target="_blank" href="http://127.0.0.1:9090/sample/binSkuSample.csv" style="float:right; margin-top:5px;">
@@ -181,9 +181,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-warning" id="download-errors" type="button">Download Errors</button>
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-primary" id="add-binSku" type="submit">Add</button>
+                        <button class="btn btn-warning" id="download-errors" type="button" style="visibility:hidden">Display Errors</button>
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button" onclick="resetModal()">Close</button>
+                        <button class="btn btn-primary" id="add-binSku" type="submit">Upload</button>
 
                         <div id="errorDetails">
                             <!--CSV errors appear here-->

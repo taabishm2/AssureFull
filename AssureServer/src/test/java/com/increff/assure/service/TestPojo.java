@@ -5,11 +5,11 @@ import model.ConsumerType;
 import model.InvoiceType;
 
 public class TestPojo {
-    public static BinPojo getConstructBin() {
+    public static BinPojo getBinPojo() {
         return new BinPojo();
     }
 
-    public static BinSkuPojo getConstructBinSku(Long globalSku, Long binId, Long quantity) {
+    public static BinSkuPojo getBinInventoryPojo(Long globalSku, Long binId, Long quantity) {
         BinSkuPojo binSkuPojo = new BinSkuPojo();
         binSkuPojo.setGlobalSkuId(globalSku);
         binSkuPojo.setBinId(binId);

@@ -152,7 +152,6 @@ function resetModal() {
     document.getElementById("download-errors").style.visibility = "hidden";
 }
 
-//UI DISPLAY METHODS
 function displayProductList(data) {
     var $tbody = $('#product-table').find('tbody');
     $tbody.empty();
@@ -205,12 +204,6 @@ function resetUploadDialog() {
     errorData = [];
     //Update counts
     updateUploadDialog();
-}
-
-function updateUploadDialog() {
-    $('#rowCount').html("" + fileData.length);
-    $('#processCount').html("" + processCount);
-    $('#errorCount').html("" + errorData.length);
 }
 
 function updateFileName() {

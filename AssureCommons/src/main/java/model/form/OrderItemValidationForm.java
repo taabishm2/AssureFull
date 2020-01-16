@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class OrderItemValidationForm {
+    @NotNull
     @Size(min=1, max=255)
     private String channelSkuId;
 
@@ -23,6 +24,7 @@ public class OrderItemValidationForm {
     @NotNull
     private Long channelId;
 
+    @NotNull
     @Size(min=1, max=255)
     private String channelOrderId;
 

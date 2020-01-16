@@ -21,9 +21,11 @@ public class OrderForm {
     @NotNull
     private Long channelId;
 
+    @NotNull
     @Size(min=1, max=255)
     private String channelOrderId;
 
     @NotNull
+    @NotEmpty
     private List<OrderItemForm> orderItemList;
 }

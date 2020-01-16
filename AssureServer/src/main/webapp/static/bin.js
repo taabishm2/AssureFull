@@ -193,12 +193,19 @@ function displayProductCsvErrors() {
     return false;
 }
 
+function updateFileName() {
+    var $file = $('#binSkuFile');
+    var fileName = $file.val();
+    $('#binSkuFileName').html(fileName);
+}
+
 function init() {
     $('#bin-form').submit(addBin);
     $('#binSku-form').submit(processData);
     $('#search-param-form').submit(getSearchBinInventoryList);
     $('#download-errors').click(displayProductCsvErrors);
     $('#refresh-data').click(getSearchBinInventoryList);
+    $('#binSkuFile').on('change', updateFileName);
 
     document.getElementById("refresh-data").disabled = true;
     document.getElementById("download-errors").disabled = true;

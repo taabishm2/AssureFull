@@ -6,7 +6,6 @@ import com.increff.assure.service.ConsumerService;
 import com.increff.assure.service.ProductMasterService;
 import com.increff.assure.util.ConvertUtil;
 import com.increff.assure.util.NormalizeUtil;
-import model.ConsumerType;
 import model.data.ProductMasterData;
 import model.form.ProductMasterForm;
 import model.form.ProductUpdateForm;
@@ -24,15 +23,6 @@ public class ProductMasterDto extends AbstractDto {
     @Autowired
     private ConsumerService consumerService;
 
-    public ProductMasterData get(Long id) throws ApiException {
-        return ConvertUtil.convert(productService.getCheckId(id), ProductMasterData.class);
-    }
-
-    public List<ProductMasterData> getAll() throws ApiException {
-        List<ProductMasterPojo> allProductMasterPojo = productService.getAll();
-        return ConvertUtil.convert(allProductMasterPojo, ProductMasterData.class);
-    }
-
     @Transactional(rollbackFor = ApiException.class)
     public void addList(List<ProductMasterForm> productFormList, Long clientId) throws ApiException {
         consumerService.getCheckClient(clientId);
@@ -45,6 +35,15 @@ public class ProductMasterDto extends AbstractDto {
             productMasterPojoList.add(convertFormToPojo(productForm, clientId));
         }
         productService.addList(productMasterPojoList);
+    }
+
+    public ProductMasterData get(Long id) throws ApiException {
+        return ConvertUtil.convert(productService.getCheckId(id), ProductMasterData.class);
+    }
+
+    public List<ProductMasterData> getAll() throws ApiException {
+        List<ProductMasterPojo> allProductMasterPojo = productService.getAll();
+        return ConvertUtil.convert(allProductMasterPojo, ProductMasterData.class);
     }
 
     public void update(Long clientId, String clientSku, ProductUpdateForm form) throws ApiException {
@@ -67,7 +66,7 @@ public class ProductMasterDto extends AbstractDto {
             try {
                 checkValid((formList.get(index)));
             } catch (ApiException e) {
-                errorDetailString.append("Error in Line: ").append(index+1).append(": ").append(e.getMessage()).append("<br \\>");
+                errorDetailString.append("Error in Line: ").append(index + 1).append(": ").append(e.getMessage()).append("<br \\>");
             }
         }
 

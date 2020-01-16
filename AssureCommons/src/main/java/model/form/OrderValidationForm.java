@@ -20,6 +20,7 @@ public class OrderValidationForm {
     @NotNull
     private Long channelId;
 
+    @NotNull
     @Size(min=1, max=255)
     private String channelOrderId;
 }

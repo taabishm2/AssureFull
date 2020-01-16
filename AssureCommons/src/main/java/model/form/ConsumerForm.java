@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class ConsumerForm {
+    @NotNull
     @Size(min=1, max=255)
     private String name;
 

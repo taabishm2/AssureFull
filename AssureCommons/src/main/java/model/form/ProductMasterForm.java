@@ -11,9 +11,11 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class ProductMasterForm {
+    @NotNull
     @Size(min=1, max=255)
     private String name;
 
+    @NotNull
     @Size(min=1, max=255)
     private String clientSkuId;
 

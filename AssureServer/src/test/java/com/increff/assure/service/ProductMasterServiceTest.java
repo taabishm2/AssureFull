@@ -171,7 +171,6 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
         productDao.insert(TestPojo.getProductPojo("A", 1L, "B", 1D, "X", "D"));
         assertEquals(1, productService.getByClientId(1L).size());
 
-        validProduct.setClientSkuId("abc");
         productDao.insert(TestPojo.getProductPojo("A", 1L, "B", 1D, "Y", "D"));
         assertEquals(2, productService.getByClientId(1L).size());
 
@@ -179,8 +178,6 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
         assertEquals(2, productService.getByClientId(1L).size());
         assertEquals(1, productService.getByClientId(345L).size());
         assertEquals(0, productService.getByClientId(789L).size());
-
-
     }
 
 }

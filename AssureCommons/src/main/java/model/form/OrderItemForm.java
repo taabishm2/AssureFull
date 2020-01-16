@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class OrderItemForm {
+    @NotNull
     @Size(min=1, max=255)
     private String clientSkuId;
 

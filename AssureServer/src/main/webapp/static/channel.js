@@ -1,10 +1,8 @@
-//Returns the URL to call the APIs
 function getChannelApiUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/channel";
 }
 
-//Add a channel
 function addChannel(event){
 	var $form = $("#channel-form");
 	var json = toJson($form);
@@ -20,14 +18,13 @@ function addChannel(event){
 	   success: function(response) {
 	   		getChannelList();
 	   		$('#exampleModal').modal('toggle');
-            getSuccessSnackbar("Channel Created.");
+            getSuccessSnackbar("Success");
 	   },
 	   error: handleAjaxError
 	});
 	return false;
 }
 
-//GET Method: Retrieve all Channels
 function getChannelList(){
 	var url = getChannelApiUrl();
 	$.ajax({
@@ -40,7 +37,6 @@ function getChannelList(){
 	});
 }
 
-//Display table of Channels
 function displayChannelList(data){
 	var $tbody = $('#channel-table').find('tbody');
 	$tbody.empty();
@@ -63,7 +59,6 @@ function displayChannelList(data){
 	}
 }
 
-//Initialization Code
 function init(){
 	$('#channel-form').submit(addChannel);
 	$('#refresh-data').click(getChannelList);

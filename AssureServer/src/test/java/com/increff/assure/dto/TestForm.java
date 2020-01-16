@@ -7,7 +7,7 @@ import model.form.*;
 
 import java.util.List;
 
-public class FormConstructor {
+public class TestForm {
     public static BinPojo getConstructBin() {
         return new BinPojo();
     }
@@ -35,7 +35,7 @@ public class FormConstructor {
         return channel;
     }
 
-    public static ConsumerForm getConstructConsumer(String name, ConsumerType type) {
+    public static ConsumerForm getConsumerForm(String name, ConsumerType type) {
         ConsumerForm consumer = new ConsumerForm();
         consumer.setName(name);
         consumer.setType(type);
@@ -68,7 +68,7 @@ public class FormConstructor {
         return order;
     }
 
-    public static ProductMasterForm getConstructProduct(String name, Long clientId, String brandId, Double mrp, String clientSkuId, String description) {
+    public static ProductMasterForm getProductForm(String name, String brandId, Double mrp, String clientSkuId, String description) {
         ProductMasterForm product = new ProductMasterForm();
         product.setName(name);
         product.setBrandId(brandId);

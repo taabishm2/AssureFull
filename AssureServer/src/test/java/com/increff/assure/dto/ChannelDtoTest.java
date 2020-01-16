@@ -29,7 +29,7 @@ public class ChannelDtoTest extends AbstractUnitTest {
 
     @Test
     public void testAdd() throws ApiException {
-        ChannelForm form = FormConstructor.getConstructChannel("  mYnTra ",InvoiceType.CHANNEL);
+        ChannelForm form = TestForm.getConstructChannel("  mYnTra ",InvoiceType.CHANNEL);
         channelDto.add(form);
 
         assertNotNull(channelDao.selectByName("MYNTRA"));

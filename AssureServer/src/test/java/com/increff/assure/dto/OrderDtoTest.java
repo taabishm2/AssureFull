@@ -59,9 +59,9 @@ public class OrderDtoTest extends AbstractUnitTest {
         consumerDao.insert(clientNike);
         consumerDao.insert(customer);
 
-        productPuma = TestPojo.getConstructProduct("PumaProduct", clientPuma.getId(), "Puma Brand", 320D, "Puma", "Puma Description");
-        productPumaA = TestPojo.getConstructProduct("PumaProductA", clientPuma.getId(), "Puma BrandA", 320D, "PumaA", "PumaA Description");
-        productNike = TestPojo.getConstructProduct("NikeProduct", clientNike.getId(), "Nike Brand", 120D, "NikeProd", "Nike Description");
+        productPuma = TestPojo.getProductPojo("PumaProduct", clientPuma.getId(), "Puma Brand", 320D, "Puma", "Puma Description");
+        productPumaA = TestPojo.getProductPojo("PumaProductA", clientPuma.getId(), "Puma BrandA", 320D, "PumaA", "PumaA Description");
+        productNike = TestPojo.getProductPojo("NikeProduct", clientNike.getId(), "Nike Brand", 120D, "NikeProd", "Nike Description");
 
         productDao.insert(productNike);
         productDao.insert(productPuma);
@@ -102,15 +102,15 @@ public class OrderDtoTest extends AbstractUnitTest {
         channelDao.insert(channelSnapdeal);
 
         List<OrderItemForm> pumaOrderItemFormList = new ArrayList<>();
-        pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
-        pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productPumaA.getClientSkuId(), 21L));
+        pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
+        pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPumaA.getClientSkuId(), 21L));
 
-        pumaOrderForm = FormConstructor.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "DEFAULT CHANNEL ORDER ID PUMA", pumaOrderItemFormList);
+        pumaOrderForm = TestForm.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "DEFAULT CHANNEL ORDER ID PUMA", pumaOrderItemFormList);
 
         List<OrderItemForm> nikeOrderItemFormList = new ArrayList<>();
-        nikeOrderItemFormList.add(FormConstructor.getConstructOrderItem(productNike.getClientSkuId(), 80L));
+        nikeOrderItemFormList.add(TestForm.getConstructOrderItem(productNike.getClientSkuId(), 80L));
 
-        nikeOrderForm = FormConstructor.getConstructOrder(customer.getId(), clientNike.getId(), channelSnapdeal.getId(), "DEFAULT CHANNEL ORDER ID NIKE", nikeOrderItemFormList);
+        nikeOrderForm = TestForm.getConstructOrder(customer.getId(), clientNike.getId(), channelSnapdeal.getId(), "DEFAULT CHANNEL ORDER ID NIKE", nikeOrderItemFormList);
 
     }
 
@@ -162,10 +162,10 @@ public class OrderDtoTest extends AbstractUnitTest {
 
         try {
             List<OrderItemForm> pumaOrderItemFormList = new ArrayList<>();
-            pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
-            pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productNike.getClientSkuId(), 21L));
+            pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
+            pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productNike.getClientSkuId(), 21L));
 
-            OrderForm pumaOrderForm = FormConstructor.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "CHANNEL ORDER ID PUMA", pumaOrderItemFormList);
+            OrderForm pumaOrderForm = TestForm.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "CHANNEL ORDER ID PUMA", pumaOrderItemFormList);
             orderDto.add(pumaOrderForm);
             fail("Invalid Product and Client combination");
         } catch (ApiException e) {
@@ -174,10 +174,10 @@ public class OrderDtoTest extends AbstractUnitTest {
 
         try {
             List<OrderItemForm> pumaOrderItemFormList = new ArrayList<>();
-            pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
-            pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productPuma.getClientSkuId(), 21L));
+            pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
+            pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPuma.getClientSkuId(), 21L));
 
-            OrderForm pumaOrderForm = FormConstructor.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "CHANNEL ID PUMA", pumaOrderItemFormList);
+            OrderForm pumaOrderForm = TestForm.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "CHANNEL ID PUMA", pumaOrderItemFormList);
             orderDto.add(pumaOrderForm);
             fail("Duplicate OrderItems in Order");
         } catch (ApiException e) {
