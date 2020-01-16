@@ -25,7 +25,7 @@ public class ConsumerDtoTest extends AbstractUnitTest {
     @Before
     public void init() {
         consumerForm = FormConstructor.getConstructConsumer(" tEsT nAmE  ", ConsumerType.CLIENT);
-        consumerPojo = PojoConstructor.getConstructConsumer("NEW TEST NAME", ConsumerType.CLIENT);
+        consumerPojo = TestPojo.getConsumerPojo("NEW TEST NAME", ConsumerType.CLIENT);
     }
 
     @Test
@@ -60,9 +60,9 @@ public class ConsumerDtoTest extends AbstractUnitTest {
     public void testGetAll() throws ApiException {
         assertEquals(0, consumerDto.getAll().size());
 
-        consumerDao.insert(PojoConstructor.getConstructConsumer("ABC", ConsumerType.CLIENT));
-        consumerDao.insert(PojoConstructor.getConstructConsumer("DEF", ConsumerType.CLIENT));
-        consumerDao.insert(PojoConstructor.getConstructConsumer("GHI", ConsumerType.CUSTOMER));
+        consumerDao.insert(TestPojo.getConsumerPojo("ABC", ConsumerType.CLIENT));
+        consumerDao.insert(TestPojo.getConsumerPojo("DEF", ConsumerType.CLIENT));
+        consumerDao.insert(TestPojo.getConsumerPojo("GHI", ConsumerType.CUSTOMER));
 
         assertEquals(3, consumerDto.getAll().size());
     }
@@ -71,9 +71,9 @@ public class ConsumerDtoTest extends AbstractUnitTest {
     public void testGetAllClients() throws ApiException {
         assertEquals(0, consumerDto.getAll().size());
 
-        consumerDao.insert(PojoConstructor.getConstructConsumer("ABC", ConsumerType.CLIENT));
-        consumerDao.insert(PojoConstructor.getConstructConsumer("DEF", ConsumerType.CLIENT));
-        consumerDao.insert(PojoConstructor.getConstructConsumer("GHI", ConsumerType.CUSTOMER));
+        consumerDao.insert(TestPojo.getConsumerPojo("ABC", ConsumerType.CLIENT));
+        consumerDao.insert(TestPojo.getConsumerPojo("DEF", ConsumerType.CLIENT));
+        consumerDao.insert(TestPojo.getConsumerPojo("GHI", ConsumerType.CUSTOMER));
 
         assertEquals(2, consumerDto.getAllClients().size());
         for(ConsumerData consumer:consumerDto.getAllClients())
@@ -84,9 +84,9 @@ public class ConsumerDtoTest extends AbstractUnitTest {
     public void testGetAllCustomers() throws ApiException {
         assertEquals(0, consumerDto.getAll().size());
 
-        consumerDao.insert(PojoConstructor.getConstructConsumer("ABC", ConsumerType.CLIENT));
-        consumerDao.insert(PojoConstructor.getConstructConsumer("DEF", ConsumerType.CLIENT));
-        consumerDao.insert(PojoConstructor.getConstructConsumer("GHI", ConsumerType.CUSTOMER));
+        consumerDao.insert(TestPojo.getConsumerPojo("ABC", ConsumerType.CLIENT));
+        consumerDao.insert(TestPojo.getConsumerPojo("DEF", ConsumerType.CLIENT));
+        consumerDao.insert(TestPojo.getConsumerPojo("GHI", ConsumerType.CUSTOMER));
 
         assertEquals(1, consumerDto.getAllCustomers().size());
         for(ConsumerData consumer:consumerDto.getAllCustomers())

@@ -52,53 +52,53 @@ public class OrderDtoTest extends AbstractUnitTest {
 
     @Before
     public void init() {
-        clientPuma = PojoConstructor.getConstructConsumer("PUMA", ConsumerType.CLIENT);
-        clientNike = PojoConstructor.getConstructConsumer("NIKE", ConsumerType.CLIENT);
-        customer = PojoConstructor.getConstructConsumer("Customer NameZ", ConsumerType.CUSTOMER);
+        clientPuma = TestPojo.getConsumerPojo("PUMA", ConsumerType.CLIENT);
+        clientNike = TestPojo.getConsumerPojo("NIKE", ConsumerType.CLIENT);
+        customer = TestPojo.getConsumerPojo("Customer NameZ", ConsumerType.CUSTOMER);
         consumerDao.insert(clientPuma);
         consumerDao.insert(clientNike);
         consumerDao.insert(customer);
 
-        productPuma = PojoConstructor.getConstructProduct("PumaProduct", clientPuma.getId(), "Puma Brand", 320D, "Puma", "Puma Description");
-        productPumaA = PojoConstructor.getConstructProduct("PumaProductA", clientPuma.getId(), "Puma BrandA", 320D, "PumaA", "PumaA Description");
-        productNike = PojoConstructor.getConstructProduct("NikeProduct", clientNike.getId(), "Nike Brand", 120D, "NikeProd", "Nike Description");
+        productPuma = TestPojo.getConstructProduct("PumaProduct", clientPuma.getId(), "Puma Brand", 320D, "Puma", "Puma Description");
+        productPumaA = TestPojo.getConstructProduct("PumaProductA", clientPuma.getId(), "Puma BrandA", 320D, "PumaA", "PumaA Description");
+        productNike = TestPojo.getConstructProduct("NikeProduct", clientNike.getId(), "Nike Brand", 120D, "NikeProd", "Nike Description");
 
         productDao.insert(productNike);
         productDao.insert(productPuma);
         productDao.insert(productPumaA);
 
-        binDao.insert(PojoConstructor.getConstructBin());
+        binDao.insert(TestPojo.getConstructBin());
 
-        bin1 = PojoConstructor.getConstructBin();
-        bin2 = PojoConstructor.getConstructBin();
-        bin3 = PojoConstructor.getConstructBin();
-        bin4 = PojoConstructor.getConstructBin();
+        bin1 = TestPojo.getConstructBin();
+        bin2 = TestPojo.getConstructBin();
+        bin3 = TestPojo.getConstructBin();
+        bin4 = TestPojo.getConstructBin();
         binDao.insert(bin1);
         binDao.insert(bin2);
         binDao.insert(bin3);
         binDao.insert(bin4);
 
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPuma.getId(), bin1.getId(), 8L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPumaA.getId(), bin1.getId(), 0L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productNike.getId(), bin1.getId(), 10L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productPuma.getId(), bin1.getId(), 8L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productPumaA.getId(), bin1.getId(), 0L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productNike.getId(), bin1.getId(), 10L));
 
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPuma.getId(), bin2.getId(), 6L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPumaA.getId(), bin2.getId(), 9L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productNike.getId(), bin2.getId(), 0L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productPuma.getId(), bin2.getId(), 6L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productPumaA.getId(), bin2.getId(), 9L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productNike.getId(), bin2.getId(), 0L));
 
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPuma.getId(), bin3.getId(), 10L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPumaA.getId(), bin3.getId(), 6L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productNike.getId(), bin3.getId(), 16L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productPuma.getId(), bin3.getId(), 10L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productPumaA.getId(), bin3.getId(), 6L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productNike.getId(), bin3.getId(), 16L));
 
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPuma.getId(), bin4.getId(), 7L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPumaA.getId(), bin4.getId(), 11L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productNike.getId(), bin4.getId(), 20L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productPuma.getId(), bin4.getId(), 7L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productPumaA.getId(), bin4.getId(), 11L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(productNike.getId(), bin4.getId(), 20L));
 
-        inventoryDao.insert(PojoConstructor.getConstructInventory(productPuma.getId(), 31L, 0L, 0L));
-        inventoryDao.insert(PojoConstructor.getConstructInventory(productPumaA.getId(), 26L, 0L, 0L));
-        inventoryDao.insert(PojoConstructor.getConstructInventory(productNike.getId(), 46L, 0L, 0L));
+        inventoryDao.insert(TestPojo.getConstructInventory(productPuma.getId(), 31L, 0L, 0L));
+        inventoryDao.insert(TestPojo.getConstructInventory(productPumaA.getId(), 26L, 0L, 0L));
+        inventoryDao.insert(TestPojo.getConstructInventory(productNike.getId(), 46L, 0L, 0L));
 
-        channelSnapdeal = PojoConstructor.getConstructChannel("SNAPDEAL", InvoiceType.SELF);
+        channelSnapdeal = TestPojo.getConstructChannel("SNAPDEAL", InvoiceType.SELF);
         channelDao.insert(channelSnapdeal);
 
         List<OrderItemForm> pumaOrderItemFormList = new ArrayList<>();

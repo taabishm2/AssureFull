@@ -21,7 +21,7 @@ public class ChannelServiceTest extends AbstractUnitTest {
 
     @Before
     public void init() {
-        channel = PojoConstructor.getConstructChannel("FLIPKART", InvoiceType.CHANNEL);
+        channel = TestPojo.getConstructChannel("FLIPKART", InvoiceType.CHANNEL);
     }
 
     @Test

@@ -20,7 +20,7 @@ public class ChannelDtoTest extends AbstractUnitTest {
 
     @Test
     public void testGet() throws ApiException {
-        ChannelPojo newChannel = PojoConstructor.getConstructChannel("SNAPDEAL",InvoiceType.CHANNEL);
+        ChannelPojo newChannel = TestPojo.getConstructChannel("SNAPDEAL",InvoiceType.CHANNEL);
         channelDao.insert(newChannel);
 
         assertEquals(newChannel.getName(), channelDto.get(newChannel.getId()).getName());

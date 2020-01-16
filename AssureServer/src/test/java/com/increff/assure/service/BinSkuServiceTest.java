@@ -13,10 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -40,10 +37,10 @@ public class BinSkuServiceTest extends AbstractUnitTest {
 
     @Before
     public void init() {
-        consumerPojo = PojoConstructor.getConstructConsumer("PUMA", ConsumerType.CLIENT);
+        consumerPojo = TestPojo.getConsumerPojo("PUMA", ConsumerType.CLIENT);
         consumerDao.insert(consumerPojo);
 
-        productPojo = PojoConstructor.getConstructProduct(
+        productPojo = TestPojo.getConstructProduct(
                 "PUMAXNAME",
                 consumerPojo.getId(),
                 "PUMA BrandID",
@@ -52,10 +49,10 @@ public class BinSkuServiceTest extends AbstractUnitTest {
                 "Puma Description");
         productMasterDao.insert(productPojo);
 
-        binPojo = PojoConstructor.getConstructBin();
+        binPojo = TestPojo.getConstructBin();
         binDao.insert(binPojo);
 
-        binSkuPojo = PojoConstructor.getConstructBinSku(productPojo.getClientId(), binPojo.getId(), 10L);
+        binSkuPojo = TestPojo.getConstructBinSku(productPojo.getClientId(), binPojo.getId(), 10L);
     }
 
     @Test
@@ -96,12 +93,12 @@ public class BinSkuServiceTest extends AbstractUnitTest {
 
     @Test
     public void testGetSearchByBinAndProduct(){
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(1L, 1L, 3L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(1L, 2L, 3L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(1L, 3L, 3L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(2L, 1L, 3L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(2L, 2L, 3L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(3L, 4L, 3L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(1L, 1L, 3L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(1L, 2L, 3L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(1L, 3L, 3L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(2L, 1L, 3L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(2L, 2L, 3L));
+        binSkuDao.insert(TestPojo.getConstructBinSku(3L, 4L, 3L));
 
         List<BinSkuPojo> resultBinId1 = binSkuService.getSearchByBinAndProduct(1L, null);
         assertEquals(2, resultBinId1.size());

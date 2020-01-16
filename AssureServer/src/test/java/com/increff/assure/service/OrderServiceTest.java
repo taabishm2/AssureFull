@@ -37,15 +37,15 @@ public class OrderServiceTest extends AbstractUnitTest {
 
     @Before
     public void init() {
-        clientPojo = PojoConstructor.getConstructConsumer("Puma", ConsumerType.CLIENT);
-        customerPojo = PojoConstructor.getConstructConsumer("User Name", ConsumerType.CUSTOMER);
-        channel = PojoConstructor.getConstructChannel("FLIPKART", InvoiceType.CHANNEL);
+        clientPojo = TestPojo.getConsumerPojo("Puma", ConsumerType.CLIENT);
+        customerPojo = TestPojo.getConsumerPojo("User Name", ConsumerType.CUSTOMER);
+        channel = TestPojo.getConstructChannel("FLIPKART", InvoiceType.CHANNEL);
 
         consumerDao.insert(clientPojo);
         consumerDao.insert(customerPojo);
         channelDao.insert(channel);
 
-        orderPojo = PojoConstructor.getConstructOrder(customerPojo.getId(), clientPojo.getId(), channel.getId(), "FLIPoID");
+        orderPojo = TestPojo.getConstructOrder(customerPojo.getId(), clientPojo.getId(), channel.getId(), "FLIPoID");
     }
 
     @Test

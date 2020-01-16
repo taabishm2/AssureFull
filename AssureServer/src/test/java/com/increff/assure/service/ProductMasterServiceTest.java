@@ -29,7 +29,7 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
 
     @Before
     public void init() {
-        client = PojoConstructor.getConstructConsumer("Puma", ConsumerType.CLIENT);
+        client = TestPojo.getConsumerPojo("Puma", ConsumerType.CLIENT);
         consumerDao.insert(client);
     }
 
@@ -37,7 +37,7 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
     public void testAdd() throws ApiException {
         int productCount = productDao.selectAll().size();
 
-        ProductMasterPojo pojo = PojoConstructor.getConstructProduct(
+        ProductMasterPojo pojo = TestPojo.getConstructProduct(
                 "PUMAX1",
                 client.getId(),
                 "PUMAX Brand",
@@ -48,7 +48,7 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
 
         assertEquals(1, productDao.selectAll().size() - productCount);
 
-        ProductMasterPojo duplicatePojo = PojoConstructor.getConstructProduct(
+        ProductMasterPojo duplicatePojo = TestPojo.getConstructProduct(
                 "PUMAX1Duplicate",
                 client.getId(),
                 "PUMAX Brand",
@@ -66,7 +66,7 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
 
     @Test
     public void testGetCheckId() throws ApiException {
-        ProductMasterPojo pojo = PojoConstructor.getConstructProduct(
+        ProductMasterPojo pojo = TestPojo.getConstructProduct(
                 "PUMAX1Duplicate",
                 client.getId(),
                 "PUMAX Brand",
@@ -87,7 +87,7 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
 
     @Test
     public void testSelectByClientIdAndClientSku() throws ApiException {
-        ProductMasterPojo pojo = PojoConstructor.getConstructProduct(
+        ProductMasterPojo pojo = TestPojo.getConstructProduct(
                 "PUMAX1Duplicate",
                 client.getId(),
                 "PUMAX Brand",
@@ -103,7 +103,7 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
     public void testAddList() throws ApiException {
         List<ProductMasterPojo> productList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            ProductMasterPojo pojo = PojoConstructor.getConstructProduct(
+            ProductMasterPojo pojo = TestPojo.getConstructProduct(
                     "PUMAX1",
                     client.getId(),
                     "PUMAX Brand",
@@ -118,7 +118,7 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
         ProductMasterPojo duplicateProduct = null;
         List<ProductMasterPojo> invalidProductList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            ProductMasterPojo pojo = PojoConstructor.getConstructProduct(
+            ProductMasterPojo pojo = TestPojo.getConstructProduct(
                     "PUMAX1",
                     client.getId(),
                     "PUMAX Brand",
@@ -140,7 +140,7 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
 
     @Test
     public void testUpdate() throws ApiException {
-        ProductMasterPojo pojo = PojoConstructor.getConstructProduct(
+        ProductMasterPojo pojo = TestPojo.getConstructProduct(
                 "PUMAX1",
                 client.getId(),
                 "PUMAX Brand",
@@ -165,7 +165,7 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
 
     @Test
     public void testGetClientIdOfProduct() throws ApiException {
-        ProductMasterPojo pojo = PojoConstructor.getConstructProduct(
+        ProductMasterPojo pojo = TestPojo.getConstructProduct(
                 "PUMAX1",
                 client.getId(),
                 "PUMAX Brand",

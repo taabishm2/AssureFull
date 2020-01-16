@@ -20,7 +20,7 @@ public class OrderItemServiceTest extends AbstractUnitTest {
 
     @Before
     public void init() {
-        orderItemPojo = PojoConstructor.getConstructOrderItem(123L, 100L, 10L, 0L, 0L);
+        orderItemPojo = TestPojo.getConstructOrderItem(123L, 100L, 10L, 0L, 0L);
     }
 
     @Test
@@ -55,9 +55,9 @@ public class OrderItemServiceTest extends AbstractUnitTest {
 
     @Test
     public void testGetByOrderId() {
-        orderItemDao.insert(PojoConstructor.getConstructOrderItem(123L, 100L, 10L, 0L, 0L));
-        orderItemDao.insert(PojoConstructor.getConstructOrderItem(456L, 100L, 10L, 0L, 0L));
-        orderItemDao.insert(PojoConstructor.getConstructOrderItem(789L, 200L, 10L, 0L, 0L));
+        orderItemDao.insert(TestPojo.getConstructOrderItem(123L, 100L, 10L, 0L, 0L));
+        orderItemDao.insert(TestPojo.getConstructOrderItem(456L, 100L, 10L, 0L, 0L));
+        orderItemDao.insert(TestPojo.getConstructOrderItem(789L, 200L, 10L, 0L, 0L));
 
         int countClientId100 = 0;
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(100L)) {

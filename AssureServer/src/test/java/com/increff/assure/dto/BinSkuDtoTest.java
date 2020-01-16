@@ -35,8 +35,8 @@ public class BinSkuDtoTest extends AbstractUnitTest {
 
     @Before
     public void init() {
-        product = PojoConstructor.getConstructProduct("Name", 123L, "Brand", 1230D, "CSKU", "Description");
-        bin = PojoConstructor.getConstructBin();
+        product = TestPojo.getConstructProduct("Name", 123L, "Brand", 1230D, "CSKU", "Description");
+        bin = TestPojo.getConstructBin();
 
         productDao.insert(product);
         binDao.insert(bin);

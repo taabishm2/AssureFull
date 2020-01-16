@@ -4,14 +4,10 @@ import com.increff.assure.dao.ConsumerDao;
 import com.increff.assure.pojo.ConsumerPojo;
 import model.ConsumerType;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class ConsumerServiceTest extends AbstractUnitTest {
 
@@ -20,39 +16,108 @@ public class ConsumerServiceTest extends AbstractUnitTest {
     @Autowired
     ConsumerDao consumerDao;
 
+    private ConsumerPojo validClientPojo;
+    private ConsumerPojo validCustomerPojo;
+
     @Before
     public void init() {
+        validClientPojo = TestPojo.getConsumerPojo("TEST NAME", ConsumerType.CLIENT);
+        validCustomerPojo = TestPojo.getConsumerPojo("TEST CUSTOMER", ConsumerType.CUSTOMER);
     }
 
     @Test
-    public void testAdd() throws ApiException {
-
-        //TODO: TestPojo.getConsumerPojo
-        ConsumerPojo pojo = PojoConstructor.getConstructConsumer("TEST NAME", ConsumerType.CUSTOMER);
-        consumerService.add(pojo);
-
-        assertEquals(1, consumerDao.selectAll().size());
-
-        ConsumerPojo duplicatePojo = PojoConstructor.getConstructConsumer("TEST NAME", ConsumerType.CUSTOMER);
+    public void testAddValidConsumer() {
         try {
-            consumerService.add(duplicatePojo);
+            consumerService.add(validClientPojo);
+        } catch (ApiException e) {
+            fail("Failed to insert valid Consumer");
+        }
+        assertEquals(1, consumerDao.selectAll().size());
+    }
+
+    @Test
+    public void testAddDuplicateConsumer() {
+        consumerDao.insert(validClientPojo);
+
+        try {
+            consumerService.add(validClientPojo);
             fail("Duplicate Consumer was inserted");
         } catch (ApiException e) {
-            assertEquals(e.getMessage(), "TEST NAME already exists.");
+            assertTrue(true);
         }
     }
 
-    public void testGetCheckId() throws ApiException {
-        ConsumerPojo pojo = PojoConstructor.getConstructConsumer("TEST NAME", ConsumerType.CUSTOMER);
-        consumerService.add(pojo);
-
-        assertEquals(pojo, consumerService.getCheckId(pojo.getId()));
+    public void testGetCheckIdWithValidId() throws ApiException {
+        consumerDao.insert(validClientPojo);
+        assertEquals(validClientPojo, consumerService.getCheckId(validClientPojo.getId()));
     }
 
-    public void testGetAll() throws ApiException {
+    public void testGetCheckIdWithInvalidId() {
+        try {
+            consumerService.getCheckId(12345L);
+            fail("Invalid ID checked");
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
+    }
+
+    public void testGetCheckClientWithValidTypes
+            () throws ApiException {
+        consumerDao.insert(validClientPojo);
+        consumerDao.insert(validCustomerPojo);
+
+        consumerService.getCheckClient(validClientPojo.getId());
+        consumerService.getCheckCustomer(validCustomerPojo.getId());
+    }
+
+    public void testGetCheckClientWithInvalidClient() {
+        consumerDao.insert(validCustomerPojo);
+
+        try {
+            consumerService.getCheckClient(validCustomerPojo.getId());
+            fail("Invalid Client was checked");
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
+    }
+
+    public void testGetCheckClientWithInvalidCustomer() {
+        consumerDao.insert(validClientPojo);
+
+        try {
+            consumerService.getCheckCustomer(validClientPojo.getId());
+            fail("Invalid Customer was checked");
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
+    }
+
+
+    public void testGetAllOnEmptyConsumerTable() {
         assertEquals(0, consumerService.getAll().size());
-        ConsumerPojo pojo = PojoConstructor.getConstructConsumer("TEST NAME", ConsumerType.CUSTOMER);
-        consumerService.add(pojo);
+    }
+
+    public void testGetAllOnNonEmptyConsumerTable() {
+        consumerDao.insert(validClientPojo);
         assertEquals(1, consumerService.getAll().size());
+
+        consumerDao.insert(validCustomerPojo);
+        assertEquals(2, consumerService.getAll().size());
+    }
+
+    public void testGetAllByType() {
+        consumerDao.insert(validClientPojo);
+        consumerDao.insert(validCustomerPojo);
+
+        assertEquals(1, consumerService.getAll(ConsumerType.CLIENT).size());
+        assertEquals(1, consumerService.getAll(ConsumerType.CUSTOMER).size());
+
+        consumerDao.insert(TestPojo.getConsumerPojo("TEST NAME 2", ConsumerType.CLIENT));
+        assertEquals(2, consumerService.getAll(ConsumerType.CLIENT).size());
+        assertEquals(1, consumerService.getAll(ConsumerType.CUSTOMER).size());
+
+        consumerDao.insert(TestPojo.getConsumerPojo("TEST NAME 3", ConsumerType.CUSTOMER));
+        assertEquals(2, consumerService.getAll(ConsumerType.CLIENT).size());
+        assertEquals(2, consumerService.getAll(ConsumerType.CUSTOMER).size());
     }
 }

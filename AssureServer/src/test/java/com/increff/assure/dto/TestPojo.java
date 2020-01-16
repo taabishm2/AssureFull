@@ -1,10 +1,10 @@
-package com.increff.assure.service;
+package com.increff.assure.dto;
 
 import com.increff.assure.pojo.*;
 import model.ConsumerType;
 import model.InvoiceType;
 
-public class PojoConstructor {
+public class TestPojo {
     public static BinPojo getConstructBin() {
         return new BinPojo();
     }
@@ -17,12 +17,11 @@ public class PojoConstructor {
         return binSkuPojo;
     }
 
-    public static ChannelListingPojo getConstructChannelListing(Long globalSku, Long channelId, String channelSkuId, Long clientId) {
+    public static ChannelListingPojo getConstructChannelListing(Long globalSku, Long channelId, String channelSkuId) {
         ChannelListingPojo channelListing = new ChannelListingPojo();
         channelListing.setGlobalSkuId(globalSku);
         channelListing.setChannelId(channelId);
         channelListing.setChannelSkuId(channelSkuId);
-        channelListing.setClientId(clientId);
         return channelListing;
     }
 
@@ -33,7 +32,7 @@ public class PojoConstructor {
         return channel;
     }
 
-    public static ConsumerPojo getConstructConsumer(String name, ConsumerType type) {
+    public static ConsumerPojo getConsumerPojo(String name, ConsumerType type) {
         ConsumerPojo consumer = new ConsumerPojo();
         consumer.setName(name);
         consumer.setType(type);

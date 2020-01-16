@@ -33,14 +33,14 @@ public class ProductMasterDtoTest extends AbstractUnitTest {
     @Before
     public void init() {
         //TODO: Create general class. Autowire all DAOs and write methods prepare_for_test
-        client = PojoConstructor.getConstructConsumer("PUMA", ConsumerType.CLIENT);
-        customer = PojoConstructor.getConstructConsumer("NAME", ConsumerType.CUSTOMER);
+        client = TestPojo.getConsumerPojo("PUMA", ConsumerType.CLIENT);
+        customer = TestPojo.getConsumerPojo("NAME", ConsumerType.CUSTOMER);
 
         consumerDao.insert(client);
         consumerDao.insert(customer);
 
         productMasterForm = FormConstructor.getConstructProduct("PUMAX", client.getId(), "BRAND", 100D, "CSKU1", "Description");
-        productPojo = PojoConstructor.getConstructProduct("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU1", "Description");
+        productPojo = TestPojo.getConstructProduct("PUMAXPOJO", client.getId(), "BRAND", 100D, "CSKU1", "Description");
     }
 
 //    @Test
