@@ -315,7 +315,7 @@ public class OrderDto extends AbstractDto {
         System.out.println(fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss")));
         System.out.println(toDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss")));
 
-/*        checkDateFilters(fromDateObject, toDateObject);
+        checkDateFilters(fromDateObject, toDateObject);
 
         if (Objects.isNull(fromDateObject) || Objects.isNull(toDateObject)) {
             if (Objects.nonNull(fromDateObject))
@@ -324,7 +324,7 @@ public class OrderDto extends AbstractDto {
                 fromDateObject = toDateObject.minusMonths(1L);
 
                 fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"));
-        }*/
+        }
 
         List<OrderPojo> searchResults = orderService.getSearch(clientId, customerId, channelId, fromDate, toDate);
 

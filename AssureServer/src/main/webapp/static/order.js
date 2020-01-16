@@ -147,6 +147,7 @@ function getSearchOrderList(){
     }
 
     json = JSON.stringify(json);
+    console.log(json);
 
 	var url = getOrderApiUrl() + '/search';
 
