@@ -47,11 +47,13 @@ public class ConsumerServiceTest extends AbstractUnitTest {
         }
     }
 
+    @Test
     public void testGetCheckIdWithValidId() throws ApiException {
         consumerDao.insert(validClientPojo);
         assertEquals(validClientPojo, consumerService.getCheckId(validClientPojo.getId()));
     }
 
+    @Test
     public void testGetCheckIdWithInvalidId() {
         try {
             consumerService.getCheckId(12345L);
@@ -61,6 +63,7 @@ public class ConsumerServiceTest extends AbstractUnitTest {
         }
     }
 
+    @Test
     public void testGetCheckClientWithValidTypes
             () throws ApiException {
         consumerDao.insert(validClientPojo);
@@ -70,6 +73,7 @@ public class ConsumerServiceTest extends AbstractUnitTest {
         consumerService.getCheckCustomer(validCustomerPojo.getId());
     }
 
+    @Test
     public void testGetCheckClientWithInvalidClient() {
         consumerDao.insert(validCustomerPojo);
 
@@ -81,6 +85,7 @@ public class ConsumerServiceTest extends AbstractUnitTest {
         }
     }
 
+    @Test
     public void testGetCheckClientWithInvalidCustomer() {
         consumerDao.insert(validClientPojo);
 
@@ -92,11 +97,12 @@ public class ConsumerServiceTest extends AbstractUnitTest {
         }
     }
 
-
+    @Test
     public void testGetAllOnEmptyConsumerTable() {
         assertEquals(0, consumerService.getAll().size());
     }
 
+    @Test
     public void testGetAllOnNonEmptyConsumerTable() {
         consumerDao.insert(validClientPojo);
         assertEquals(1, consumerService.getAll().size());
@@ -105,6 +111,7 @@ public class ConsumerServiceTest extends AbstractUnitTest {
         assertEquals(2, consumerService.getAll().size());
     }
 
+    @Test
     public void testGetAllByType() {
         consumerDao.insert(validClientPojo);
         consumerDao.insert(validCustomerPojo);

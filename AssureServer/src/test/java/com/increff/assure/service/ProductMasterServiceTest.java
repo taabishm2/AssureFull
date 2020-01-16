@@ -13,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class ProductMasterServiceTest extends AbstractUnitTest {
 
@@ -26,128 +25,101 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
     ConsumerDao consumerDao;
 
     ConsumerPojo client;
+    ProductMasterPojo validProduct;
 
     @Before
     public void init() {
-        client = TestPojo.getConsumerPojo("Puma", ConsumerType.CLIENT);
+        client = TestPojo.getConsumerPojo("PUMA", ConsumerType.CLIENT);
         consumerDao.insert(client);
-    }
 
-    @Test
-    public void testAdd() throws ApiException {
-        int productCount = productDao.selectAll().size();
-
-        ProductMasterPojo pojo = TestPojo.getConstructProduct(
+        validProduct = TestPojo.getProductPojo(
                 "PUMAX1",
                 client.getId(),
                 "PUMAX Brand",
                 1200D,
                 "PUMAX1SKU",
                 "PUMAX Description");
-        productService.add(pojo);
+    }
 
-        assertEquals(1, productDao.selectAll().size() - productCount);
+    @Test
+    public void testAddWithValidProduct() throws ApiException {
+        try{
+            productService.add(validProduct);
+        } catch(ApiException e){
+            fail("Failed to insert valid Product");
+        }
+        assertEquals(1, productDao.selectAll().size());
+    }
 
-        ProductMasterPojo duplicatePojo = TestPojo.getConstructProduct(
-                "PUMAX1Duplicate",
-                client.getId(),
-                "PUMAX Brand",
-                4200D,
-                "PUMAX1SKU",
-                "PUMAX Duplicate Description");
+    @Test
+    public void testAddDuplicateProduct(){
+        productDao.insert(validProduct);
 
         try {
-            productService.add(duplicatePojo);
+            productService.add(validProduct);
             fail("Duplicate Product was inserted");
         } catch (ApiException e) {
-            assertEquals(e.getMessage(), "Duplicate ClientSKUs present.");
+            assertTrue(true);
         }
     }
 
     @Test
-    public void testGetCheckId() throws ApiException {
-        ProductMasterPojo pojo = TestPojo.getConstructProduct(
-                "PUMAX1Duplicate",
-                client.getId(),
-                "PUMAX Brand",
-                4200D,
-                "PUMAX1SKU",
-                "PUMAX Duplicate Description");
-        productService.add(pojo);
+    public void testGetCheckIdWithValidId() throws ApiException {
+        productDao.insert(validProduct);
 
-        assertEquals(productService.getCheckId(pojo.getId()), pojo);
+        assertEquals(productService.getCheckId(validProduct.getId()), validProduct);
+    }
 
+    @Test
+    public void testGetCheckIdWithInvalidId(){
         try {
             productService.getCheckId(1235L);
-            fail("1235 ID shouldn't exist");
+            fail("ID shouldn't exist");
         } catch (ApiException e) {
-            assertEquals(e.getMessage(), "Product (ID:1235) does not exist.");
+            assertTrue(true);
         }
     }
 
     @Test
-    public void testSelectByClientIdAndClientSku() throws ApiException {
-        ProductMasterPojo pojo = TestPojo.getConstructProduct(
-                "PUMAX1Duplicate",
-                client.getId(),
-                "PUMAX Brand",
-                4200D,
-                "PUMAX1SKU",
-                "PUMAX Duplicate Description");
-        productService.add(pojo);
-
-        assertEquals("PUMAX1Duplicate", productService.getByClientAndClientSku(client.getId(),"PUMAX1SKU").getName());
-    }
-
-    @Test
-    public void testAddList() throws ApiException {
+    public void testAddListWithValidList() throws ApiException {
         List<ProductMasterPojo> productList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            ProductMasterPojo pojo = TestPojo.getConstructProduct(
-                    "PUMAX1",
-                    client.getId(),
-                    "PUMAX Brand",
-                    4200D,
-                    "PUMAX1SKU"+i,
-                    "PUMAX Description");
-            productList.add(pojo);
+            validProduct.setClientSkuId("CSKU" + i*10);
+            productList.add(TestPojo.getProductPojo("A", 1L, "B", 1D, String.valueOf(i), "D"));
         }
-        productService.addList(productList);
 
-        //Test if transactional holds
-        ProductMasterPojo duplicateProduct = null;
+        productService.addList(productList);
+    }
+
+    @Test
+    public void testAddListWithInvalidList() throws ApiException {
         List<ProductMasterPojo> invalidProductList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            ProductMasterPojo pojo = TestPojo.getConstructProduct(
-                    "PUMAX1",
-                    client.getId(),
-                    "PUMAX Brand",
-                    4200D,
-                    "New-PUMAX1SKU"+i,
-                    "PUMAX Description");
-            invalidProductList.add(pojo);
-            duplicateProduct = pojo;
+            validProduct.setClientSkuId("ID");
+            invalidProductList.add(validProduct);
         }
-        invalidProductList.add(duplicateProduct);
+
         try {
             productService.addList(invalidProductList);
             fail("Product AddList method not Transactional");
+        } catch (ApiException e) {
+            assertTrue(true);
         }
-        catch(ApiException e){
-            assertEquals("Duplicate ClientSKUs present.", e.getMessage());
-        }
+    }
+
+    @Test
+    public void testGetAll() throws ApiException {
+        productDao.insert(TestPojo.getProductPojo("A", 1L, "B", 1D, "X", "D"));
+        assertEquals(1,productService.getAll().size());
+
+        productDao.insert(TestPojo.getProductPojo("A", 1L, "B", 1D, "Y", "D"));
+        assertEquals(2,productService.getAll().size());
     }
 
     @Test
     public void testUpdate() throws ApiException {
-        ProductMasterPojo pojo = TestPojo.getConstructProduct(
-                "PUMAX1",
-                client.getId(),
-                "PUMAX Brand",
-                4200D,
-                "PUMAX1SKU",
-                "PUMAX Description");
-        productService.add(pojo);
+        validProduct.setClientSkuId("UPDATETESTSKU");
+        productDao.insert(validProduct);
 
         ProductUpdateForm form = new ProductUpdateForm();
         form.setName("NewTest");
@@ -155,8 +127,8 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
         form.setDescription("NewDescription");
         form.setMrp(500D);
 
-        productService.update(client.getId(),"PUMAX1SKU", form);
-        ProductMasterPojo updatedPojo = productDao.selectByClientIdAndClientSku(client.getId(), "PUMAX1SKU");
+        productService.update(client.getId(), "UPDATETESTSKU", form);
+        ProductMasterPojo updatedPojo = productDao.selectByClientIdAndClientSku(client.getId(), "UPDATETESTSKU");
 
         assertEquals("NewTest", updatedPojo.getName());
         assertEquals("NewBrandId", updatedPojo.getBrandId());
@@ -164,16 +136,51 @@ public class ProductMasterServiceTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testGetClientIdOfProduct() throws ApiException {
-        ProductMasterPojo pojo = TestPojo.getConstructProduct(
-                "PUMAX1",
-                client.getId(),
-                "PUMAX Brand",
-                4200D,
-                "PUMAX1SKU",
-                "PUMAX Description");
-        productService.add(pojo);
+    public void testSelectByClientIdAndClientSkuWithValidInputs() throws ApiException {
+        productDao.insert(validProduct);
 
-        assertEquals(client.getId(), productService.getClientIdOfProduct(pojo.getId()));
+        assertEquals(validProduct, productService.getByClientAndClientSku(client.getId(), validProduct.getClientSkuId()) );
     }
+
+    @Test
+    public void testGetClientIdOfProduct() throws ApiException {
+        productDao.insert(validProduct);
+
+        assertEquals(client.getId(), productService.getClientIdOfProduct(validProduct.getId()));
+    }
+
+    @Test
+    public void testSelectByClientIdAndClientSkuWithInvalidInputs() throws ApiException {
+        productDao.insert(validProduct);
+
+        try{
+            productService.getByClientAndClientSku(client.getId(), validProduct.getClientSkuId()+"abc");
+        } catch (ApiException e){
+            assertTrue(true);
+        }
+
+        try{
+            productService.getByClientAndClientSku(client.getId()+123L, validProduct.getClientSkuId());
+        } catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testGetByClientId(){
+        productDao.insert(TestPojo.getProductPojo("A", 1L, "B", 1D, "X", "D"));
+        assertEquals(1, productService.getByClientId(1L).size());
+
+        validProduct.setClientSkuId("abc");
+        productDao.insert(TestPojo.getProductPojo("A", 1L, "B", 1D, "Y", "D"));
+        assertEquals(2, productService.getByClientId(1L).size());
+
+        productDao.insert(TestPojo.getProductPojo("A", 345L, "B", 1D, "Y", "D"));
+        assertEquals(2, productService.getByClientId(1L).size());
+        assertEquals(1, productService.getByClientId(345L).size());
+        assertEquals(0, productService.getByClientId(789L).size());
+
+
+    }
+
 }

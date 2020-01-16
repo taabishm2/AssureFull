@@ -68,7 +68,7 @@ public class TestPojo {
         return order;
     }
 
-    public static ProductMasterPojo getConstructProduct(String name, Long clientId, String brandId, Double mrp, String clientSkuId, String description) {
+    public static ProductMasterPojo getProductPojo(String name, Long clientId, String brandId, Double mrp, String clientSkuId, String description) {
         ProductMasterPojo product = new ProductMasterPojo();
         product.setName(name);
         product.setClientId(clientId);

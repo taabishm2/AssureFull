@@ -41,7 +41,7 @@ public class ChannelListingServiceTest extends AbstractUnitTest {
         consumerDao.insert(consumerPojo);
         System.out.println("CONSUMER "+consumerPojo.getId());
 
-        productMasterPojo = TestPojo.getConstructProduct("PUMAX", consumerPojo.getId(), "BrandID", 200D, "SKUID", "Descriiption");
+        productMasterPojo = TestPojo.getProductPojo("PUMAX", consumerPojo.getId(), "BrandID", 200D, "SKUID", "Descriiption");
         productMasterDao.insert(productMasterPojo);
 
         channelPojo = TestPojo.getConstructChannel("FLIPKART", InvoiceType.CHANNEL);

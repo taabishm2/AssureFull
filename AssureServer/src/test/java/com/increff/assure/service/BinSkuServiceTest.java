@@ -40,7 +40,7 @@ public class BinSkuServiceTest extends AbstractUnitTest {
         consumerPojo = TestPojo.getConsumerPojo("PUMA", ConsumerType.CLIENT);
         consumerDao.insert(consumerPojo);
 
-        productPojo = TestPojo.getConstructProduct(
+        productPojo = TestPojo.getProductPojo(
                 "PUMAXNAME",
                 consumerPojo.getId(),
                 "PUMA BrandID",
