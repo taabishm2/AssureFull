@@ -61,7 +61,7 @@ function displayConsumerList(data) {
 
     document.getElementById("consumer-table").style.visibility = "visible";
     document.getElementById("refresh-data").disabled = false;
-    getSuccessSnackbar("Refreshed");
+    getSuccessSnackbar("Success");
     return false;
 }
 
