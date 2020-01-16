@@ -4,14 +4,12 @@ import com.increff.assure.dto.ProductMasterDto;
 import com.increff.assure.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import model.data.MessageData;
 import model.data.ProductMasterData;
 import model.form.ProductMasterForm;
 import model.form.ProductUpdateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Api
@@ -26,13 +24,7 @@ public class ProductMasterController {
         productMasterDto.addList(formList, clientId);
     }
 
-    @ApiOperation(value = "Get a product by ID")
-    @RequestMapping(path = "/api/product/{id}", method = RequestMethod.GET)
-    public ProductMasterData get(@PathVariable Long id) throws ApiException {
-        return productMasterDto.get(id);
-    }
-
-    @ApiOperation(value = "Get a product by ID")
+    @ApiOperation(value = "Get a product by Client and Client SKU")
     @RequestMapping(path = "/api/product/{clientId}/{clientSkuId}", method = RequestMethod.GET)
     public ProductMasterData get(@PathVariable Long clientId, @PathVariable String clientSkuId) throws ApiException {
         return productMasterDto.getByClientAndClientSku(clientId, clientSkuId);
@@ -50,9 +42,9 @@ public class ProductMasterController {
         return productMasterDto.getByClientId(clientId);
     }
 
-    @ApiOperation(value = "Validate products master list.")
+    @ApiOperation(value = "Validate products master list for given Client")
     @RequestMapping(path = "/api/product/validate/{clientId}", method = RequestMethod.POST)
     public void validateList(@PathVariable Long clientId, @RequestBody List<ProductMasterForm> formList) throws ApiException {
-        productMasterDto.validateList(formList, clientId);
+        productMasterDto.validateFormList(formList, clientId);
     }
 }
