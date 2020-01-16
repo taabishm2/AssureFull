@@ -42,4 +42,22 @@ public class ConsumerDao extends AbstractDao<ConsumerPojo> {
         typedQuery.setParameter(typeParam, type);
         return getSingle(typedQuery);
     }
+
+    @Transactional(readOnly = true)
+    public List<ConsumerPojo> selectAll(ConsumerType type) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ConsumerPojo> q = cb.createQuery(ConsumerPojo.class);
+        Root<ConsumerPojo> c = q.from(ConsumerPojo.class);
+        q.select(c);
+        ParameterExpression<ConsumerType> typeParam = cb.parameter(ConsumerType.class);
+        q.where(
+                cb.equal(c.get("type"), typeParam)
+        );
+        TypedQuery<ConsumerPojo> typedQuery = entityManager.createQuery(q);
+        typedQuery.setParameter(typeParam, type);
+        List<ConsumerPojo> resultList = typedQuery.getResultList();
+        if (Objects.isNull(resultList))
+            return new ArrayList<>();
+        return resultList;
+    }
 }

@@ -5,10 +5,8 @@ import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ConsumerService;
 import com.increff.assure.service.ProductMasterService;
 import com.increff.assure.util.ConvertUtil;
-import com.increff.assure.util.FileWriteUtil;
 import com.increff.assure.util.NormalizeUtil;
 import model.ConsumerType;
-import model.data.MessageData;
 import model.data.ProductMasterData;
 import model.form.ProductMasterForm;
 import model.form.ProductUpdateForm;
@@ -78,19 +76,17 @@ public class ProductMasterDto extends AbstractDto {
 
     public void validateList(List<ProductMasterForm> formList, Long clientId) throws ApiException {
         validateClient(clientId);
-        List<MessageData> errorMessages = new ArrayList<>();
+        StringBuilder errorDetailString = new StringBuilder();
 
         for (int index = 0; index < formList.size(); index++) {
             try {
                 checkValid((formList.get(index)));
             } catch (ApiException e) {
-                MessageData errorMessage = new MessageData();
-                errorMessage.setMessage("Error in Line: " + index + ": " + e.getMessage() + "\n");
-                errorMessages.add(errorMessage);
+                errorDetailString.append("Error in Line: ").append(index).append(": ").append(e.getMessage()).append("<br \\>");
             }
         }
 
-        if (errorMessages.size() != 0)
-            throw new ApiException(FileWriteUtil.writeErrorsToFile("productError" + formList.hashCode(), errorMessages));
+        if (errorDetailString.length() > 0)
+            throw new ApiException(errorDetailString.toString());
     }
 }

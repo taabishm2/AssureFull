@@ -17,7 +17,7 @@ public class AbstractDto {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<T>> violations = validator.validate(form);
         for (ConstraintViolation<T> violation : violations)
-            throw new ApiException("Constraint Violation: " + violation.getPropertyPath() + violation.getMessage());
+            throw new ApiException("Constraint Violation: " + violation.getPropertyPath() + " " + violation.getMessage());
     }
 
     public static <T> void checkValid(Collection<T> formList) throws ApiException {

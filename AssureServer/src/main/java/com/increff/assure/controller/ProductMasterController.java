@@ -20,7 +20,7 @@ public class ProductMasterController {
     @Autowired
     private ProductMasterDto productMasterDto;
 
-    @ApiOperation(value = "Add a List of Products")
+    @ApiOperation(value = "Add a List of Products for given client")
     @RequestMapping(path = "/api/product/list/{clientId}", method = RequestMethod.POST)
     public void addList(@PathVariable Long clientId, @RequestBody List<ProductMasterForm> formList) throws ApiException {
         productMasterDto.addList(formList, clientId);
@@ -36,12 +36,6 @@ public class ProductMasterController {
     @RequestMapping(path = "/api/product/{clientId}/{clientSkuId}", method = RequestMethod.GET)
     public ProductMasterData get(@PathVariable Long clientId, @PathVariable String clientSkuId) throws ApiException {
         return productMasterDto.getByClientAndClientSku(clientId, clientSkuId);
-    }
-
-    @ApiOperation(value = "Get list of all products")
-    @RequestMapping(path = "/api/product", method = RequestMethod.GET)
-    public List<ProductMasterData> getAll() throws ApiException {
-        return productMasterDto.getAll();
     }
 
     @ApiOperation(value = "Update a product entry")
