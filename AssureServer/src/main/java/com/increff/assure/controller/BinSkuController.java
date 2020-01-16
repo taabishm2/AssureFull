@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @Api
 @RestController
 public class BinSkuController {
@@ -22,18 +21,6 @@ public class BinSkuController {
     @RequestMapping(path = "/api/binSku/list", method = RequestMethod.POST)
     public void addList(@RequestBody List<BinSkuForm> formList) throws ApiException {
         binSkuDto.addList(formList);
-    }
-
-    @ApiOperation(value = "Get a Bin-wise-Inventory item by ID")
-    @RequestMapping(path = "/api/binSku/{id}", method = RequestMethod.GET)
-    public BinSkuData get(@PathVariable Long id) throws ApiException {
-        return binSkuDto.get(id);
-    }
-
-    @ApiOperation(value = "Get list of all Bin-wise-Inventories")
-    @RequestMapping(path = "/api/binSku", method = RequestMethod.GET)
-    public List<BinSkuData> getAll() throws ApiException {
-        return binSkuDto.getAll();
     }
 
     @ApiOperation(value = "Search Bin Inventory")

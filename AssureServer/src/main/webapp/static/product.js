@@ -24,7 +24,7 @@ function updateProduct(event) {
         },
         success: function(response) {
             getProductListByClient();
-            getSuccessSnackbar("Product Updated.");
+            getSuccessSnackbar("Success");
         },
         error: handleAjaxError
     });
@@ -132,7 +132,7 @@ function uploadProductMaster(formList, clientId) {
         },
         success: function(response) {
             $('#exampleModal').modal('toggle');
-            getSuccessSnackbar("Products Added.");
+            getSuccessSnackbar("Success");
         },
         error: function(response) {
             alert(response.responseText);

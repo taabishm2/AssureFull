@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Api
@@ -27,7 +26,7 @@ public class BinController {
 
     @ApiOperation(value = "Get list of all Bin IDs")
     @RequestMapping(path = "/api/bin", method = RequestMethod.GET)
-    public List<Long> getAll() throws ApiException {
+    public List<Long> getAll() {
         return binDto.getAll();
     }
 }
