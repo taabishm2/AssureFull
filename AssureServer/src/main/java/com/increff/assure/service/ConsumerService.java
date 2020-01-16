@@ -21,8 +21,7 @@ public class ConsumerService extends AbstractService {
     }
 
     private void checkIfConsumerExists(ConsumerPojo consumerPojo) throws ApiException {
-        ConsumerPojo exists = consumerDao.selectByNameAndType(consumerPojo.getName(), consumerPojo.getType());
-        checkNull(exists, consumerPojo.getName() + " already exists.");
+        checkNull(consumerDao.selectByNameAndType(consumerPojo.getName(), consumerPojo.getType()), consumerPojo.getName() + " already exists.");
     }
 
     public ConsumerPojo getCheckId(Long id) throws ApiException {
@@ -32,12 +31,12 @@ public class ConsumerService extends AbstractService {
     }
 
     public void getCheckClient(Long id) throws ApiException {
-        if(!getCheckId(id).getType().equals(ConsumerType.CLIENT))
+        if (!getCheckId(id).getType().equals(ConsumerType.CLIENT))
             throw new ApiException("Invalid Client");
     }
 
     public void getCheckCustomer(Long id) throws ApiException {
-        if(!getCheckId(id).getType().equals(ConsumerType.CUSTOMER))
+        if (!getCheckId(id).getType().equals(ConsumerType.CUSTOMER))
             throw new ApiException("Invalid Customer");
     }
 
