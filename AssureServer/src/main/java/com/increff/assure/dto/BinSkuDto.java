@@ -3,7 +3,6 @@ package com.increff.assure.dto;
 import com.increff.assure.pojo.BinSkuPojo;
 import com.increff.assure.pojo.InventoryPojo;
 import com.increff.assure.service.*;
-import com.increff.assure.util.FileWriteUtil;
 import model.data.BinSkuData;
 import model.data.MessageData;
 import model.form.BinSkuForm;
@@ -91,7 +90,7 @@ public class BinSkuDto extends AbstractDto {
 
     @Transactional(readOnly = true)
     public void validateFormList(List<BinSkuForm> formList) throws ApiException {
-        List<MessageData> errorMessages = new ArrayList<>();
+        StringBuilder errorDetailString = new StringBuilder();
         HashSet<String> binSkuSet = new HashSet<>();
 
         for (int index = 0; index < formList.size(); index++) {
@@ -105,13 +104,11 @@ public class BinSkuDto extends AbstractDto {
                 binSkuSet.add(form.getBinId() + "," + form.getGlobalSkuId());
 
             } catch (ApiException e) {
-                MessageData errorMessage = new MessageData();
-                errorMessage.setMessage("Error in Line: " + index + ": " + e.getMessage() + "\n");
-                errorMessages.add(errorMessage);
+                errorDetailString.append("Error in Line: ").append(index + 1).append(": ").append(e.getMessage()).append("<br \\>");
             }
         }
 
-        if (errorMessages.size() != 0)
-            throw new ApiException(FileWriteUtil.writeErrorsToFile("inventoryError" + formList.hashCode(), errorMessages));
+        if (errorDetailString.length() > 0)
+            throw new ApiException(errorDetailString.toString());
     }
 }

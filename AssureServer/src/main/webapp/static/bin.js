@@ -69,7 +69,8 @@ function validateCsv(formList) {
             uploadBinInventory(formList);
         },
         error: function(response) {
-            errorButtonActivate("http://127.0.0.1:9090/" + JSON.parse(response.responseText)['message']);
+            sessionStorage.setItem("BinInventoryCSVError", JSON.stringify(JSON.parse(response.responseText)['message']));
+            errorButtonActivate();
             alert("Errors in CSV");
         }
     });
@@ -98,9 +99,16 @@ function uploadBinInventory(formList) {
     return false;
 }
 
-function errorButtonActivate(link) {
+function errorButtonActivate() {
+    document.getElementById("download-errors").style.visibility = "visible";
     document.getElementById("download-errors").disabled = false;
-    document.getElementById('error-file-link').href = link;
+}
+
+function resetModal() {
+    sessionStorage.setItem("BinInventoryCSVError", '');
+    document.getElementById("errorDetails").style.display = "none";
+    document.getElementById("download-errors").disabled = true;
+    document.getElementById("download-errors").style.visibility = "hidden";
 }
 
 function displayNewBinInfo(response) {
@@ -179,11 +187,19 @@ function displayBinInventoryData(data) {
     return false;
 }
 
+function displayProductCsvErrors() {
+    document.getElementById('errorDetails').innerHTML = sessionStorage.getItem("BinInventoryCSVError");
+    document.getElementById("errorDetails").style.display = "block";
+    return false;
+}
+
 function init() {
     $('#bin-form').submit(addBin);
     $('#binSku-form').submit(processData);
     $('#search-param-form').submit(getSearchBinInventoryList);
+    $('#download-errors').click(displayProductCsvErrors);
     $('#refresh-data').click(getSearchBinInventoryList);
+
     document.getElementById("refresh-data").disabled = true;
     document.getElementById("download-errors").disabled = true;
 }

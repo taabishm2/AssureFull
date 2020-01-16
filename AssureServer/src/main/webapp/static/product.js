@@ -115,7 +115,7 @@ function validateCsv(formList) {
     return false;
 }
 
-function errorButtonActivate(link) {
+function errorButtonActivate() {
     document.getElementById("download-errors").style.visibility = "visible";
     document.getElementById("download-errors").disabled = false;
 }
