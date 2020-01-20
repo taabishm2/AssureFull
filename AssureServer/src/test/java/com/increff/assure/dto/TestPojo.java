@@ -9,7 +9,7 @@ public class TestPojo {
         return new BinPojo();
     }
 
-    public static BinSkuPojo getConstructBinSku(Long globalSku, Long binId, Long quantity) {
+    public static BinSkuPojo getBinSkuPojo(Long globalSku, Long binId, Long quantity) {
         BinSkuPojo binSkuPojo = new BinSkuPojo();
         binSkuPojo.setGlobalSkuId(globalSku);
         binSkuPojo.setBinId(binId);

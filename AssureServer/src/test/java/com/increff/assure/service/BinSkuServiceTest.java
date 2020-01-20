@@ -119,6 +119,20 @@ public class BinSkuServiceTest extends AbstractUnitTest {
     }
 
     @Test
+    public void testGetAllWithEmptyTable(){
+        assertEquals(0, binSkuService.getAll().size());
+    }
+
+    @Test
+    public void testGetAll(){
+        binSkuDao.insert(TestPojo.getBinInventoryPojo(1L, 1L, 3L));
+        assertEquals(1, binSkuService.getAll().size());
+
+        binSkuDao.insert(TestPojo.getBinInventoryPojo(2L, 1L, 3L));
+        assertEquals(2, binSkuService.getAll().size());
+    }
+
+    @Test
     public void testAddList(){
         List<BinSkuPojo> binSkuPojos = new ArrayList<>();
         for(int i=0; i<5; i++)

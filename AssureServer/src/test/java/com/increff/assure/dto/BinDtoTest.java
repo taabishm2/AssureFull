@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class BinDtoTest extends AbstractUnitTest {
 
@@ -22,6 +23,15 @@ public class BinDtoTest extends AbstractUnitTest {
 
         HashSet<Long> hashSet = new HashSet<>(binIdList);
         assertEquals(5, hashSet.size());
+    }
+
+    @Test
+    public void testAddInvalidBinQty(){
+        try{
+            binDto.add(-10);
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
     }
 
     @Test

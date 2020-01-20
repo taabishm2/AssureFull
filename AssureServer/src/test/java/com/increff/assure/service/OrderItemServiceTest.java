@@ -6,8 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class OrderItemServiceTest extends AbstractUnitTest {
 
@@ -86,5 +85,21 @@ public class OrderItemServiceTest extends AbstractUnitTest {
         assertEquals(10L, (long) orderItemPojo.getAllocatedQuantity());
         assertEquals(10L, (long) orderItemPojo.getAllocatedQuantity());
         assertEquals(0L, (long) orderItemPojo.getFulfilledQuantity());
+    }
+
+    @Test
+    public void testGetCheckIdWithValidId() throws ApiException {
+        orderItemDao.insert(orderItemPojo);
+        assertEquals(orderItemPojo, orderItemService.getCheckId(orderItemPojo.getId()));
+    }
+
+    @Test
+    public void testGetCheckIdWithInvalidId(){
+        try{
+            orderItemService.getCheckId(12784L);
+            fail("Invalid Id Selected");
+        } catch (ApiException e){
+            assertTrue(true);
+        }
     }
 }

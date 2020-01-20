@@ -47,7 +47,9 @@ function validateOrder(event){
 	   success: function(response) {
 	   		sessionStorage.setItem("orderIdentifier",JSON.stringify(parsedJson));
 	   		toggleOrderCreateToModify();
-	   			document.getElementById('order-details-client').innerHTML = json['clientId'];
+
+	   		console.log(json['clientId']);
+	   			document.getElementById('order-details-client').innerHTML = document.getElementById('clientId').innerHTML;
             	document.getElementById('order-details-customer').innerHTML = json['customerId'];
             	document.getElementById('order-details-channel-order-id').innerHTML = json['channelId'];
 	   		getSuccessSnackbar("Success");

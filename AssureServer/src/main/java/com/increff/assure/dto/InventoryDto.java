@@ -22,14 +22,4 @@ public class InventoryDto extends AbstractDto {
     public void add(InventoryForm form) throws ApiException {
         inventoryService.addOrUpdate(convert(form, InventoryPojo.class));
     }
-
-    @Transactional(readOnly = true)
-    public InventoryData get(Long id) throws ApiException {
-        return convert(inventoryService.getCheckId(id), InventoryData.class);
-    }
-
-    @Transactional(readOnly = true)
-    public List<InventoryData> getAll() throws ApiException {
-        return convert(inventoryService.getAll(), InventoryData.class);
-    }
 }

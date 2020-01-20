@@ -59,7 +59,7 @@ public class TestPojo {
         return orderItemPojo;
     }
 
-    public static OrderPojo getConstructOrder(Long customerId, Long clientId, Long channelId, String channelOrderId) {
+    public static OrderPojo getOrderPojo(Long customerId, Long clientId, Long channelId, String channelOrderId) {
         OrderPojo order = new OrderPojo();
         order.setCustomerId(customerId);
         order.setClientId(clientId);

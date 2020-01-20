@@ -1,16 +1,7 @@
 package com.increff.assure.service;
 
-import com.increff.assure.dao.ChannelDao;
 import com.increff.assure.dao.ChannelListingDao;
-import com.increff.assure.dao.ConsumerDao;
-import com.increff.assure.dao.ProductMasterDao;
 import com.increff.assure.pojo.ChannelListingPojo;
-import com.increff.assure.pojo.ChannelPojo;
-import com.increff.assure.pojo.ConsumerPojo;
-import com.increff.assure.pojo.ProductMasterPojo;
-import model.ConsumerType;
-import model.InvoiceType;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,7 +27,7 @@ public class ChannelListingServiceTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testAddDuplicateChannelClientAndChannelSku(){
+    public void testAddDuplicateChannelClientAndChannelSku() {
         channelListingDao.insert(TestPojo.getChannelListingPojo(123L, 987L, "ChannelSKU", 567L));
         try {
             channelListingService.add(TestPojo.getChannelListingPojo(456L, 987L, "ChannelSKU", 567L));
@@ -47,7 +38,7 @@ public class ChannelListingServiceTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testAddDuplicateChannelAndGsku(){
+    public void testAddDuplicateChannelAndGsku() {
         channelListingDao.insert(TestPojo.getChannelListingPojo(123L, 987L, "CSKU1", 567L));
         try {
             channelListingService.add(TestPojo.getChannelListingPojo(123L, 987L, "CSKU2", 567L));
@@ -58,12 +49,12 @@ public class ChannelListingServiceTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testGetAllWithEmptyTable(){
+    public void testGetAllWithEmptyTable() {
         assertEquals(0, channelListingService.getAll().size());
     }
 
     @Test
-    public void testGetAll(){
+    public void testGetAll() {
         channelListingDao.insert(TestPojo.getChannelListingPojo(123L, 987L, "CSKU1", 567L));
         assertEquals(1, channelListingService.getAll().size());
 
@@ -80,7 +71,7 @@ public class ChannelListingServiceTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testGetCheckIdWithInvalidId(){
+    public void testGetCheckIdWithInvalidId() {
         try {
             channelListingService.getCheckId(1234L);
             fail("Invalid Channel ID validated");
@@ -92,10 +83,34 @@ public class ChannelListingServiceTest extends AbstractUnitTest {
     @Test
     public void testAddList() throws ApiException {
         List<ChannelListingPojo> listingPojos = new ArrayList<>();
-        for(long i = 0L; i<5L; i++)
-            listingPojos.add(TestPojo.getChannelListingPojo(i,i*10,"CSKU"+i,i+123));
+        for (long i = 0L; i < 5L; i++)
+            listingPojos.add(TestPojo.getChannelListingPojo(i, i * 10, "CSKU" + i, i + 123));
 
         channelListingService.addList(listingPojos);
         assertEquals(5, channelListingDao.selectAll().size());
+    }
+
+    @Test
+    public void testGetByChannelIdAndGlobalSkuWithValidInputs() {
+        ChannelListingPojo channelListing = TestPojo.getChannelListingPojo(123L, 987L, "CSKU1", 567L);
+        channelListingDao.insert(channelListing);
+        assertEquals(channelListing, channelListingService.getByChannelIdAndGlobalSku(987L, 123L));
+    }
+
+    @Test
+    public void testGetByChannelIdAndGlobalSkuWithInvalidInputs() {
+        assertNull(channelListingService.getByChannelIdAndGlobalSku(111L, 222L));
+    }
+
+    @Test
+    public void testGetByChannelChannelSkuAndClientWithValidInputs() {
+        ChannelListingPojo channelListing = TestPojo.getChannelListingPojo(123L, 987L, "CSKU1", 567L);
+        channelListingDao.insert(channelListing);
+        assertEquals(channelListing, channelListingService.getByChannelChannelSkuAndClient(987L, "CSKU1", 567L));
+    }
+
+    @Test
+    public void testGetByChannelChannelSkuAndClientWithInvalidInputs() {
+        assertNull(channelListingService.getByChannelChannelSkuAndClient(8888L,"JSDF" ,23322L));
     }
 }

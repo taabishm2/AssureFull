@@ -7,6 +7,7 @@ import com.increff.assure.pojo.ProductMasterPojo;
 import com.increff.assure.service.ApiException;
 import model.ConsumerType;
 import model.form.ProductMasterForm;
+import model.form.ProductUpdateForm;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,5 +133,34 @@ public class ProductMasterDtoTest extends AbstractUnitTest {
         } catch (ApiException e) {
             assertTrue(true);
         }
+    }
+
+    @Test
+    public void testValidateFormListWithInvalidFormList() {
+        List<ProductMasterForm> productList = new ArrayList<>();
+        productList.add(TestForm.getProductForm("PumPojo", "BRAND", 100D, "CSKU2", "Description"));
+        productList.add(TestForm.getProductForm("", "BRAND", 100D, "CSKU2", "Description"));
+        consumerDao.insert(client);
+
+        try {
+            productDto.validateFormList(productList, client.getId());
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testUpdate() throws ApiException {
+        productDao.insert(TestPojo.getProductPojo("PUMAXPOJO", 123L, "BRAND", 100D, "CSKU1", "Description"));
+        ProductMasterPojo updatedPojo = TestPojo.getProductPojo("NEW NAME", 123L, "NEW BRAND ID", 999D, "CSKU1", "NEW DESCRIPTION");
+
+        ProductUpdateForm updateForm = new ProductUpdateForm();
+        updateForm.setMrp(updatedPojo.getMrp());
+        updateForm.setDescription(updatedPojo.getDescription());
+        updateForm.setBrandId(updatedPojo.getBrandId());
+        updateForm.setName(updatedPojo.getName());
+
+        productDto.update(123L, "CSKU1", updateForm);
+        assertEquals(updatedPojo, productDao.selectByClientIdAndClientSku(updatedPojo.getClientId(),updatedPojo.getClientSkuId()));
     }
 }

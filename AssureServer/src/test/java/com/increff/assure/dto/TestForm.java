@@ -12,7 +12,7 @@ public class TestForm {
         return new BinPojo();
     }
 
-    public static BinSkuForm getConstructBinSku(Long globalSku, Long binId, Long quantity) {
+    public static BinSkuForm getBinSkuForm(Long globalSku, Long binId, Long quantity) {
         BinSkuForm binSkuForm = new BinSkuForm();
         binSkuForm.setGlobalSkuId(globalSku);
         binSkuForm.setBinId(binId);
