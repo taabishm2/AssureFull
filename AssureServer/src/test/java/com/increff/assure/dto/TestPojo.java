@@ -5,7 +5,7 @@ import model.ConsumerType;
 import model.InvoiceType;
 
 public class TestPojo {
-    public static BinPojo getConstructBin() {
+    public static BinPojo getBinPojo() {
         return new BinPojo();
     }
 

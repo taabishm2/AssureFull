@@ -161,6 +161,9 @@ public class ProductMasterDtoTest extends AbstractUnitTest {
         updateForm.setName(updatedPojo.getName());
 
         productDto.update(123L, "CSKU1", updateForm);
-        assertEquals(updatedPojo, productDao.selectByClientIdAndClientSku(updatedPojo.getClientId(),updatedPojo.getClientSkuId()));
+        assertEquals(updatedPojo.getClientId(), productDao.selectByClientIdAndClientSku(updatedPojo.getClientId(),updatedPojo.getClientSkuId()).getClientId());
+        assertEquals(updatedPojo.getBrandId(), productDao.selectByClientIdAndClientSku(updatedPojo.getClientId(),updatedPojo.getClientSkuId()).getBrandId());
+        assertEquals(updatedPojo.getMrp(), productDao.selectByClientIdAndClientSku(updatedPojo.getClientId(),updatedPojo.getClientSkuId()).getMrp());
+        assertEquals(updatedPojo.getDescription(), productDao.selectByClientIdAndClientSku(updatedPojo.getClientId(),updatedPojo.getClientSkuId()).getDescription());
     }
 }

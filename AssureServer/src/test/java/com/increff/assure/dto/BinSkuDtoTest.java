@@ -40,7 +40,7 @@ public class BinSkuDtoTest extends AbstractUnitTest {
     @Before
     public void init() {
         product = TestPojo.getProductPojo("Name", 123L, "Brand", 1230D, "CSKU", "Description");
-        bin = TestPojo.getConstructBin();
+        bin = TestPojo.getBinPojo();
 
         productDao.insert(product);
         binDao.insert(bin);
@@ -93,7 +93,7 @@ public class BinSkuDtoTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testAddWithInvalidQuantity(){
+    public void testAddWithInvalidQuantity() {
         try {
             binSkuDto.add(TestForm.getBinSkuForm(product.getId(), bin.getId(), -123L));
             fail("Invalid Quantity allowed");
@@ -112,31 +112,150 @@ public class BinSkuDtoTest extends AbstractUnitTest {
 
     @Test
     public void testGetInvalidBinSku() throws ApiException {
-        assertNull(binSkuDto.get(8493L));
+        try {
+            binSkuDto.get(8493L);
+            fail("Invalid BinID Selected");
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
     }
 
     @Test
-    public void testAddValidList() throws ApiException {
+    public void testAddListWithValidList() throws ApiException {
+        ProductMasterPojo product1 = TestPojo.getProductPojo("P1", 11L, "BID", 12D, "CK1", "De1");
+        ProductMasterPojo product2 = TestPojo.getProductPojo("P2", 11L, "BID", 12D, "CK2", "De2");
+        productDao.insert(product1);
+        productDao.insert(product2);
+
+        BinPojo bin1 = TestPojo.getBinPojo();
+        BinPojo bin2 = TestPojo.getBinPojo();
+        binDao.insert(bin1);
+        binDao.insert(bin2);
+
         List<BinSkuForm> formList = new ArrayList<>();
-        for(int i=0; i<5; i++){
-            formList.add(TestForm.getBinSkuForm((long)i*10, (long)i+10, (long) i*2));
-        }
+        formList.add(TestForm.getBinSkuForm(product1.getId(), bin1.getId(), 12L));
+        formList.add(TestForm.getBinSkuForm(product2.getId(), bin1.getId(), 34L));
+        formList.add(TestForm.getBinSkuForm(product1.getId(), bin2.getId(), 43L));
+        formList.add(TestForm.getBinSkuForm(product2.getId(), bin2.getId(), 25L));
 
         binSkuDto.addList(formList);
-        assertEquals(5, binSkuDao.selectAll().size());
+        assertEquals(4, binSkuDao.selectAll().size());
+        assertEquals(2, inventoryDao.selectAll().size());
+
+        assertEquals(55L, (long) inventoryDao.selectByGlobalSku(product1.getId()).getAvailableQuantity());
+        assertEquals(59L, (long) inventoryDao.selectByGlobalSku(product2.getId()).getAvailableQuantity());
     }
 
     @Test
-    public void testAddInvalidList() throws ApiException {
+    public void testAddListWithInvalidList() {
+        ProductMasterPojo product1 = TestPojo.getProductPojo("P1", 11L, "BID", 12D, "CK1", "De1");
+        ProductMasterPojo product2 = TestPojo.getProductPojo("P2", 11L, "BID", 12D, "CK2", "De2");
+        productDao.insert(product1);
+        productDao.insert(product2);
+
+        BinPojo bin1 = TestPojo.getBinPojo();
+        BinPojo bin2 = TestPojo.getBinPojo();
+        binDao.insert(bin1);
+        binDao.insert(bin2);
+
         List<BinSkuForm> formList = new ArrayList<>();
-        for(int i=0; i<5; i++){
-            formList.add(TestForm.getBinSkuForm(123L, (long)i+10, (long) i*2));
-        }
+        formList.add(TestForm.getBinSkuForm(product1.getId(), bin1.getId(), 0L));
+        formList.add(TestForm.getBinSkuForm(product2.getId(), bin1.getId(), -12L));
+        formList.add(TestForm.getBinSkuForm(product1.getId(), bin2.getId(), null));
+        formList.add(TestForm.getBinSkuForm(product2.getId(), null, 12L));
+        formList.add(TestForm.getBinSkuForm(null, bin1.getId(), 10L));
 
         try {
             binSkuDto.addList(formList);
-            fail("Added Invalid list");
-        }catch(ApiException e){
+            fail("Field Validation failed on invalid fields");
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testGetAllWithEmptyTable() throws ApiException {
+        assertEquals(0, binSkuDto.getAll().size());
+    }
+
+    @Test
+    public void testGetAll() throws ApiException {
+        binSkuDao.insert(TestPojo.getBinSkuPojo(123L, 456L, 10L));
+        assertEquals(1, binSkuDto.getAll().size());
+
+        binSkuDao.insert(TestPojo.getBinSkuPojo(456L, 456L, 10L));
+        assertEquals(2, binSkuDto.getAll().size());
+    }
+
+    @Test
+    public void testGetSearchByBinAndProduct() throws ApiException {
+        ProductMasterPojo product1 = TestPojo.getProductPojo("p1", 123L, "BID1", 120D, "CSKU1", "DES1");
+        ProductMasterPojo product2 = TestPojo.getProductPojo("p2", 321L, "BID2", 320D, "CSKU2", "DES2");
+        productDao.insert(product1);
+        productDao.insert(product2);
+
+        BinPojo bin1 = TestPojo.getBinPojo();
+        BinPojo bin2 = TestPojo.getBinPojo();
+        binDao.insert(bin1);
+        binDao.insert(bin2);
+
+        binSkuDao.insert(TestPojo.getBinSkuPojo(product1.getId(), bin1.getId(), 2L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(product2.getId(), bin2.getId(), 3L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(product1.getId(), bin2.getId(), 4L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(product2.getId(), bin1.getId(), 5L));
+
+        assertEquals(4, binSkuDto.getSearchByBinAndProduct(null, null).size());
+
+        assertEquals(2, binSkuDto.getSearchByBinAndProduct(null, product1.getId()).size());
+        assertEquals(2, binSkuDto.getSearchByBinAndProduct(bin1.getId(), null).size());
+
+        assertEquals(1, binSkuDto.getSearchByBinAndProduct(bin1.getId(), product2.getId()).size());
+
+        try{
+            assertEquals(0, binSkuDto.getSearchByBinAndProduct(999L, 777L).size());
+            fail("Bin and Product does not exist");
+        } catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testValidateFormList() throws ApiException {
+        ProductMasterPojo product1 = TestPojo.getProductPojo("P1", 11L, "BID", 12D, "CK1", "De1");
+        ProductMasterPojo product2 = TestPojo.getProductPojo("P2", 11L, "BID", 12D, "CK2", "De2");
+        productDao.insert(product1);
+        productDao.insert(product2);
+
+        BinPojo bin1 = TestPojo.getBinPojo();
+        BinPojo bin2 = TestPojo.getBinPojo();
+        binDao.insert(bin1);
+        binDao.insert(bin2);
+
+        List<BinSkuForm> formList = new ArrayList<>();
+        formList.add(TestForm.getBinSkuForm(product1.getId(), bin1.getId(), 12L));
+        formList.add(TestForm.getBinSkuForm(product2.getId(), bin1.getId(), 34L));
+        formList.add(TestForm.getBinSkuForm(product1.getId(), bin2.getId(), 43L));
+        formList.add(TestForm.getBinSkuForm(product2.getId(), bin2.getId(), 25L));
+
+        binSkuDto.validateFormList(formList);
+    }
+
+    @Test
+    public void testValidateFormListWithInvalidList() throws ApiException {
+        ProductMasterPojo product1 = TestPojo.getProductPojo("P1", 11L, "BID", 12D, "CK1", "De1");
+        productDao.insert(product1);
+
+        BinPojo bin1 = TestPojo.getBinPojo();
+        binDao.insert(bin1);
+
+        List<BinSkuForm> formList = new ArrayList<>();
+        formList.add(TestForm.getBinSkuForm(product1.getId(), bin1.getId(), 12L));
+        formList.add(TestForm.getBinSkuForm(product1.getId(), bin1.getId(), 42L));
+
+        try {
+            binSkuDto.validateFormList(formList);
+            fail("Duplicate BinSku entries");
+        } catch (ApiException e) {
             assertTrue(true);
         }
     }

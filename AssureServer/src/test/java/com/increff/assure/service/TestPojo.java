@@ -3,6 +3,7 @@ package com.increff.assure.service;
 import com.increff.assure.pojo.*;
 import model.ConsumerType;
 import model.InvoiceType;
+import model.OrderStatus;
 
 public class TestPojo {
     public static BinPojo getBinPojo() {
@@ -59,12 +60,13 @@ public class TestPojo {
         return orderItemPojo;
     }
 
-    public static OrderPojo getOrderPojo(Long customerId, Long clientId, Long channelId, String channelOrderId) {
+    public static OrderPojo getOrderPojo(Long customerId, Long clientId, Long channelId, String channelOrderId, OrderStatus status) {
         OrderPojo order = new OrderPojo();
         order.setCustomerId(customerId);
         order.setClientId(clientId);
         order.setChannelId(channelId);
         order.setChannelOrderId(channelOrderId);
+        order.setStatus(status);
         return order;
     }
 

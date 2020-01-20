@@ -45,7 +45,7 @@ public class OrderServiceTest extends AbstractUnitTest {
         consumerDao.insert(customerPojo);
         channelDao.insert(channel);
 
-        orderPojo = TestPojo.getOrderPojo(customerPojo.getId(), clientPojo.getId(), channel.getId(), "FLIPoID");
+        orderPojo = TestPojo.getOrderPojo(customerPojo.getId(), clientPojo.getId(), channel.getId(), "FLIPoID", OrderStatus.CREATED);
     }
 
     @Test
@@ -89,11 +89,11 @@ public class OrderServiceTest extends AbstractUnitTest {
 
     @Test
     public void testGetByChannel(){
-        orderDao.insert(TestPojo.getOrderPojo(123L, 456L, 1L, "CHA1"));
-        orderDao.insert(TestPojo.getOrderPojo(123L, 456L, 1L, "CHA3"));
-        orderDao.insert(TestPojo.getOrderPojo(123L, 456L, 2L, "CHA1"));
-        orderDao.insert(TestPojo.getOrderPojo(123L, 456L, 3L, "CHA3"));
-        orderDao.insert(TestPojo.getOrderPojo(123L, 456L, 3L, "CHA4"));
+        orderDao.insert(TestPojo.getOrderPojo(123L, 456L, 1L, "CHA1", OrderStatus.CREATED));
+        orderDao.insert(TestPojo.getOrderPojo(123L, 456L, 1L, "CHA3", OrderStatus.CREATED));
+        orderDao.insert(TestPojo.getOrderPojo(123L, 456L, 3L, "CHA1", OrderStatus.CREATED));
+        orderDao.insert(TestPojo.getOrderPojo(123L, 456L, 3L, "CHA3", OrderStatus.CREATED));
+        orderDao.insert(TestPojo.getOrderPojo(123L, 456L, 3L, "CHA4", OrderStatus.CREATED));
 
         assertEquals(2, orderService.getByChannel(1L).size());
         assertEquals(3, orderService.getByChannel(3L).size());

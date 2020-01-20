@@ -67,12 +67,12 @@ public class OrderDtoTest extends AbstractUnitTest {
         productDao.insert(productPuma);
         productDao.insert(productPumaA);
 
-        binDao.insert(TestPojo.getConstructBin());
+        binDao.insert(TestPojo.getBinPojo());
 
-        bin1 = TestPojo.getConstructBin();
-        bin2 = TestPojo.getConstructBin();
-        bin3 = TestPojo.getConstructBin();
-        bin4 = TestPojo.getConstructBin();
+        bin1 = TestPojo.getBinPojo();
+        bin2 = TestPojo.getBinPojo();
+        bin3 = TestPojo.getBinPojo();
+        bin4 = TestPojo.getBinPojo();
         binDao.insert(bin1);
         binDao.insert(bin2);
         binDao.insert(bin3);
