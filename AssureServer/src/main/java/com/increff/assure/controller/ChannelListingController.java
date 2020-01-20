@@ -24,18 +24,6 @@ public class ChannelListingController {
         channelListingDto.addList(formList, channelId, clientId);
     }
 
-    @ApiOperation(value = "Gets a Channel-Listing by ID")
-    @RequestMapping(path = "/api/channelListing/{id}", method = RequestMethod.GET)
-    public ChannelListingData get(@PathVariable Long id) throws ApiException {
-        return channelListingDto.get(id);
-    }
-
-    @ApiOperation(value = "Gets list of all Channel-Listing")
-    @RequestMapping(path = "/api/channelListing", method = RequestMethod.GET)
-    public List<ChannelListingData> getAll() throws ApiException {
-        return channelListingDto.getAll();
-    }
-
     @ApiOperation(value = "Validate List of Channel Listings for a Channel")
     @RequestMapping(path = "/api/channelListing/validate/{channelId}/{clientId}", method = RequestMethod.POST)
     public void validateList(@PathVariable Long channelId, @PathVariable Long clientId, @RequestBody List<ChannelListingForm> formList) throws ApiException {
