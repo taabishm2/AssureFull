@@ -73,7 +73,7 @@ public class OrderItemDto extends AbstractDto {
     public void validateChannelOrderItemForm(OrderItemValidationForm validationForm) throws ApiException {
         checkValid(validationForm);
 
-        ChannelListingPojo listing = channelListingService.getUnique(validationForm.getChannelId(), validationForm.getChannelSkuId(), validationForm.getClientId());
+        ChannelListingPojo listing = channelListingService.getByChannelChannelSkuAndClient(validationForm.getChannelId(), validationForm.getChannelSkuId(), validationForm.getClientId());
         if (Objects.isNull(listing))
             throw new ApiException("Channel listing does not exist");
 

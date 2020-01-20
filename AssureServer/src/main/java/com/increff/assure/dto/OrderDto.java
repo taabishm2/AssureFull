@@ -300,18 +300,18 @@ public class OrderDto extends AbstractDto {
             throw new ApiException(FileWriteUtil.writeErrorsToFile("orderError" + formList.hashCode(), errorMessages));
     }
 
-    public List<OrderData> getSearch(Long clientId, Long customerId, Long channelId, String fromDate, String toDate) throws ApiException {
-        if (Objects.nonNull(clientId))
-            consumerService.getCheckClient(clientId);
+    public List<OrderData> getSearch(OrderSearchForm form) throws ApiException {
+        if (Objects.nonNull(form.getClientId()))
+            consumerService.getCheckClient(form.getClientId());
 
-        if (Objects.nonNull(customerId))
-            consumerService.getCheckCustomer(customerId);
+        if (Objects.nonNull(form.getCustomerId()))
+            consumerService.getCheckCustomer(form.getCustomerId());
 
-        if (Objects.nonNull(channelId))
-            channelService.getCheckId(channelId);
+        if (Objects.nonNull(form.getChannelId()))
+            channelService.getCheckId(form.getChannelId());
 
-        ZonedDateTime fromDateObject = ZonedDateTime.parse(fromDate);
-        ZonedDateTime toDateObject = ZonedDateTime.parse(toDate);
+        ZonedDateTime fromDateObject = ZonedDateTime.parse(form.getFromDate());
+        ZonedDateTime toDateObject = ZonedDateTime.parse(form.getToDate());
         System.out.println(fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss")));
         System.out.println(toDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss")));
 
@@ -326,9 +326,8 @@ public class OrderDto extends AbstractDto {
                 fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"));
         }
 
-        List<OrderPojo> searchResults = orderService.getSearch(clientId, customerId, channelId, fromDate, toDate);
-
-        return convertPojoToData(searchResults);
+        return convertPojoToData(orderService.getSearch(form.getClientId(),
+                form.getCustomerId(), form.getChannelId(), form.getFromDate(), form.getToDate()));
     }
 
     private void checkDateFilters(ZonedDateTime fromDate, ZonedDateTime toDate) throws ApiException {
@@ -350,7 +349,7 @@ public class OrderDto extends AbstractDto {
         for (ChannelOrderItemForm form : orderItemFormList) {
             OrderItemPojo pojo = new OrderItemPojo();
             pojo.setOrderId(orderId);
-            pojo.setGlobalSkuId(channelListingService.getUnique(channelId, form.getChannelSkuId(), clientId).getGlobalSkuId());
+            pojo.setGlobalSkuId(channelListingService.getByChannelChannelSkuAndClient(channelId, form.getChannelSkuId(), clientId).getGlobalSkuId());
             pojo.setOrderedQuantity(form.getOrderedQuantity());
             orderItemList.add(pojo);
         }

@@ -28,7 +28,7 @@ public class TestForm {
         return channelListing;
     }
 
-    public static ChannelForm getConstructChannel(String name, InvoiceType type) {
+    public static ChannelForm getChannelForm(String name, InvoiceType type) {
         ChannelForm channel = new ChannelForm();
         channel.setName(name);
         channel.setInvoiceType(type);

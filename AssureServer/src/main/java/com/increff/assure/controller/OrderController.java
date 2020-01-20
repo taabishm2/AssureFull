@@ -83,6 +83,6 @@ public class OrderController {
     @ApiOperation(value = "Search Orders")
     @RequestMapping(path = "/api/order/search", method = RequestMethod.POST)
     public List<OrderData> getSearch(@RequestBody OrderSearchForm form) throws ApiException {
-        return orderDto.getSearch(form.getClientId(), form.getCustomerId(), form.getChannelId(), form.getFromDate(), form.getToDate());
+        return orderDto.getSearch(form);
     }
 }

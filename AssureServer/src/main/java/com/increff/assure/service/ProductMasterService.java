@@ -56,6 +56,10 @@ public class ProductMasterService extends AbstractService {
         return exists;
     }
 
+    public List<ProductMasterPojo> getByClientSku(String clientSkuId) {
+        return productMasterDao.selectByClientSku(clientSkuId);
+    }
+
     public List<ProductMasterPojo> getByClientId(Long clientId) {
         return productMasterDao.selectByClientId(clientId);
     }

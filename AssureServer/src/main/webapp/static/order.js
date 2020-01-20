@@ -84,7 +84,7 @@ function validateCsv(formList){
 
     	var json = JSON.stringify(formList);
         console.log("JSON:",json);
-    	//Make ajax call
+
     	$.ajax({
     	   url: url,
     	   type: 'POST',

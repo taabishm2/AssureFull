@@ -33,7 +33,7 @@ public class ConsumerDtoTest extends AbstractUnitTest {
         consumerDto.add(consumerForm);
 
         assertEquals(1, consumerDao.selectAll().size());
-        assertNotNull(consumerDao.selectByNameAndType("TEST NAME", ConsumerType.CLIENT));
+        assertNotNull(consumerDao.selectByNameAndType("test name", ConsumerType.CLIENT));
     }
 
     @Test

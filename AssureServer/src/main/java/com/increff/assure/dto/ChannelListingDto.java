@@ -1,6 +1,7 @@
 package com.increff.assure.dto;
 
 import com.increff.assure.pojo.ChannelListingPojo;
+import com.increff.assure.pojo.ProductMasterPojo;
 import com.increff.assure.service.*;
 import com.increff.assure.util.ConvertUtil;
 import com.increff.assure.util.FileWriteUtil;
@@ -8,6 +9,7 @@ import com.increff.assure.util.NormalizeUtil;
 import model.data.ChannelListingData;
 import model.data.MessageData;
 import model.form.ChannelListingForm;
+import model.form.ChannelListingSearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import static com.increff.assure.util.ConvertUtil.convert;
 
@@ -39,6 +42,14 @@ public class ChannelListingDto extends AbstractDto {
         listingData.setClientSkuId(productService.getCheckId(channelListingPojo.getGlobalSkuId()).getClientSkuId());
         listingData.setChannelName(channelService.getCheckId(channelListingPojo.getChannelId()).getName());
         listingData.setClientName(consumerService.getCheckId(channelListingPojo.getClientId()).getName());
+        return listingData;
+    }
+
+    private List<ChannelListingData> convertPojoToData(List<ChannelListingPojo> listingPojoList) throws ApiException {
+        List<ChannelListingData> listingData = new ArrayList<>();
+        for (ChannelListingPojo listingPojo : listingPojoList) {
+            listingData.add(convertPojoToData(listingPojo));
+        }
         return listingData;
     }
 
@@ -78,7 +89,7 @@ public class ChannelListingDto extends AbstractDto {
         channelService.getCheckId(channelId);
         consumerService.getCheckClient(clientId);
 
-        List<MessageData> errorMessages = new ArrayList<>();
+        StringBuilder errorDetailString = new StringBuilder();
         HashSet<String> channelSkus = new HashSet<>();
         HashSet<String> clientAndClientSkus = new HashSet<>();
 
@@ -88,23 +99,40 @@ public class ChannelListingDto extends AbstractDto {
                 checkValid(form);
 
                 if (channelSkus.contains(form.getChannelSkuId()))
-                    throw new ApiException("Duplicate Channel SKU");
+                    throw new ApiException("Duplicate Channel SKU present");
                 else
                     channelSkus.add(form.getChannelSkuId());
 
                 if (clientAndClientSkus.contains(clientId + "," + form.getClientSkuId()))
-                    throw new ApiException("Duplicate Client, ClientSKU");
+                    throw new ApiException("Duplicate Client, ClientSKU present");
                 else
                     clientAndClientSkus.add(clientId + "," + form.getClientSkuId());
 
             } catch (ApiException e) {
-                MessageData errorMessage = new MessageData();
-                errorMessage.setMessage("Error in Line: " + index + ": " + e.getMessage() + "\n");
-                errorMessages.add(errorMessage);
+                errorDetailString.append("Error in Line: ").append(index + 1).append(": ").append(e.getMessage()).append("<br \\>");
             }
         }
 
-        if (errorMessages.size() != 0)
-            throw new ApiException(FileWriteUtil.writeErrorsToFile("channelListing" + formList.hashCode(), errorMessages));
+        if (errorDetailString.length() > 0)
+            throw new ApiException(errorDetailString.toString());
+    }
+
+    public List<ChannelListingData> getSearch(ChannelListingSearchForm form) throws ApiException {
+        if (Objects.nonNull(form.getClientId()))
+            consumerService.getCheckClient(form.getClientId());
+
+        if (Objects.nonNull(form.getChannelId()))
+            channelService.getCheckId(form.getChannelId());
+
+        List<ProductMasterPojo> productsByClientSku = productService.getByClientSku(form.getClientSkuId());
+        if(productsByClientSku.isEmpty())
+            return convertPojoToData(channelListingService.getSearch(form.getChannelId(), form.getClientId(),
+                    form.getChannelSkuId(),null));
+
+        List<ChannelListingData> searchResults = new ArrayList<>();
+        for(ProductMasterPojo product:productsByClientSku)
+            searchResults.addAll(convertPojoToData(channelListingService.getSearch(form.getChannelId(), form.getClientId(),
+                form.getChannelSkuId(), product.getId())));
+        return searchResults;
     }
 }

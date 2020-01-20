@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import model.data.ChannelListingData;
 import model.form.ChannelListingForm;
+import model.form.ChannelListingSearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +40,11 @@ public class ChannelListingController {
     @RequestMapping(path = "/api/channelListing/validate/{channelId}/{clientId}", method = RequestMethod.POST)
     public void validateList(@PathVariable Long channelId, @PathVariable Long clientId, @RequestBody List<ChannelListingForm> formList) throws ApiException {
         channelListingDto.validateFormList(formList, channelId, clientId);
+    }
+
+    @ApiOperation(value = "Search Channel Listing Entries")
+    @RequestMapping(path = "/api/channelListing/search", method = RequestMethod.POST)
+    public List<ChannelListingData> getSearch(@RequestBody ChannelListingSearchForm form) throws ApiException {
+        return channelListingDto.getSearch(form);
     }
 }

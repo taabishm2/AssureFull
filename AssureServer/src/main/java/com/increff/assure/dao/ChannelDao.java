@@ -22,21 +22,6 @@ public class ChannelDao extends AbstractDao<ChannelPojo> {
         super(ChannelPojo.class);
     }
 
-    @Transactional(readOnly = true)
-    public ChannelPojo selectByName(String name) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<ChannelPojo> q = cb.createQuery(ChannelPojo.class);
-        Root<ChannelPojo> c = q.from(ChannelPojo.class);
-        q.select(c);
-        ParameterExpression<String> nameParam = cb.parameter(String.class);
-        q.where(
-                cb.equal(c.get("name"), nameParam)
-        );
-        TypedQuery<ChannelPojo> typedQuery = entityManager.createQuery(q);
-        typedQuery.setParameter(nameParam, name);
-        return getSingle(typedQuery);
-    }
-
     public ChannelPojo selectByNameAndType(String channelName, InvoiceType channelType) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<ChannelPojo> q = cb.createQuery(ChannelPojo.class);

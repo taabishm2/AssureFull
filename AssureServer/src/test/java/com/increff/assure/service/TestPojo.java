@@ -17,7 +17,7 @@ public class TestPojo {
         return binSkuPojo;
     }
 
-    public static ChannelListingPojo getConstructChannelListing(Long globalSku, Long channelId, String channelSkuId, Long clientId) {
+    public static ChannelListingPojo getChannelListingPojo(Long globalSku, Long channelId, String channelSkuId, Long clientId) {
         ChannelListingPojo channelListing = new ChannelListingPojo();
         channelListing.setGlobalSkuId(globalSku);
         channelListing.setChannelId(channelId);
@@ -26,7 +26,7 @@ public class TestPojo {
         return channelListing;
     }
 
-    public static ChannelPojo getConstructChannel(String name, InvoiceType type) {
+    public static ChannelPojo getChannelPojo(String name, InvoiceType type) {
         ChannelPojo channel = new ChannelPojo();
         channel.setName(name);
         channel.setInvoiceType(type);
