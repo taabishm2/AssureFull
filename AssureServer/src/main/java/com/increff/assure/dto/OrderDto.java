@@ -87,7 +87,6 @@ public class OrderDto extends AbstractDto {
         channelService.getCheckId(orderPojo.getChannelId());
     }
 
-    @Transactional(rollbackFor = ApiException.class)
     private void addChannelOrderItemsForOrder(List<ChannelOrderItemForm> orderItemFormList, Long channelId, Long orderId, Long clientId) throws ApiException {
         List<OrderItemPojo> orderItemList = convertFormToPojo(orderItemFormList, channelId, orderId, clientId);
         for (OrderItemPojo orderItem : orderItemList)
@@ -96,7 +95,6 @@ public class OrderDto extends AbstractDto {
         orderItemService.addList(orderItemList);
     }
 
-    @Transactional(rollbackFor = ApiException.class)
     private void addOrderItemsForOrder(List<OrderItemForm> orderItemFormList, Long orderId, Long clientId) throws ApiException {
         List<OrderItemPojo> orderItemList = convertFormToPojo(orderItemFormList, orderId, clientId);
         for (OrderItemPojo orderItem : orderItemList)
@@ -106,7 +104,7 @@ public class OrderDto extends AbstractDto {
     }
 
     @Transactional(readOnly = true)
-    private void validateOrderItem(OrderItemPojo orderItemPojo, Long clientId) throws ApiException {
+    public void validateOrderItem(OrderItemPojo orderItemPojo, Long clientId) throws ApiException {
         productService.getCheckId(orderItemPojo.getGlobalSkuId());
 
         if (!clientId.equals(productService.getClientIdOfProduct(orderItemPojo.getGlobalSkuId())))

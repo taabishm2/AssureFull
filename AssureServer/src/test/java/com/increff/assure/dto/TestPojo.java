@@ -18,11 +18,12 @@ public class TestPojo {
         return binSkuPojo;
     }
 
-    public static ChannelListingPojo getConstructChannelListing(Long globalSku, Long channelId, String channelSkuId) {
+    public static ChannelListingPojo getChannelListingPojo(Long globalSku, Long channelId, String channelSkuId, Long clientId) {
         ChannelListingPojo channelListing = new ChannelListingPojo();
         channelListing.setGlobalSkuId(globalSku);
         channelListing.setChannelId(channelId);
         channelListing.setChannelSkuId(channelSkuId);
+        channelListing.setClientId(clientId);
         return channelListing;
     }
 
