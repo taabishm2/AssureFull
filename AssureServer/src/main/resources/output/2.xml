@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<orderReceiptData>
+    <channelName>SNAPDEAL</channelName>
+    <channelOrderId>ABCL</channelOrderId>
+    <clientDetails>PUMA</clientDetails>
+    <customerDetails>Customer NameZ</customerDetails>
+    <orderCreationTime>01/21/2020 08:23:54</orderCreationTime>
+    <orderId>2</orderId>
+</orderReceiptData>

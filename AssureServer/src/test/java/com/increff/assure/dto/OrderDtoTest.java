@@ -1,15 +1,15 @@
 package com.increff.assure.dto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.increff.assure.dao.*;
-import com.increff.assure.pojo.BinPojo;
-import com.increff.assure.pojo.ChannelPojo;
-import com.increff.assure.pojo.ConsumerPojo;
-import com.increff.assure.pojo.ProductMasterPojo;
+import com.increff.assure.pojo.*;
 import com.increff.assure.service.ApiException;
 import model.ConsumerType;
 import model.InvoiceType;
+import model.OrderStatus;
 import model.form.OrderForm;
 import model.form.OrderItemForm;
+import org.hibernate.criterion.Order;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,51 +115,66 @@ public class OrderDtoTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testAdd() throws ApiException {
-        orderDto.add(pumaOrderForm);
-        orderDto.add(nikeOrderForm);
-
+    public void testAddWithInvalidClient() throws ApiException {
         try {
             pumaOrderForm.setClientId(customer.getId());
             orderDto.add(pumaOrderForm);
             fail("Customer Id set as Client ID");
         } catch (ApiException e) {
             pumaOrderForm.setClientId(clientPuma.getId());
+            assertTrue(true);
         }
+    }
 
+    @Test
+    public void testAddWithInvalidCustomer(){
         try {
             pumaOrderForm.setCustomerId(clientNike.getId());
             orderDto.add(pumaOrderForm);
             fail("Client Id set as Customer ID");
         } catch (ApiException e) {
             pumaOrderForm.setCustomerId(customer.getId());
+            assertTrue(true);
         }
+    }
 
+    @Test
+    public void testAddWithInvalidCustomerId() {
         try {
             pumaOrderForm.setCustomerId(87283L);
             orderDto.add(pumaOrderForm);
             fail("Invalid Consumer ID");
         } catch (ApiException e) {
-            assertEquals("Consumer (ID:87283) does not exist.", e.getMessage());
             pumaOrderForm.setCustomerId(customer.getId());
+            assertTrue(true);
         }
+    }
 
+    @Test
+    public void  testAddWithInvalidChannelId() {
         try {
             pumaOrderForm.setChannelId(123L);
             orderDto.add(pumaOrderForm);
             fail("Invalid Channel ID used");
         } catch (ApiException e) {
-            assertEquals("Channel (ID:" + 123 + ") does not exist", e.getMessage());
             pumaOrderForm.setChannelId(channelSnapdeal.getId());
+            assertTrue(true);
         }
+    }
 
+    @Test
+    public void testAddWithDuplicateOrder() {
         try {
+            orderDto.add(pumaOrderForm);
             orderDto.add(pumaOrderForm);
             fail("Duplicate order inserted");
         } catch (ApiException e) {
-            assertEquals("Order with ChannelID & ChannelOrderID pair already exist.", e.getMessage());
+            assertTrue(true);
         }
+    }
 
+    @Test
+    public void testAddWithInvalidClientProductPair() {
         try {
             List<OrderItemForm> pumaOrderItemFormList = new ArrayList<>();
             pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
@@ -171,7 +186,10 @@ public class OrderDtoTest extends AbstractUnitTest {
         } catch (ApiException e) {
             assertTrue(true);
         }
+    }
 
+    @Test
+    public void testAddWithDuplicateOrderIdAndProduct() {
         try {
             List<OrderItemForm> pumaOrderItemFormList = new ArrayList<>();
             pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
@@ -181,8 +199,30 @@ public class OrderDtoTest extends AbstractUnitTest {
             orderDto.add(pumaOrderForm);
             fail("Duplicate OrderItems in Order");
         } catch (ApiException e) {
-            assertEquals("GlobalSKU, OrderID pair already exists.", e.getMessage());
+            assertTrue(true);
         }
+    }
+
+    @Test
+    public void testGet() throws ApiException {
+        OrderPojo order = TestPojo.getOrderPojo(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "ABCL", OrderStatus.CREATED);
+        orderDao.insert(order);
+
+        assertEquals(order.getChannelOrderId(), orderDto.get(order.getId()).getChannelOrderId());
+    }
+
+    @Test
+    public void testGetAllWithEmptyTable() throws ApiException {
+        assertEquals(0, orderDto.getAll().size());
+    }
+
+    @Test
+    public void testGetAll() throws ApiException {
+        orderDao.insert( TestPojo.getOrderPojo(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "ABCL", OrderStatus.CREATED));
+        assertEquals(1, orderDto.getAll().size());
+
+        orderDao.insert( TestPojo.getOrderPojo(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "ABCD", OrderStatus.CREATED));
+        assertEquals(2, orderDto.getAll().size());
     }
 
     @Test
@@ -224,5 +264,36 @@ public class OrderDtoTest extends AbstractUnitTest {
         assertEquals(0L, (long) binSkuDao.selectByBinIdAndGlobalSku(bin3.getId(), productNike.getId()).getQuantity());
         assertEquals(0L, (long) binSkuDao.selectByBinIdAndGlobalSku(bin4.getId(), productNike.getId()).getQuantity());
 
+        assertEquals(OrderStatus.ALLOCATED, orderDao.selectByChannelAndChannelOrderId(pumaOrderForm.getChannelId(), pumaOrderForm.getChannelOrderId()).getStatus());
+        assertEquals(OrderStatus.CREATED, orderDao.selectByChannelAndChannelOrderId(nikeOrderForm.getChannelId(), nikeOrderForm.getChannelOrderId()).getStatus());
+
+        try{
+            orderDto.runAllocation(orderDao.selectByChannelAndChannelOrderId(channelSnapdeal.getId(), "DEFAULT CHANNEL ORDER ID PUMA").getId());
+            fail("Pre allocated order allocated again");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testFulfillOrderWithCreatedOrder() throws JsonProcessingException, ApiException {
+        OrderPojo orderPojo = TestPojo.getOrderPojo(123L, 345L, 3L, "ABCL", OrderStatus.CREATED);
+        orderDao.insert(orderPojo);
+
+        try {
+            orderDto.fulfillOrder(orderPojo.getId());
+            fail("Unallocated order was fulfilled");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testFulfillOrderWithAllocatedOrder() throws JsonProcessingException, ApiException {
+        OrderPojo orderPojo = TestPojo.getOrderPojo(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "ABCL", OrderStatus.ALLOCATED);
+        orderDao.insert(orderPojo);
+
+        orderDto.fulfillOrder(orderPojo.getId());
+        assertEquals(OrderStatus.FULFILLED, orderPojo.getStatus());
     }
 }

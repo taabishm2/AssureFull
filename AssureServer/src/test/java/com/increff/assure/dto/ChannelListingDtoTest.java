@@ -3,11 +3,13 @@ package com.increff.assure.dto;
 import com.increff.assure.dao.ChannelDao;
 import com.increff.assure.dao.ChannelListingDao;
 import com.increff.assure.dao.ConsumerDao;
+import com.increff.assure.dao.ProductMasterDao;
 import com.increff.assure.pojo.ChannelPojo;
 import com.increff.assure.pojo.ConsumerPojo;
 import com.increff.assure.service.ApiException;
 import model.ConsumerType;
 import model.InvoiceType;
+import model.data.ProductMasterData;
 import model.form.ChannelListingForm;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +30,8 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
     ChannelDao channelDao;
     @Autowired
     ConsumerDao consumerDao;
+    @Autowired
+    ProductMasterDao productDao;
 
     private ChannelPojo testChannelA;
     private ConsumerPojo testClient;
@@ -44,8 +48,10 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
     @Test
     public void testAddListWithValidList() throws ApiException {
         List<ChannelListingForm> formList = new ArrayList<>();
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++) {
+            productDao.insert(TestPojo.getProductPojo("A",testClient.getId(),"B",2D,"CL SKU"+i,"DESC"));
             formList.add(TestForm.getChannelListingForm("CL SKU" + i, "CH SKU" + i));
+        }
 
         listingDto.addList(formList, testChannelA.getId(), testClient.getId());
         assertEquals(5, listingDao.selectAll().size());
@@ -121,4 +127,5 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
             assertTrue(true);
         }
     }
+
 }

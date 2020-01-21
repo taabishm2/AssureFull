@@ -19,12 +19,6 @@ public class OrderItemController {
     @Autowired
     private OrderItemDto orderItemDto;
 
-    @ApiOperation(value = "Adds an Order-Item")
-    @RequestMapping(path = "/api/orderItem", method = RequestMethod.POST)
-    public void add(@RequestBody OrderItemForm form) throws ApiException {
-        orderItemDto.add(form);
-    }
-
     @ApiOperation(value = "Gets an Order-Item by ID")
     @RequestMapping(path = "/api/orderItem/{id}", method = RequestMethod.GET)
     public OrderItemData get(@PathVariable long id) throws ApiException {
