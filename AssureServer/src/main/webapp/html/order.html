@@ -20,13 +20,15 @@
             <br/>
             <span class="text-muted" style="font-size:0.9em;">Add and View the created Orders.</span>
         </p>
-        <button class="btn btn-primary" id="refresh-data" style="width:60" type="button">
+
+        <button class="btn btn-primary" data-toggle="tooltip" id="refresh-data" title="Refresh" type="button">
             <i aria-hidden="true" class="fa fa-refresh"></i>
         </button>
+        <span data-toggle="tooltip" title="Add Order">
         <button class="btn btn-primary" data-target="#orderModal" data-toggle="modal" type="button">
             <i aria-hidden="true" class="fa fa-plus"></i>
-            &nbspCreate Orders
         </button>
+        </span>
 
         <!--Search Param Form-->
         <hr style="margin-top:25px">
@@ -72,7 +74,7 @@
                 <div class="row" style="margin-top:10px;">
 
                     <div class="form-group col-md-4">
-                        <label for="fromDateSearch" style="font-weight: bold;">From:</label>
+                        <label for="fromDateSearch" style="font-weight: bold;">Orders After:</label>
                         <input class="form-control" id="fromDateSearch" name="fromDate"
                                placeholder="From Date" type="date" style="border:0px; border-bottom:1px solid #2B7A78;">
                         <br>
@@ -80,21 +82,20 @@
 
 
                     <div class="form-group col-md-4">
-                        <label for="toDateSearch" style="font-weight: bold;">To:</label>
+                        <label for="toDateSearch" style="font-weight: bold;">Orders Till:</label>
                         <input class="form-control" id="toDateSearch" name="toDate"
                                placeholder="To Date" type="date" style="border:0px; border-bottom:1px solid #2B7A78;">
                         <br>
                     </div>
 
-                </div>
-
-                <div class="row">
                     <div class="form-group col-md-4">
-                        <button class="btn btn-primary" id="search-button" type="submit">
+                        <label for="search-button">&nbsp;</label>
+                        <br/>
+                        <button class="btn btn-primary" id="search-button" type="submit" data-toggle="tooltip" title="Search">
                             <i aria-hidden="true" class="fa fa-search"></i>
-                            &nbspSearch
                         </button>
                     </div>
+
                 </div>
             </form>
         </div>
@@ -138,7 +139,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="orderDetailsModalLabel">Order Details.</h6>
+                    <h6 class="modal-title" id="orderDetailsModalLabel">Order Details</h6>
                     <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -239,12 +240,23 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Upload Order Items</h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button" onclick="resetModal()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+
                 <form id="order-item-form">
                     <div class="modal-body">
+
+                        <div id="validated-order-details" class="row">
+                            <div class="col-md-6">Client: <span id="order-details-client" class="font-weight-bold"></span></div>
+                            <div class="col-md-6">Customer: <span id="order-details-customer" class="font-weight-bold"></span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">Channel Order ID: <span id="order-details-channel-order-id" class="font-weight-bold"></span></div>
+                        </div>
+
+                        <hr/>
 
                         <div class="">
                             <div>
@@ -265,12 +277,14 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-warning" id="download-errors" type="button" style="visibility:hidden">Display Errors</button>
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button" onclick="resetModal()">Close</button>
                         <button class="btn btn-primary" id="add-orderItems" type="submit">Submit</button>
-                        <a id="error-file-link">
-                            <button class="btn btn-warning" id="download-errors" type="button">Download Errors
-                            </button>
-                        </a>
+
+                        <div id="errorDetails">
+                            <!--CSV errors appear here-->
+                        </div>
+
                     </div>
                 </form>
             </div>

@@ -35,6 +35,8 @@ public class DbConfig {
     private String hibernateHbm2ddl;
     @Value("${hibernate.namingStrategy}")
     private String hibernateNamingStrategy;
+    @Value("${hibernate.jdbc.time_zone}")
+    private String hibernateTimeZone;
 
     @Bean(name = "dataSource")
     public DataSource getDataSource() {
@@ -66,6 +68,7 @@ public class DbConfig {
         jpaProperties.put("hibernate.show_sql", hibernateShowSql);
         jpaProperties.put("hibernate.hbm2ddl.auto", hibernateHbm2ddl);
         jpaProperties.put("hibernate.physical_naming_strategy", hibernateNamingStrategy);
+        jpaProperties.put("hibernate.jdbc.time_zone", hibernateTimeZone);
         bean.setJpaProperties(jpaProperties);
         return bean;
     }

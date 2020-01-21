@@ -242,8 +242,8 @@ public class OrderDto extends AbstractDto {
             orderItemReceipt.setMrp(product.getMrp());
             orderItemReceipt.setTotal((long) (orderItem.getAllocatedQuantity() * product.getMrp()));
 
-            if(!channelService.getCheckId(order.getChannelId()).getName().equals("INTERNAL"))
-            orderItemReceipt.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(), product.getId()).getChannelSkuId());
+            if (!channelService.getCheckId(order.getChannelId()).getName().equals("INTERNAL"))
+                orderItemReceipt.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(), product.getId()).getChannelSkuId());
 
             orderItems.add(orderItemReceipt);
         }
@@ -310,24 +310,31 @@ public class OrderDto extends AbstractDto {
         if (Objects.nonNull(form.getChannelId()))
             channelService.getCheckId(form.getChannelId());
 
-        ZonedDateTime fromDateObject = ZonedDateTime.parse(form.getFromDate());
-        ZonedDateTime toDateObject = ZonedDateTime.parse(form.getToDate());
-        System.out.println(fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss")));
-        System.out.println(toDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss")));
+        checkDateFilters(form.getFromDate(), form.getToDate());
 
-        checkDateFilters(fromDateObject, toDateObject);
+        ZonedDateTime fromDateObject = form.getFromDate();
+        ZonedDateTime toDateObject = form.getToDate();
 
-        if (Objects.isNull(fromDateObject) || Objects.isNull(toDateObject)) {
-            if (Objects.nonNull(fromDateObject))
-                toDateObject = ZonedDateTime.now();
-            else
+        if (Objects.isNull(fromDateObject) && Objects.isNull(toDateObject)) {
+            toDateObject = ZonedDateTime.now();
+            fromDateObject = toDateObject.minusMonths(1L);
+        }
+        else if (Objects.isNull(fromDateObject) ^ Objects.isNull(toDateObject)) {
+            if (Objects.nonNull(fromDateObject)) {
+                toDateObject = fromDateObject.plusMonths(1L);
+            } else {
                 fromDateObject = toDateObject.minusMonths(1L);
-
-                fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"));
+            }
         }
 
+        fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"));
+        toDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"));
+
+        System.out.println("FROM:"+fromDateObject.toString());
+        System.out.println("TO  :"+toDateObject.toString());
+
         return convertPojoToData(orderService.getSearch(form.getClientId(),
-                form.getCustomerId(), form.getChannelId(), form.getFromDate(), form.getToDate()));
+                form.getCustomerId(), form.getChannelId(), fromDateObject, toDateObject));
     }
 
     private void checkDateFilters(ZonedDateTime fromDate, ZonedDateTime toDate) throws ApiException {
@@ -371,7 +378,7 @@ public class OrderDto extends AbstractDto {
     private OrderData convertPojoToData(OrderPojo order) throws ApiException {
         OrderData orderData = convert(order, OrderData.class);
         orderData.setOrderItemList(convert(orderItemService.getByOrderId(order.getId()), OrderItemForm.class));
-        orderData.setDateCreated(order.getCreatedAt().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")));
+        orderData.setDateCreated(order.getCreatedAt());
         orderData.setClientName(consumerService.getCheckId(order.getClientId()).getName());
         orderData.setCustomerName(consumerService.getCheckId(order.getCustomerId()).getName());
         orderData.setChannelName(channelService.getCheckId(order.getChannelId()).getName());

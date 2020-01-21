@@ -33,6 +33,7 @@ function resetModals(){
 
 function validateOrder(event){
 	var parsedJson = JSON.parse(toJson($("#order-form")));
+
 	var url = getOrderApiUrl()+"/validate";
     json = JSON.stringify(parsedJson);
 
@@ -46,8 +47,10 @@ function validateOrder(event){
 	   success: function(response) {
 	   		sessionStorage.setItem("orderIdentifier",JSON.stringify(parsedJson));
 	   		toggleOrderCreateToModify();
-
-	   		getSuccessSnackbar("Order Validated");
+	   			document.getElementById('order-details-client').innerHTML = json['clientId'];
+            	document.getElementById('order-details-customer').innerHTML = json['customerId'];
+            	document.getElementById('order-details-channel-order-id').innerHTML = json['channelId'];
+	   		getSuccessSnackbar("Success");
 	   },
 	   error: handleAjaxError
 	});
@@ -94,21 +97,27 @@ function validateCsv(formList){
            },
     	   success: function(response) {
     	        uploadOrder(formList);
-    	        getSuccessSnackbar("Order Placed");
+    	        getSuccessSnackbar("Success");
     	   },
     	   error: function(response){
-    	        errorButtonActivate("http://127.0.0.1:9090/"+JSON.parse(response.responseText)['message']);
-    	   		alert("Errors in CSV");
-    	   		var index = array.indexOf(item);
-                if (index !== -1) array.splice(index, 1);
+                sessionStorage.setItem("OrderItemsCSVError", JSON.stringify(JSON.parse(response.responseText)['message']));
+                            errorButtonActivate();
+                            alert("Errors in CSV");
     	   }
     	});
     	return false;
 }
 
-function errorButtonActivate(link){
+function errorButtonActivate() {
+    document.getElementById("download-errors").style.visibility = "visible";
     document.getElementById("download-errors").disabled = false;
-    document.getElementById('error-file-link').href = link;
+}
+
+function resetModal() {
+    sessionStorage.setItem("OrderItemsCSVError", '');
+    document.getElementById("errorDetails").style.display = "none";
+    document.getElementById("download-errors").disabled = true;
+    document.getElementById("download-errors").style.visibility = "hidden";
 }
 
 function uploadOrder(formList){
@@ -139,10 +148,36 @@ function getSearchOrderList(){
     if(document.getElementById("fromDateSearch").value != ''){
         var fromDate = new Date(Date.parse(document.getElementById("fromDateSearch").value + 'T00:00'));
         json["fromDate"] = fromDate.toISOString();
+
+        if(document.getElementById("toDateSearch").value == ''){
+            var toDate = fromDate;
+            toDate.setMonth(toDate.getMonth() + 1);
+            var today = new Date();
+
+            if(today < toDate){
+                toDate = today;
+            }
+            json["toDate"] = toDate.toISOString();
+        }
     }
 
     if(document.getElementById("toDateSearch").value != ''){
-        var toDate = new Date(Date.parse(document.getElementById("toDateSearch").value + 'T24:00'));
+        var toDate = new Date(Date.parse(document.getElementById("toDateSearch").value + 'T23:59:59'));
+        json["toDate"] = toDate.toISOString();
+
+                if(document.getElementById("fromDateSearch").value == ''){
+                    var fromDate = toDate;
+                    fromDate.setMonth(fromDate.getMonth() - 1);
+                    json["fromDate"] = fromDate.toISOString();
+                }
+    }
+
+    if(document.getElementById("toDateSearch").value == '' && document.getElementById("fromDateSearch").value == ''){
+        var toDate = new Date();
+        var fromDate = toDate;
+        fromDate.setMonth(fromDate.getMonth() - 1);
+
+        json["fromDate"] = fromDate.toISOString();
         json["toDate"] = toDate.toISOString();
     }
 
@@ -179,13 +214,17 @@ function displayOrderList(data){
 
 	for(var i in data){
 		var e = data[i];
-		var infoButtonHtml = '<button style="margin-right:2px;" id="infobutton'+e.id+'" class="btn btn-primary btn-sm" onclick="displayOrderDetails(' + e.id + ')"><i class="fa fa-info-circle"></i>&nbspDetails</button>';
+		var infoButtonHtml = '<button style="margin-right:2px;" id="infobutton'+e.id+'" class="btn btn-primary btn-sm" onclick="displayOrderDetails(' + e.id + ')"><i class="fa fa-info-circle"></i></button>';
 		var allocateButtonHtml = '<button style="margin-right:2px;" id="allocbutton'+e.id+'" class="btn btn-primary btn-sm" onclick="allocateOrder(' + e.id + ')"><i class="fa fa-link"></i>&nbspAllocate</button>';
 		var invoiceButtonHtml = '<button style="margin-right:2px;" id="invoicebutton'+e.id+'" class="btn btn-primary btn-sm" onclick="invoiceOrder(' + e.id + ',\'' + e.channelName + '\')"><i class="fa fa-print"></i>&nbspInvoice</button>';
 
+        console.log(e.dateCreated);
+        //var dateCreated = new Date(Date.parse(e.dateCreated));
+        var dateCreated = new Date(0);
+        dateCreated.setUTCSeconds(e.dateCreated);
 		var row = '<tr>'
 		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
-		+ '<td>' + e.dateCreated + '</td>'
+		+ '<td>' + dateCreated.getDate()+'/'+dateCreated.getMonth()+1+'/'+dateCreated.getFullYear()+' '+dateCreated.getHours()+':'+dateCreated.getMinutes()+':'+dateCreated.getSeconds() + '</td>'
 		+ '<td>' + e.clientName + '</td>'
 		+ '<td>' + e.customerName + '</td>'
 		+ '<td>' + e.channelName + '</td>'
@@ -214,7 +253,7 @@ function displayOrderList(data){
 
 		document.getElementById("order-table").style.visibility = "visible";
     	document.getElementById("refresh-data").disabled = false;
-    	getSuccessSnackbar("Refreshed");
+    	getSuccessSnackbar("Success");
     	return false;
 }
 
@@ -267,7 +306,7 @@ function allocateOrder(orderId){
            },
     	   success: function(response) {
     	        getSearchOrderList();
-        	   getSuccessSnackbar("Order Allocated");
+        	   getSuccessSnackbar("Success");
     	   },
     	   error: handleAjaxError
     	});
@@ -284,7 +323,7 @@ function invoiceOrder(orderId, channelName){
                	'Content-Type': 'application/json'
                },
         	   success: function(response) {
-            	   getSuccessSnackbar("Invoice Generated");
+            	   getSuccessSnackbar("Success");
             	   displayDownloadModal(orderId, channelName);
             	   getSearchOrderList();
             	   //alert("C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//"+orderId+".pdf");
@@ -382,6 +421,18 @@ function resetOrderModal(){
     toggleOrderModifyToCreate();
 }
 
+function displayProductCsvErrors() {
+    document.getElementById('errorDetails').innerHTML = sessionStorage.getItem("OrderItemsCSVError");
+    document.getElementById("errorDetails").style.display = "block";
+    return false;
+}
+
+function updateFileName() {
+    var $file = $('#orderItemFile');
+    var fileName = $file.val();
+    $('#orderItemFileName').html(fileName);
+}
+
 //Initialization Code
 function init(){
     document.getElementById("download-errors").disabled = true;
@@ -391,6 +442,9 @@ function init(){
 	$('#order-item-form').submit(processData);
 
     $('#search-param-form').submit(getSearchOrderList);
+
+$('#download-errors').click(displayProductCsvErrors);
+$('#orderItemFile').on('change', updateFileName);
 
 	$('#refresh-data').click(getSearchOrderList);
 }

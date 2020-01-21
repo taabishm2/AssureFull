@@ -10,6 +10,7 @@ import model.data.OrderData;
 import model.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -81,7 +82,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "Search Orders")
-    @RequestMapping(path = "/api/order/search", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/order/search", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<OrderData> getSearch(@RequestBody OrderSearchForm form) throws ApiException {
         return orderDto.getSearch(form);
     }

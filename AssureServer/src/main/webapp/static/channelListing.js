@@ -119,7 +119,7 @@ function uploadChannelListing(formList, channelId, clientId) {
         },
         success: function(response) {
             $('#exampleModal').modal('toggle');
-            getSuccessSnackbar("Channel Listings Created.");
+            getSuccessSnackbar("Success");
         },
         error: function(response) {
             alert(response.responseText);
@@ -162,7 +162,7 @@ function updateFileName() {
     $('#channelListingFileName').html(fileName);
 }
 
-function populateDropdown(){
+function populateDropdown() {
     populateChannelDropdown();
     populateClientDropdown();
     return false;
@@ -222,10 +222,14 @@ function populateClientDropdown() {
 
 function getSearchChannelListingList() {
     var json = JSON.parse(toJson($("#search-param-form")));
+    if (json['clientId'] == undefined && json['channelId'] == undefined && json['channelSkuId'] == '' && json['clientSkuId'] == '') {
+        alert('All search params cannot be empty');
+        return false;
+    }
 
     json = JSON.stringify(json);
-
     var url = getChannelListingUrl() + '/search';
+
 
     $.ajax({
         url: url,
@@ -242,34 +246,34 @@ function getSearchChannelListingList() {
     return false;
 }
 
-function displayChannelListingList(data){
-	var $tbody = $('#channelListing-table').find('tbody');
-	$tbody.empty();
+function displayChannelListingList(data) {
+    var $tbody = $('#channelListing-table').find('tbody');
+    $tbody.empty();
 
-    if(data.length == 0){
-	    var row = '<tr>'
-        + '<td style="text-align:center; font-weight: bold; background-color:#ffebe8;" colspan="5">No Listing Entries</td>'
-        + '</tr>';
+    if (data.length == 0) {
+        var row = '<tr>' +
+            '<td style="text-align:center; font-weight: bold; background-color:#ffebe8;" colspan="5">No Listing Entries</td>' +
+            '</tr>';
         $tbody.append(row);
     }
 
-	for(var i in data){
-		var e = data[i];
+    for (var i in data) {
+        var e = data[i];
 
-		var row = '<tr>'
-		+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
-		+ '<td>' + e.channelName + '</td>'
-		+ '<td>' + e.clientName + '</td>'
-		+ '<td>' + e.channelSkuId + '</td>'
-		+ '<td>' + e.clientSkuId + '</td>'
-		+ '</tr>';
+        var row = '<tr>' +
+            '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>' +
+            '<td>' + e.channelName + '</td>' +
+            '<td>' + e.clientName + '</td>' +
+            '<td>' + e.channelSkuId + '</td>' +
+            '<td>' + e.clientSkuId + '</td>' +
+            '</tr>';
         $tbody.append(row);
-	}
+    }
 
-		document.getElementById("channelListing-table").style.visibility = "visible";
-    	document.getElementById("refresh-data").disabled = false;
-    	getSuccessSnackbar("Refreshed");
-    	return false;
+    document.getElementById("channelListing-table").style.visibility = "visible";
+    document.getElementById("refresh-data").disabled = false;
+    getSuccessSnackbar("Success");
+    return false;
 }
 
 function init() {

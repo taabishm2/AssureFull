@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import model.OrderStatus;
 import model.form.OrderForm;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.ZonedDateTime;
 
@@ -14,7 +15,8 @@ public class OrderData extends OrderForm {
 
     private OrderStatus status;
 
-    private String dateCreated;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+    private ZonedDateTime dateCreated;
 
     private String clientName;
     private String customerName;

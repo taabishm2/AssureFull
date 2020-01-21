@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -51,7 +52,7 @@ public class OrderService extends AbstractService {
         return orderDao.selectByChannel(channelId);
     }
 
-    public List<OrderPojo> getSearch(Long clientId, Long customerId, Long channelId, String fromDate, String toDate) {
+    public List<OrderPojo> getSearch(Long clientId, Long customerId, Long channelId, ZonedDateTime fromDate, ZonedDateTime toDate) {
         return orderDao.getSearch(clientId, customerId, channelId, fromDate, toDate);
     }
 }
