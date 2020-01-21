@@ -1,71 +1,124 @@
 package com.increff.assure.dto;
 
 import com.increff.assure.dao.ChannelDao;
+import com.increff.assure.dao.ChannelListingDao;
+import com.increff.assure.dao.ConsumerDao;
 import com.increff.assure.pojo.ChannelPojo;
+import com.increff.assure.pojo.ConsumerPojo;
 import com.increff.assure.service.ApiException;
+import model.ConsumerType;
 import model.InvoiceType;
-import model.form.ChannelForm;
+import model.form.ChannelListingForm;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
-public class ChannelDtoTest extends AbstractUnitTest {
+public class ChannelListingDtoTest extends AbstractUnitTest {
 
     @Autowired
-    ChannelDto channelDto;
+    ChannelListingDto listingDto;
+    @Autowired
+    ChannelListingDao listingDao;
     @Autowired
     ChannelDao channelDao;
+    @Autowired
+    ConsumerDao consumerDao;
 
-    @Test
-    public void testGet() throws ApiException {
-        ChannelPojo channelPojo = TestPojo.getConstructChannel("SNAPDEAL",InvoiceType.CHANNEL);
-        channelDao.insert(channelPojo);
+    private ChannelPojo testChannelA;
+    private ConsumerPojo testClient;
 
-        assertEquals(channelPojo.getName(), channelDto.get(channelPojo.getId()).getName());
-        assertEquals(channelPojo.getInvoiceType(), channelDto.get(channelPojo.getId()).getInvoiceType());
+    @Before
+    public void init() {
+        testChannelA = TestPojo.getChannelPojo("CHANNEL A", InvoiceType.CHANNEL);
+        channelDao.insert(testChannelA);
+
+        testClient = TestPojo.getConsumerPojo("CONSUMER A", ConsumerType.CLIENT);
+        consumerDao.insert(testClient);
     }
 
     @Test
-    public void testGetInvalidChannel() throws ApiException {
+    public void testAddListWithValidList() throws ApiException {
+        List<ChannelListingForm> formList = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            formList.add(TestForm.getChannelListingForm("CL SKU" + i, "CH SKU" + i));
+
+        listingDto.addList(formList, testChannelA.getId(), testClient.getId());
+        assertEquals(5, listingDao.selectAll().size());
+    }
+
+    @Test
+    public void testAddListWithInvalidClientChannel() {
+        List<ChannelListingForm> formList = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            formList.add(TestForm.getChannelListingForm("CL SKU" + i, "CH SKU" + i));
+
         try{
-            channelDto.get(123L);
-            fail("Invalid channel selected");
-        } catch (ApiException e){
+            listingDto.addList(formList, 123L, testClient.getId());
+            listingDto.addList(formList, testChannelA.getId(), 456L);
+            fail("Invalid Client/Channel Validated");
+        }catch(ApiException e){
             assertTrue(true);
         }
     }
 
     @Test
-    public void testAdd() throws ApiException {
-        ChannelForm form = TestForm.getChannelForm("  mYnTra ",InvoiceType.CHANNEL);
-        channelDto.add(form);
+    public void testAddListWithInvalidFormFields() {
+        List<ChannelListingForm> formList = new ArrayList<>();
+        formList.add(TestForm.getChannelListingForm(null, "CH SKU"));
+        formList.add(TestForm.getChannelListingForm("CL SKU", null));
+        formList.add(TestForm.getChannelListingForm("ABC SKU", "DEF SKU"));
+        formList.add(TestForm.getChannelListingForm("ABC SKU", "DEF SKU"));
 
-        assertNotNull(channelDao.selectByNameAndType("myntra",InvoiceType.CHANNEL));
+        try{
+            listingDto.addList(formList, testChannelA.getId(), testClient.getId());
+            fail("Invalid form fields validated");
+        }catch(ApiException e){
+            assertTrue(true);
+        }
     }
 
     @Test
-    public void testAddWithInvalidInput() throws ApiException {
+    public void testValidateListWithValidList() throws ApiException {
+        List<ChannelListingForm> formList = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            formList.add(TestForm.getChannelListingForm("CL SKU" + i, "CH SKU" + i));
+
+        listingDto.validateFormList(formList, testChannelA.getId(), testClient.getId());
+    }
+
+    @Test
+    public void testValidateListWithInvalidClientChannel(){
+        List<ChannelListingForm> formList = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            formList.add(TestForm.getChannelListingForm("CL SKU" + i, "CH SKU" + i));
+
         try{
-            channelDto.add(TestForm.getChannelForm("",InvoiceType.CHANNEL));
-            channelDto.add(TestForm.getChannelForm("ABC",null));
-            fail("Channel with null fields Inserted");
+            listingDto.validateFormList(formList, 123L, 456L);
+            fail("Invalid Client Channel details validated");
         }catch (ApiException e){
             assertTrue(true);
         }
     }
 
     @Test
-    public void testGetAllWithEmptyTable() throws ApiException {
-        assertEquals(0, channelDto.getAll().size());
-    }
+    public void testValidateListWithInvalidFormFields(){
+        List<ChannelListingForm> formList = new ArrayList<>();
+        formList.add(TestForm.getChannelListingForm(null, "CH SKU"));
+        formList.add(TestForm.getChannelListingForm("CL SKU", null));
+        formList.add(TestForm.getChannelListingForm("ABC SKU", "DEF SKU"));
+        formList.add(TestForm.getChannelListingForm("ABC DEF", "DEF SKU"));
+        formList.add(TestForm.getChannelListingForm("ABC DEF", "PQR SKU"));
 
-    @Test
-    public void testGetAll() throws ApiException {
-        channelDao.insert(TestPojo.getConstructChannel("SNAPDEAL",InvoiceType.CHANNEL));
-        assertEquals(1, channelDto.getAll().size());
-
-        channelDao.insert(TestPojo.getConstructChannel("FLIPKART",InvoiceType.CHANNEL));
-        assertEquals(2, channelDto.getAll().size());
+        try{
+            listingDto.validateFormList(formList, testChannelA.getId(), testClient.getId());
+            fail("Invalid form fields validated");
+        } catch(ApiException e){
+            assertTrue(true);
+        }
     }
 }

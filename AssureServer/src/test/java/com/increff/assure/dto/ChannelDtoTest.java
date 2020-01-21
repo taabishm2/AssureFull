@@ -19,7 +19,7 @@ public class ChannelDtoTest extends AbstractUnitTest {
 
     @Test
     public void testGet() throws ApiException {
-        ChannelPojo channelPojo = TestPojo.getConstructChannel("SNAPDEAL",InvoiceType.CHANNEL);
+        ChannelPojo channelPojo = TestPojo.getChannelPojo("SNAPDEAL",InvoiceType.CHANNEL);
         channelDao.insert(channelPojo);
 
         assertEquals(channelPojo.getName(), channelDto.get(channelPojo.getId()).getName());
@@ -53,5 +53,19 @@ public class ChannelDtoTest extends AbstractUnitTest {
         }catch (ApiException e){
             assertTrue(true);
         }
+    }
+
+    @Test
+    public void testGetAllWithEmptyTable() throws ApiException {
+        assertEquals(0, channelDto.getAll().size());
+    }
+
+    @Test
+    public void testGetAll() throws ApiException {
+        channelDao.insert(TestPojo.getChannelPojo("SNAPDEAL",InvoiceType.CHANNEL));
+        assertEquals(1, channelDto.getAll().size());
+
+        channelDao.insert(TestPojo.getChannelPojo("FLIPKART",InvoiceType.CHANNEL));
+        assertEquals(2, channelDto.getAll().size());
     }
 }

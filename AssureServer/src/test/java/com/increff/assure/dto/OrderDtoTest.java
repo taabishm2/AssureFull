@@ -98,7 +98,7 @@ public class OrderDtoTest extends AbstractUnitTest {
         inventoryDao.insert(TestPojo.getConstructInventory(productPumaA.getId(), 26L, 0L, 0L));
         inventoryDao.insert(TestPojo.getConstructInventory(productNike.getId(), 46L, 0L, 0L));
 
-        channelSnapdeal = TestPojo.getConstructChannel("SNAPDEAL", InvoiceType.SELF);
+        channelSnapdeal = TestPojo.getChannelPojo("SNAPDEAL", InvoiceType.SELF);
         channelDao.insert(channelSnapdeal);
 
         List<OrderItemForm> pumaOrderItemFormList = new ArrayList<>();

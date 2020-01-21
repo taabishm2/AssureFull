@@ -20,7 +20,7 @@ public class TestForm {
         return binSkuForm;
     }
 
-    public static ChannelListingPojo getConstructChannelListing(Long globalSku, Long channelId, String channelSkuId) {
+    public static ChannelListingPojo getChannelListingPojo(Long globalSku, Long channelId, String channelSkuId) {
         ChannelListingPojo channelListing = new ChannelListingPojo();
         channelListing.setGlobalSkuId(globalSku);
         channelListing.setChannelId(channelId);
@@ -76,5 +76,12 @@ public class TestForm {
         product.setClientSkuId(clientSkuId);
         product.setDescription(description);
         return product;
+    }
+
+    public static ChannelListingForm getChannelListingForm(String clientSkuId, String channelSkuId) {
+        ChannelListingForm listingForm = new ChannelListingForm();
+        listingForm.setClientSkuId(clientSkuId);
+        listingForm.setChannelSkuId(channelSkuId);
+        return listingForm;
     }
 }

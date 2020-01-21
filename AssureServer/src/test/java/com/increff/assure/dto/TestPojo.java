@@ -25,7 +25,7 @@ public class TestPojo {
         return channelListing;
     }
 
-    public static ChannelPojo getConstructChannel(String name, InvoiceType type) {
+    public static ChannelPojo getChannelPojo(String name, InvoiceType type) {
         ChannelPojo channel = new ChannelPojo();
         channel.setName(name);
         channel.setInvoiceType(type);

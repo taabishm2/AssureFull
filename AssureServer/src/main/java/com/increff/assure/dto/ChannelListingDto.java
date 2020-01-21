@@ -32,11 +32,6 @@ public class ChannelListingDto extends AbstractDto {
     @Autowired
     private ConsumerService consumerService;
 
-    @Transactional(readOnly = true)
-    public ChannelListingData get(Long id) throws ApiException {
-        return convertPojoToData(channelListingService.getCheckId(id));
-    }
-
     private ChannelListingData convertPojoToData(ChannelListingPojo channelListingPojo) throws ApiException {
         ChannelListingData listingData = convert(channelListingPojo, ChannelListingData.class);
         listingData.setClientSkuId(productService.getCheckId(channelListingPojo.getGlobalSkuId()).getClientSkuId());
@@ -52,15 +47,6 @@ public class ChannelListingDto extends AbstractDto {
         }
         return listingData;
     }
-
-    @Transactional(readOnly = true)
-    public List<ChannelListingData> getAll() throws ApiException {
-        List<ChannelListingData> allListingData = new ArrayList<>();
-        for (ChannelListingPojo listingPojo : channelListingService.getAll())
-            allListingData.add(convertPojoToData(listingPojo));
-        return allListingData;
-    }
-
 
     public void addList(List<ChannelListingForm> formList, Long channelId, Long clientId) throws ApiException {
         channelService.getCheckId(channelId);
