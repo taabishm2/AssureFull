@@ -12,6 +12,7 @@ import model.form.ChannelOrderForm;
 import model.form.OrderForm;
 import model.form.OrderItemValidationForm;
 import model.form.OrderValidationForm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -24,6 +25,9 @@ import static com.increff.assure.util.ConvertUtil.*;
 
 @Component
 public class ClientWrapper {
+    @Value("${assure.server.url}")
+    private static String assureServerUrl;
+
     public static void hitAddOrderApi(ChannelOrderForm orderForm) throws ApiException {
         ObjectMapper mapper = new ObjectMapper();
 
@@ -40,13 +44,13 @@ public class ClientWrapper {
 
         System.out.println("Sending request: "+jsonStr);
         HttpEntity<String> request = new HttpEntity<>(jsonStr, headers);
-        restTemplate.postForObject("http://localhost:6060/assure/api/order/channel", request, String.class);
+        restTemplate.postForObject(assureServerUrl + "/api/order/channel", request, String.class);
         System.out.println("Request Completed");
     }
 
     public static ChannelAppOrderData hitGetOrderApi(Long id) {
         RestTemplate restTemplate = new RestTemplate();
-        String fooResourceUrl = "http://localhost:6060/assure/api/order";
+        String fooResourceUrl = assureServerUrl +  "/api/order";
         return restTemplate.getForEntity(fooResourceUrl + "/" + id, ChannelAppOrderData.class).getBody();
     }
 
@@ -84,7 +88,7 @@ public class ClientWrapper {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<String> request = new HttpEntity<String>(jsonStr, headers);
-        restTemplate.postForObject("http://localhost:6060/assure/api/order/validate", request, String.class);
+        restTemplate.postForObject(assureServerUrl + "/api/order/validate", request, String.class);
     }
 
     public static void hitOrderItemValidationApi(OrderItemValidationForm validationForm) throws ApiException {
@@ -102,11 +106,11 @@ public class ClientWrapper {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<String> request = new HttpEntity<String>(jsonStr, headers);
-        restTemplate.postForObject("http://localhost:6060/assure/api/orderitem/channel/validate", request, String.class);
+        restTemplate.postForObject(assureServerUrl + "/api/orderitem/channel/validate", request, String.class);
     }
 
     public static List<OrderData> hitGetOrdersByChannelApi(Long channelId) throws ApiException {
-        String urlGETList = "http://localhost:6060/assure/api/order/channel/"+channelId;
+        String urlGETList = assureServerUrl + "/api/order/channel/"+channelId;
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<OrderData[]> responseEntity = restTemplate.getForEntity(urlGETList, OrderData[].class);
         OrderData[] objects = responseEntity.getBody();
@@ -117,7 +121,7 @@ public class ClientWrapper {
     }
 
     public static List<ConsumerData> hitGetClientsApi() {
-        String urlGETList = "http://localhost:6060/assure/api/consumer/clients";
+        String urlGETList = assureServerUrl + "/api/consumer/clients";
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<ConsumerData[]> responseEntity = restTemplate.getForEntity(urlGETList, ConsumerData[].class);
         ConsumerData[] objects = responseEntity.getBody();
@@ -127,7 +131,7 @@ public class ClientWrapper {
     }
 
     public static List<ChannelData> hitGetChannelsApi() {
-        String urlGETList = "http://localhost:6060/assure/api/channel";
+        String urlGETList = assureServerUrl + "/api/channel";
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<ChannelData[]> responseEntity = restTemplate.getForEntity(urlGETList, ChannelData[].class);
         ChannelData[] objects = responseEntity.getBody();
@@ -137,7 +141,7 @@ public class ClientWrapper {
     }
 
     public static List<OrderItemData> hitGetOrderItemsApi(Long orderId) {
-        String urlGETList = "http://localhost:6060/assure/api/orderItem/orderId/"+orderId;
+        String urlGETList = assureServerUrl + "/api/orderItem/orderId/"+orderId;
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<OrderItemData[]> responseEntity = restTemplate.getForEntity(urlGETList, OrderItemData[].class);
         OrderItemData[] objects = responseEntity.getBody();

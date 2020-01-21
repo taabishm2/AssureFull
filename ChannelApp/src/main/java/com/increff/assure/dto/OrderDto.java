@@ -1,9 +1,8 @@
 package com.increff.assure.dto;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.increff.assure.model.data.ChannelAppOrderData;
 import com.increff.assure.model.data.ChannelOrderItemReceiptData;
 import com.increff.assure.model.data.ChannelOrderReceiptData;
-import com.increff.assure.model.data.ChannelAppOrderData;
 import com.increff.assure.model.form.ChannelAppOrderForm;
 import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ClientWrapper;
@@ -11,7 +10,6 @@ import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
 import model.data.*;
 import model.form.ChannelOrderForm;
-import model.form.OrderForm;
 import model.form.OrderItemValidationForm;
 import model.form.OrderValidationForm;
 import org.springframework.stereotype.Service;
@@ -33,22 +31,11 @@ public class OrderDto {
     }
 
     public void generateReceipt(OrderReceiptData orderReceiptData) throws ApiException {
-
         ChannelOrderReceiptData orderReceipt = ClientWrapper.convert(orderReceiptData);
-        System.out.println("GENERATING XML");
-        System.out.println(orderReceipt.getOrderId());
-        System.out.println(orderReceipt.getChannelName());
-        System.out.println(orderReceipt.getChannelOrderId());
-        System.out.println(orderReceipt.getClientDetails());
-        System.out.println(orderReceipt.getCustomerDetails());
-        System.out.println(orderReceipt.getOrderCreationTime());
-        for(ChannelOrderItemReceiptData r: orderReceipt.getOrderItems())
-            System.out.println(r.getChannelSkuId()+","+r.getMrp());
 
         XmlGenerateUtil.generate(orderReceipt);
-        System.out.println("GENERATED XML");
         PdfGenerateUtil.generate(orderReceipt.getOrderId());
-        }
+    }
 
     public void validateOrder(OrderValidationForm validationForm) throws ApiException {
         ClientWrapper.hitOrderValidationApi(validationForm);
