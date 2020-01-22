@@ -2,7 +2,6 @@ package com.increff.assure.model.data;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @XmlRootElement
@@ -11,7 +10,7 @@ public class ChannelOrderReceiptData {
     Long orderId;
     String channelName;
     String channelOrderId;
-    ZonedDateTime OrderCreationTime;
+    String orderCreationTime;
     String clientDetails;
     String customerDetails;
 
@@ -44,13 +43,13 @@ public class ChannelOrderReceiptData {
         this.channelOrderId = channelOrderId;
     }
 
-    public ZonedDateTime getOrderCreationTime() {
-        return OrderCreationTime;
+    public String getOrderCreationTime() {
+        return orderCreationTime;
     }
 
     @XmlElement
-    public void setOrderCreationTime(ZonedDateTime orderCreationTime) {
-        OrderCreationTime = orderCreationTime;
+    public void setOrderCreationTime(String orderCreationTime) {
+        this.orderCreationTime = orderCreationTime;
     }
 
     public String getClientDetails() {

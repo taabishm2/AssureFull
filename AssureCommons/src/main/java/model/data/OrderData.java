@@ -1,9 +1,11 @@
 package model.data;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import model.OrderStatus;
 import model.form.OrderForm;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.ZonedDateTime;
 
@@ -14,5 +16,10 @@ public class OrderData extends OrderForm {
 
     private OrderStatus status;
 
-    private ZonedDateTime createdAt;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private ZonedDateTime dateCreated;
+
+    private String clientName;
+    private String customerName;
+    private String channelName;
 }

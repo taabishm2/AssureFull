@@ -12,21 +12,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class BinDto {
+public class BinDto extends AbstractDto {
     @Autowired
     private BinService binService;
 
     @Transactional(rollbackFor = ApiException.class)
-    public ArrayList<Long> add(Integer numberOfBins) throws ApiException {
-        if(numberOfBins <= 0)
+    public ArrayList<Long> add(Integer binCount) throws ApiException {
+        if(binCount <= 0)
             throw new ApiException("Bin Count must be positive");
 
-        return binService.addBins(numberOfBins);
+        return binService.addBins(binCount);
     }
 
     @Transactional(readOnly = true)
-    public List<Long> getAll() throws ApiException {
-        List<BinPojo> binPojoList = binService.getAll();
-        return binPojoList.stream().map(BinPojo::getId).collect(Collectors.toList());
+    public List<Long> getAll() {
+        return binService.getAll().stream().map(BinPojo::getId).collect(Collectors.toList());
     }
 }

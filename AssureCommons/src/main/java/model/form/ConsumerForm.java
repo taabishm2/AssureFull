@@ -8,11 +8,13 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 public class ConsumerForm {
-    @NotBlank
+    @NotNull
+    @Size(min=1, max=255)
     private String name;
 
     @NotNull

@@ -6,11 +6,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import model.data.ChannelListingData;
 import model.form.ChannelListingForm;
-import model.form.ProductMasterForm;
+import model.form.ChannelListingSearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Api
@@ -21,25 +20,19 @@ public class ChannelListingController {
 
     @ApiOperation(value = "Add a Channel Listings for given Channel and Client")
     @RequestMapping(path = "/api/channelListing/list/{channelId}/{clientId}", method = RequestMethod.POST)
-    public void addList(@PathVariable Long channelId, @PathVariable Long clientId, @Valid @RequestBody List<ChannelListingForm> formList) throws ApiException {
+    public void addList(@PathVariable Long channelId, @PathVariable Long clientId, @RequestBody List<ChannelListingForm> formList) throws ApiException {
         channelListingDto.addList(formList, channelId, clientId);
-    }
-
-    @ApiOperation(value = "Gets a Channel-Listing by ID")
-    @RequestMapping(path = "/api/channelListing/{id}", method = RequestMethod.GET)
-    public ChannelListingData get(@PathVariable Long id) throws ApiException {
-        return channelListingDto.get(id);
-    }
-
-    @ApiOperation(value = "Gets list of all Channel-Listing")
-    @RequestMapping(path = "/api/channelListing", method = RequestMethod.GET)
-    public List<ChannelListingData> getAll() throws ApiException {
-        return channelListingDto.getAll();
     }
 
     @ApiOperation(value = "Validate List of Channel Listings for a Channel")
     @RequestMapping(path = "/api/channelListing/validate/{channelId}/{clientId}", method = RequestMethod.POST)
-    public void validateList(@PathVariable Long channelId, @PathVariable Long clientId, @Valid @RequestBody List<ChannelListingForm> formList) throws ApiException {
-        channelListingDto.validateList(formList, channelId, clientId);
+    public void validateList(@PathVariable Long channelId, @PathVariable Long clientId, @RequestBody List<ChannelListingForm> formList) throws ApiException {
+        channelListingDto.validateFormList(formList, channelId, clientId);
+    }
+
+    @ApiOperation(value = "Search Channel Listing Entries")
+    @RequestMapping(path = "/api/channelListing/search", method = RequestMethod.POST)
+    public List<ChannelListingData> getSearch(@RequestBody ChannelListingSearchForm form) throws ApiException {
+        return channelListingDto.getSearch(form);
     }
 }

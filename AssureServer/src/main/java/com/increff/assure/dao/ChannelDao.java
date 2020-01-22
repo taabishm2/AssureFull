@@ -1,6 +1,7 @@
 package com.increff.assure.dao;
 
 import com.increff.assure.pojo.ChannelPojo;
+import model.InvoiceType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,18 +22,20 @@ public class ChannelDao extends AbstractDao<ChannelPojo> {
         super(ChannelPojo.class);
     }
 
-    @Transactional(readOnly = true)
-    public ChannelPojo selectByName(String name) {
+    public ChannelPojo selectByNameAndType(String channelName, InvoiceType channelType) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<ChannelPojo> q = cb.createQuery(ChannelPojo.class);
         Root<ChannelPojo> c = q.from(ChannelPojo.class);
         q.select(c);
         ParameterExpression<String> nameParam = cb.parameter(String.class);
+        ParameterExpression<InvoiceType> typeParam = cb.parameter(InvoiceType.class);
         q.where(
-                cb.equal(c.get("name"), nameParam)
+                cb.equal(c.get("name"), nameParam),
+                cb.equal(c.get("invoiceType"), typeParam)
         );
         TypedQuery<ChannelPojo> typedQuery = entityManager.createQuery(q);
-        typedQuery.setParameter(nameParam, name);
+        typedQuery.setParameter(nameParam, channelName);
+        typedQuery.setParameter(typeParam, channelType);
         return getSingle(typedQuery);
     }
 }

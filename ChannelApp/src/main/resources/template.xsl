@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format"
                 version="1.1" exclude-result-prefixes="fo">
-    <xsl:template match="orderReceiptData">
+    <xsl:template match="channelOrderReceiptData">
         <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
             <fo:layout-master-set>
@@ -25,7 +25,7 @@
                     </fo:block>
 
                     <fo:block font-size="10pt" font-weight="bold" space-after="5mm">Order Creation Time:
-                        <xsl:value-of select="OrderCreationTime"/>
+                        <xsl:value-of select="orderCreationTime"/>
                     </fo:block>
 
                     <fo:block font-size="10pt" font-weight="bold" space-after="8mm">
@@ -121,7 +121,7 @@
 
             <fo:table-cell>
                 <fo:block>
-                    <xsl:value-of select="clientSkuId"/>
+                    <xsl:value-of select="channelSkuId"/>
                 </fo:block>
             </fo:table-cell>
 

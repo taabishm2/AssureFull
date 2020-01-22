@@ -14,9 +14,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -40,10 +38,10 @@ public class BinSkuServiceTest extends AbstractUnitTest {
 
     @Before
     public void init() {
-        consumerPojo = PojoConstructor.getConstructConsumer("PUMA", ConsumerType.CLIENT);
+        consumerPojo = TestPojo.getConsumerPojo("PUMA", ConsumerType.CLIENT);
         consumerDao.insert(consumerPojo);
 
-        productPojo = PojoConstructor.getConstructProduct(
+        productPojo = TestPojo.getProductPojo(
                 "PUMAXNAME",
                 consumerPojo.getId(),
                 "PUMA BrandID",
@@ -52,10 +50,10 @@ public class BinSkuServiceTest extends AbstractUnitTest {
                 "Puma Description");
         productMasterDao.insert(productPojo);
 
-        binPojo = PojoConstructor.getConstructBin();
+        binPojo = TestPojo.getBinPojo();
         binDao.insert(binPojo);
 
-        binSkuPojo = PojoConstructor.getConstructBinSku(productPojo.getClientId(), binPojo.getId(), 10L);
+        binSkuPojo = TestPojo.getBinInventoryPojo(productPojo.getClientId(), binPojo.getId(), 10L);
     }
 
     @Test
@@ -70,16 +68,9 @@ public class BinSkuServiceTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testGetCheckId() throws ApiException {
+    public void testGetCheckIdWithValidId() throws ApiException {
         binSkuDao.insert(binSkuPojo);
         assertEquals(binSkuService.getCheckId(binSkuPojo.getId()), binSkuPojo);
-
-        try {
-            binSkuService.getCheckId(1234L);
-            fail("Invalid BinSKU ID validated");
-        } catch (ApiException e) {
-            assertEquals("Bin Inventory Item (ID:1234) does not exist.", e.getMessage());
-        }
     }
 
     @Test
@@ -96,12 +87,12 @@ public class BinSkuServiceTest extends AbstractUnitTest {
 
     @Test
     public void testGetSearchByBinAndProduct(){
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(1L, 1L, 3L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(1L, 2L, 3L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(1L, 3L, 3L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(2L, 1L, 3L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(2L, 2L, 3L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(3L, 4L, 3L));
+        binSkuDao.insert(TestPojo.getBinInventoryPojo(1L, 1L, 3L));
+        binSkuDao.insert(TestPojo.getBinInventoryPojo(1L, 2L, 3L));
+        binSkuDao.insert(TestPojo.getBinInventoryPojo(1L, 3L, 3L));
+        binSkuDao.insert(TestPojo.getBinInventoryPojo(2L, 1L, 3L));
+        binSkuDao.insert(TestPojo.getBinInventoryPojo(2L, 2L, 3L));
+        binSkuDao.insert(TestPojo.getBinInventoryPojo(3L, 4L, 3L));
 
         List<BinSkuPojo> resultBinId1 = binSkuService.getSearchByBinAndProduct(1L, null);
         assertEquals(2, resultBinId1.size());
@@ -125,5 +116,29 @@ public class BinSkuServiceTest extends AbstractUnitTest {
 
         List<BinSkuPojo> resultBinIdInv = binSkuService.getSearchByBinAndProduct(34L, null);
         assertEquals(0L, resultBinIdInv.size());
+    }
+
+    @Test
+    public void testGetAllWithEmptyTable(){
+        assertEquals(0, binSkuService.getAll().size());
+    }
+
+    @Test
+    public void testGetAll(){
+        binSkuDao.insert(TestPojo.getBinInventoryPojo(1L, 1L, 3L));
+        assertEquals(1, binSkuService.getAll().size());
+
+        binSkuDao.insert(TestPojo.getBinInventoryPojo(2L, 1L, 3L));
+        assertEquals(2, binSkuService.getAll().size());
+    }
+
+    @Test
+    public void testAddList(){
+        List<BinSkuPojo> binSkuPojos = new ArrayList<>();
+        for(int i=0; i<5; i++)
+            binSkuPojos.add(TestPojo.getBinInventoryPojo(123L + i, 456L, 10L));
+
+        binSkuService.addList(binSkuPojos);
+        assertEquals(5, binSkuDao.selectAll().size());
     }
 }

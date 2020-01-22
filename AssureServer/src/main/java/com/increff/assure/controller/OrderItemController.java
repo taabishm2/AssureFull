@@ -19,27 +19,15 @@ public class OrderItemController {
     @Autowired
     private OrderItemDto orderItemDto;
 
-    @ApiOperation(value = "Adds an Order-Item")
-    @RequestMapping(path = "/api/orderItem", method = RequestMethod.POST)
-    public void add(@Valid @RequestBody OrderItemForm form) throws ApiException {
-        orderItemDto.add(form);
-    }
-
-    @ApiOperation(value = "Gets an Order-Item by ID")
-    @RequestMapping(path = "/api/orderItem/{id}", method = RequestMethod.GET)
-    public OrderItemData get(@PathVariable long id) throws ApiException {
-        return orderItemDto.get(id);
+    @ApiOperation(value = "Validate Channel Order Details")
+    @RequestMapping(path = "/api/orderitem/channel/validate", method = RequestMethod.POST)
+    public void validateChannelOrderItem(@RequestBody OrderItemValidationForm validationForm) throws ApiException {
+        orderItemDto.validateChannelOrderItemForm(validationForm);
     }
 
     @ApiOperation(value = "Gets list of all Order-Items")
-    @RequestMapping(path = "/api/orderItem", method = RequestMethod.GET)
-    public List<OrderItemData> getAll() throws ApiException {
-        return orderItemDto.getAll();
-    }
-
-    @ApiOperation(value = "Validate Order Details")
-    @RequestMapping(path = "/api/orderitem/validate", method = RequestMethod.POST)
-    public void validateOrderItem(@RequestBody OrderItemValidationForm validationForm) throws ApiException {
-        orderItemDto.validateOrderItemForm(validationForm);
+    @RequestMapping(path = "/api/orderItem/orderId/{orderId}", method = RequestMethod.GET)
+    public List<OrderItemData> getAll(@PathVariable Long orderId) throws ApiException {
+        return orderItemDto.getByOrderId(orderId);
     }
 }

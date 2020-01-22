@@ -10,9 +10,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Getter
 @Setter
-@Table(
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "type"})}
-)
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "type"})})
 public class ConsumerPojo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,15 +1,15 @@
 package com.increff.assure.dto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.increff.assure.dao.*;
-import com.increff.assure.pojo.BinPojo;
-import com.increff.assure.pojo.ChannelPojo;
-import com.increff.assure.pojo.ConsumerPojo;
-import com.increff.assure.pojo.ProductMasterPojo;
+import com.increff.assure.pojo.*;
 import com.increff.assure.service.ApiException;
 import model.ConsumerType;
 import model.InvoiceType;
+import model.OrderStatus;
 import model.form.OrderForm;
 import model.form.OrderItemForm;
+import org.hibernate.criterion.Order;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class OrderDtoTest extends AbstractUnitTest {
 
@@ -53,137 +52,177 @@ public class OrderDtoTest extends AbstractUnitTest {
 
     @Before
     public void init() {
-        clientPuma = PojoConstructor.getConstructConsumer("PUMA", ConsumerType.CLIENT);
-        clientNike = PojoConstructor.getConstructConsumer("NIKE", ConsumerType.CLIENT);
-        customer = PojoConstructor.getConstructConsumer("Customer NameZ", ConsumerType.CUSTOMER);
+        clientPuma = TestPojo.getConsumerPojo("PUMA", ConsumerType.CLIENT);
+        clientNike = TestPojo.getConsumerPojo("NIKE", ConsumerType.CLIENT);
+        customer = TestPojo.getConsumerPojo("Customer NameZ", ConsumerType.CUSTOMER);
         consumerDao.insert(clientPuma);
         consumerDao.insert(clientNike);
         consumerDao.insert(customer);
 
-        productPuma = PojoConstructor.getConstructProduct("PumaProduct", clientPuma.getId(), "Puma Brand", 320D, "Puma", "Puma Description");
-        productPumaA = PojoConstructor.getConstructProduct("PumaProductA", clientPuma.getId(), "Puma BrandA", 320D, "PumaA", "PumaA Description");
-        productNike = PojoConstructor.getConstructProduct("NikeProduct", clientNike.getId(), "Nike Brand", 120D, "NikeProd", "Nike Description");
+        productPuma = TestPojo.getProductPojo("PumaProduct", clientPuma.getId(), "Puma Brand", 320D, "Puma", "Puma Description");
+        productPumaA = TestPojo.getProductPojo("PumaProductA", clientPuma.getId(), "Puma BrandA", 320D, "PumaA", "PumaA Description");
+        productNike = TestPojo.getProductPojo("NikeProduct", clientNike.getId(), "Nike Brand", 120D, "NikeProd", "Nike Description");
 
         productDao.insert(productNike);
         productDao.insert(productPuma);
         productDao.insert(productPumaA);
 
-        binDao.insert(PojoConstructor.getConstructBin());
+        binDao.insert(TestPojo.getBinPojo());
 
-        bin1 = PojoConstructor.getConstructBin();
-        bin2 = PojoConstructor.getConstructBin();
-        bin3 = PojoConstructor.getConstructBin();
-        bin4 = PojoConstructor.getConstructBin();
+        bin1 = TestPojo.getBinPojo();
+        bin2 = TestPojo.getBinPojo();
+        bin3 = TestPojo.getBinPojo();
+        bin4 = TestPojo.getBinPojo();
         binDao.insert(bin1);
         binDao.insert(bin2);
         binDao.insert(bin3);
         binDao.insert(bin4);
 
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPuma.getId(), bin1.getId(), 8L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPumaA.getId(), bin1.getId(), 0L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productNike.getId(), bin1.getId(), 10L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productPuma.getId(), bin1.getId(), 8L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productPumaA.getId(), bin1.getId(), 0L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productNike.getId(), bin1.getId(), 10L));
 
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPuma.getId(), bin2.getId(), 6L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPumaA.getId(), bin2.getId(), 9L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productNike.getId(), bin2.getId(), 0L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productPuma.getId(), bin2.getId(), 6L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productPumaA.getId(), bin2.getId(), 9L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productNike.getId(), bin2.getId(), 0L));
 
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPuma.getId(), bin3.getId(), 10L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPumaA.getId(), bin3.getId(), 6L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productNike.getId(), bin3.getId(), 16L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productPuma.getId(), bin3.getId(), 10L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productPumaA.getId(), bin3.getId(), 6L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productNike.getId(), bin3.getId(), 16L));
 
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPuma.getId(), bin4.getId(), 7L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productPumaA.getId(), bin4.getId(), 11L));
-        binSkuDao.insert(PojoConstructor.getConstructBinSku(productNike.getId(), bin4.getId(), 20L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productPuma.getId(), bin4.getId(), 7L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productPumaA.getId(), bin4.getId(), 11L));
+        binSkuDao.insert(TestPojo.getBinSkuPojo(productNike.getId(), bin4.getId(), 20L));
 
-        inventoryDao.insert(PojoConstructor.getConstructInventory(productPuma.getId(), 31L, 0L, 0L));
-        inventoryDao.insert(PojoConstructor.getConstructInventory(productPumaA.getId(), 26L, 0L, 0L));
-        inventoryDao.insert(PojoConstructor.getConstructInventory(productNike.getId(), 46L, 0L, 0L));
+        inventoryDao.insert(TestPojo.getConstructInventory(productPuma.getId(), 31L, 0L, 0L));
+        inventoryDao.insert(TestPojo.getConstructInventory(productPumaA.getId(), 26L, 0L, 0L));
+        inventoryDao.insert(TestPojo.getConstructInventory(productNike.getId(), 46L, 0L, 0L));
 
-        channelSnapdeal = PojoConstructor.getConstructChannel("SNAPDEAL", InvoiceType.SELF);
+        channelSnapdeal = TestPojo.getChannelPojo("SNAPDEAL", InvoiceType.SELF);
         channelDao.insert(channelSnapdeal);
 
         List<OrderItemForm> pumaOrderItemFormList = new ArrayList<>();
-        pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productPuma.getId(), 15L));
-        pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productPumaA.getId(), 21L));
+        pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
+        pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPumaA.getClientSkuId(), 21L));
 
-        pumaOrderForm = FormConstructor.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "DEFAULT CHANNEL ORDER ID PUMA", pumaOrderItemFormList);
+        pumaOrderForm = TestForm.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "DEFAULT CHANNEL ORDER ID PUMA", pumaOrderItemFormList);
 
         List<OrderItemForm> nikeOrderItemFormList = new ArrayList<>();
-        nikeOrderItemFormList.add(FormConstructor.getConstructOrderItem(productNike.getId(), 80L));
+        nikeOrderItemFormList.add(TestForm.getConstructOrderItem(productNike.getClientSkuId(), 80L));
 
-        nikeOrderForm = FormConstructor.getConstructOrder(customer.getId(), clientNike.getId(), channelSnapdeal.getId(), "DEFAULT CHANNEL ORDER ID NIKE", nikeOrderItemFormList);
+        nikeOrderForm = TestForm.getConstructOrder(customer.getId(), clientNike.getId(), channelSnapdeal.getId(), "DEFAULT CHANNEL ORDER ID NIKE", nikeOrderItemFormList);
 
     }
 
     @Test
-    public void testAdd() throws ApiException {
-        orderDto.add(pumaOrderForm);
-        orderDto.add(nikeOrderForm);
-
+    public void testAddWithInvalidClient() throws ApiException {
         try {
             pumaOrderForm.setClientId(customer.getId());
             orderDto.add(pumaOrderForm);
             fail("Customer Id set as Client ID");
         } catch (ApiException e) {
             pumaOrderForm.setClientId(clientPuma.getId());
+            assertTrue(true);
         }
+    }
 
+    @Test
+    public void testAddWithInvalidCustomer(){
         try {
             pumaOrderForm.setCustomerId(clientNike.getId());
             orderDto.add(pumaOrderForm);
             fail("Client Id set as Customer ID");
         } catch (ApiException e) {
             pumaOrderForm.setCustomerId(customer.getId());
+            assertTrue(true);
         }
+    }
 
+    @Test
+    public void testAddWithInvalidCustomerId() {
         try {
             pumaOrderForm.setCustomerId(87283L);
             orderDto.add(pumaOrderForm);
             fail("Invalid Consumer ID");
         } catch (ApiException e) {
-            assertEquals("Consumer (ID:87283) does not exist.", e.getMessage());
             pumaOrderForm.setCustomerId(customer.getId());
+            assertTrue(true);
         }
+    }
 
+    @Test
+    public void  testAddWithInvalidChannelId() {
         try {
             pumaOrderForm.setChannelId(123L);
             orderDto.add(pumaOrderForm);
             fail("Invalid Channel ID used");
         } catch (ApiException e) {
-            assertEquals("Channel (ID:" + 123 + ") does not exist", e.getMessage());
             pumaOrderForm.setChannelId(channelSnapdeal.getId());
+            assertTrue(true);
         }
+    }
 
+    @Test
+    public void testAddWithDuplicateOrder() {
         try {
+            orderDto.add(pumaOrderForm);
             orderDto.add(pumaOrderForm);
             fail("Duplicate order inserted");
         } catch (ApiException e) {
-            assertEquals("Order with ChannelID & ChannelOrderID pair already exist.", e.getMessage());
+            assertTrue(true);
         }
+    }
 
+    @Test
+    public void testAddWithInvalidClientProductPair() {
         try {
             List<OrderItemForm> pumaOrderItemFormList = new ArrayList<>();
-            pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productPuma.getId(), 15L));
-            pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productNike.getId(), 21L));
+            pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
+            pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productNike.getClientSkuId(), 21L));
 
-            OrderForm pumaOrderForm = FormConstructor.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "CHANNEL ORDER ID PUMA", pumaOrderItemFormList);
+            OrderForm pumaOrderForm = TestForm.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "CHANNEL ORDER ID PUMA", pumaOrderItemFormList);
             orderDto.add(pumaOrderForm);
             fail("Invalid Product and Client combination");
         } catch (ApiException e) {
-            assertEquals("Invalid Client for Product(ID: " + productNike.getId() + ").", e.getMessage());
+            assertTrue(true);
         }
+    }
 
+    @Test
+    public void testAddWithDuplicateOrderIdAndProduct() {
         try {
             List<OrderItemForm> pumaOrderItemFormList = new ArrayList<>();
-            pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productPuma.getId(), 15L));
-            pumaOrderItemFormList.add(FormConstructor.getConstructOrderItem(productPuma.getId(), 21L));
+            pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
+            pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPuma.getClientSkuId(), 21L));
 
-            OrderForm pumaOrderForm = FormConstructor.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "CHANNEL ID PUMA", pumaOrderItemFormList);
+            OrderForm pumaOrderForm = TestForm.getConstructOrder(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "CHANNEL ID PUMA", pumaOrderItemFormList);
             orderDto.add(pumaOrderForm);
             fail("Duplicate OrderItems in Order");
         } catch (ApiException e) {
-            assertEquals("GlobalSKU, OrderID pair already exists.", e.getMessage());
+            assertTrue(true);
         }
+    }
+
+    @Test
+    public void testGet() throws ApiException {
+        OrderPojo order = TestPojo.getOrderPojo(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "ABCL", OrderStatus.CREATED);
+        orderDao.insert(order);
+
+        assertEquals(order.getChannelOrderId(), orderDto.get(order.getId()).getChannelOrderId());
+    }
+
+    @Test
+    public void testGetAllWithEmptyTable() throws ApiException {
+        assertEquals(0, orderDto.getAll().size());
+    }
+
+    @Test
+    public void testGetAll() throws ApiException {
+        orderDao.insert( TestPojo.getOrderPojo(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "ABCL", OrderStatus.CREATED));
+        assertEquals(1, orderDto.getAll().size());
+
+        orderDao.insert( TestPojo.getOrderPojo(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "ABCD", OrderStatus.CREATED));
+        assertEquals(2, orderDto.getAll().size());
     }
 
     @Test
@@ -225,5 +264,36 @@ public class OrderDtoTest extends AbstractUnitTest {
         assertEquals(0L, (long) binSkuDao.selectByBinIdAndGlobalSku(bin3.getId(), productNike.getId()).getQuantity());
         assertEquals(0L, (long) binSkuDao.selectByBinIdAndGlobalSku(bin4.getId(), productNike.getId()).getQuantity());
 
+        assertEquals(OrderStatus.ALLOCATED, orderDao.selectByChannelAndChannelOrderId(pumaOrderForm.getChannelId(), pumaOrderForm.getChannelOrderId()).getStatus());
+        assertEquals(OrderStatus.CREATED, orderDao.selectByChannelAndChannelOrderId(nikeOrderForm.getChannelId(), nikeOrderForm.getChannelOrderId()).getStatus());
+
+        try{
+            orderDto.runAllocation(orderDao.selectByChannelAndChannelOrderId(channelSnapdeal.getId(), "DEFAULT CHANNEL ORDER ID PUMA").getId());
+            fail("Pre allocated order allocated again");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testFulfillOrderWithCreatedOrder() throws JsonProcessingException, ApiException {
+        OrderPojo orderPojo = TestPojo.getOrderPojo(123L, 345L, 3L, "ABCL", OrderStatus.CREATED);
+        orderDao.insert(orderPojo);
+
+        try {
+            orderDto.fulfillOrder(orderPojo.getId());
+            fail("Unallocated order was fulfilled");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testFulfillOrderWithAllocatedOrder() throws JsonProcessingException, ApiException {
+        OrderPojo orderPojo = TestPojo.getOrderPojo(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "ABCL", OrderStatus.ALLOCATED);
+        orderDao.insert(orderPojo);
+
+        orderDto.fulfillOrder(orderPojo.getId());
+        assertEquals(OrderStatus.FULFILLED, orderPojo.getStatus());
     }
 }

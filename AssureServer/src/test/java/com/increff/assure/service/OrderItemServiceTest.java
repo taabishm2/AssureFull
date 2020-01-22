@@ -6,8 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class OrderItemServiceTest extends AbstractUnitTest {
 
@@ -20,7 +19,7 @@ public class OrderItemServiceTest extends AbstractUnitTest {
 
     @Before
     public void init() {
-        orderItemPojo = PojoConstructor.getConstructOrderItem(123L, 100L, 10L, 0L, 0L);
+        orderItemPojo = TestPojo.getOrderItemPojo(123L, 100L, 10L, 0L, 0L);
     }
 
     @Test
@@ -55,9 +54,9 @@ public class OrderItemServiceTest extends AbstractUnitTest {
 
     @Test
     public void testGetByOrderId() {
-        orderItemDao.insert(PojoConstructor.getConstructOrderItem(123L, 100L, 10L, 0L, 0L));
-        orderItemDao.insert(PojoConstructor.getConstructOrderItem(456L, 100L, 10L, 0L, 0L));
-        orderItemDao.insert(PojoConstructor.getConstructOrderItem(789L, 200L, 10L, 0L, 0L));
+        orderItemDao.insert(TestPojo.getOrderItemPojo(123L, 100L, 10L, 0L, 0L));
+        orderItemDao.insert(TestPojo.getOrderItemPojo(456L, 100L, 10L, 0L, 0L));
+        orderItemDao.insert(TestPojo.getOrderItemPojo(789L, 200L, 10L, 0L, 0L));
 
         int countClientId100 = 0;
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(100L)) {
@@ -86,5 +85,21 @@ public class OrderItemServiceTest extends AbstractUnitTest {
         assertEquals(10L, (long) orderItemPojo.getAllocatedQuantity());
         assertEquals(10L, (long) orderItemPojo.getAllocatedQuantity());
         assertEquals(0L, (long) orderItemPojo.getFulfilledQuantity());
+    }
+
+    @Test
+    public void testGetCheckIdWithValidId() throws ApiException {
+        orderItemDao.insert(orderItemPojo);
+        assertEquals(orderItemPojo, orderItemService.getCheckId(orderItemPojo.getId()));
+    }
+
+    @Test
+    public void testGetCheckIdWithInvalidId(){
+        try{
+            orderItemService.getCheckId(12784L);
+            fail("Invalid Id Selected");
+        } catch (ApiException e){
+            assertTrue(true);
+        }
     }
 }

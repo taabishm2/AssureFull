@@ -5,12 +5,12 @@ import com.increff.assure.dto.OrderDto;
 import com.increff.assure.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import model.data.BinSkuData;
 import model.data.OrderData;
-import model.form.OrderForm;
-import model.form.OrderItemValidationForm;
-import model.form.OrderValidationForm;
+import model.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +29,13 @@ public class OrderController {
 
     @ApiOperation(value = "Adds an Order")
     @RequestMapping(path = "/api/order", method = RequestMethod.POST)
-    public void add(@Valid @RequestBody OrderForm form) throws ApiException {
+    public void add(@RequestBody OrderForm form) throws ApiException {
+        orderDto.add(form);
+    }
+
+    @ApiOperation(value = "Adds an Order from Channel")
+    @RequestMapping(path = "/api/order/channel", method = RequestMethod.POST)
+    public void addChannelOrder(@RequestBody ChannelOrderForm form) throws ApiException {
         orderDto.add(form);
     }
 
@@ -67,5 +73,17 @@ public class OrderController {
     @RequestMapping(path = "/api/order/channel/{channelId}", method = RequestMethod.GET)
     public List<OrderData> getByChannel(@PathVariable Long channelId) throws ApiException {
         return orderDto.getByChannel(channelId);
+    }
+
+    @ApiOperation(value = "Validate Order Details")
+    @RequestMapping(path = "/api/order/orderItems/validate/{clientId}/{channelId}", method = RequestMethod.POST)
+    public void validateOrderItems(@PathVariable Long clientId, @PathVariable Long channelId, @RequestBody List<OrderItemForm> validationForm) throws ApiException {
+        orderDto.validateList(validationForm, clientId, channelId);
+    }
+
+    @ApiOperation(value = "Search Orders")
+    @RequestMapping(path = "/api/order/search", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<OrderData> getSearch(@RequestBody OrderSearchForm form) throws ApiException {
+        return orderDto.getSearch(form);
     }
 }

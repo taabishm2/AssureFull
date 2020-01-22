@@ -1,4 +1,0 @@
-Error in Line: 0: Invalid Client
-Error in Line: 1: Invalid Client
-Error in Line: 2: Invalid Client
-Error in Line: 3: Invalid Client

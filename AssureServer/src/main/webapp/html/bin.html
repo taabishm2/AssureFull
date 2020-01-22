@@ -6,25 +6,42 @@
 <body>
 <nav th:replace="snippets.html :: navbar"></nav>
 
+<div style="padding-top: 10px;">
+    <div class="addressbar" style="border-bottom:1px solid #ECECEC; width:90%; margin: auto; height: 25px; font-size: 0.85em; padding-left: 15px; margin-top:3px;">
+        <a th:href="@{/}">Home</a> /
+        Bins
+    </div>
+</div>
+
 <div class="parent-container">
     <div class="main-header">
+
         <p class="page-header">
-            <span style="font-size: 20px">Bin Page</span>
+            <span class="h5">Manage Bins</span>
             <br/>
-            <span class="text-muted" style="font-size:0.9em;">Add Bins and manage Bin Inventory.</span>
+            <span class="text-muted" style="font-size:0.9em;">Create new Bins to store Inventory</span>
         </p>
-        <button class="btn btn-primary" data-target="#binCreateModal" data-toggle="modal" type="button">
-            <i aria-hidden="true" class="fa fa-plus" ></i>
-            Create Bins
-        </button>
+
+        <span data-toggle="tooltip" title="Create Bins">
+            <button class="btn btn-primary" data-target="#binCreateModal" data-toggle="modal" type="button">
+                <i aria-hidden="true" class="fa fa-plus"></i> Create Bins
+            </button>
+        </span>
+
         <hr>
-        <button class="btn btn-primary" id="refresh-data" style="width:60" type="button">
+        <p class="page-header">
+            <span class="h5">Manage Bin Inventory</span>
+            <br/>
+            <span class="text-muted" style="font-size:0.9em;">Add Products to created Bins</span>
+        </p>
+
+        <button class="btn btn-primary" id="refresh-data" type="button" data-toggle="tooltip" title="Refresh">
             <i aria-hidden="true" class="fa fa-refresh"></i>
         </button>
         <button class="btn btn-primary" data-target="#binInventoryModal" data-toggle="modal" type="button">
-            <i aria-hidden="true" class="fa fa-cubes" ></i>
-            Add Bin Inventory
+            <i aria-hidden="true" class="fa fa-cubes"></i> Add Bin Inventory
         </button>
+
         <!--Search Param Form-->
         <hr style="margin-top:25px">
         <div id="search-param-div" style="margin-top:15px">
@@ -34,23 +51,20 @@
                 </div>
                 <div class="row" style="margin-top:10px;">
                     <div class="form-group col-md-4">
-                        <label for="binIdSearch" style="font-weight: bold;">Bin ID:</label>
-                        <input class="form-control" id="binIdSearch" name="binId"
-                               pattern="[0-9]*" placeholder="Enter Bin ID" type="text" style="border:0px; border-bottom:1px solid #2B7A78;">
+                        <label for="binIdSearch" class="font-weight-bold">Bin ID:</label>
+                        <input class="form-control" id="binIdSearch" name="binId" pattern="[0-9]*" placeholder="Enter Bin ID" type="text" style="border:0px; border-bottom:1px solid #2B7A78;">
                         <br>
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="globalSkuSearch" style="font-weight: bold;">Global SKU ID:</label>
-                        <input class="form-control" id="globalSkuSearch" name="globalSkuId"
-                               pattern="[0-9]*" placeholder="Enter GSKU ID" type="text" style="border:0px; border-bottom:1px solid #2B7A78;">
+                        <label for="globalSkuSearch" class="font-weight-bold">Global SKU ID:</label>
+                        <input class="form-control" id="globalSkuSearch" name="globalSkuId" pattern="[0-9]*" placeholder="Enter GSKU ID" type="text" style="border:0px; border-bottom:1px solid #2B7A78;">
                         <br>
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group col-md-4">
-                        <button class="btn btn-primary" id="search-button" type="submit">
+                        <label for="search-button">&nbsp;</label>
+                        <br />
+                        <button class="btn btn-primary" id="search-button" type="submit" data-toggle="tooltip" title="Search">
                             <i aria-hidden="true" class="fa fa-search"></i>
-                            &nbspSearch
                         </button>
                     </div>
                 </div>
@@ -60,6 +74,7 @@
 
     <div class="body-content">
         <div class="table-display">
+
             <table class="table table-sm table-striped" id="binSku-table" style="visibility:hidden">
                 <thead>
                 <tr>
@@ -73,15 +88,15 @@
                     <th scope="col" style="width:130px; text-align:center;">Quantity</th>
                 </tr>
                 </thead>
-                <tbody>
 
+                <tbody>
+                    <!--Search results here-->
                 </tbody>
             </table>
         </div>
     </div>
 
-    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="binIdModal" role="dialog"
-         tabindex="-1">
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="binIdModal" role="dialog" tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -110,8 +125,7 @@
     </div>
 
     <!-- Bin Create Modal -->
-    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="binCreateModal" role="dialog"
-         tabindex="-1">
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="binCreateModal" role="dialog" tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -123,10 +137,11 @@
                 <form id="bin-form">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="binQuantity">Quantity</label><br/>
-                            <input aria-describedby="nameHelp" class="form-control" id="binQuantity" name="binQuantity"
-                                   placeholder="Enter Number of Bins" style="width:100%; float:left;" type="text"
-                                   required pattern="[0-9]*" title="Enter a valid number"/>
+                            <label for="binQuantity" class="font-weight-bold">Quantity</label>
+                            <br/>
+                            <input aria-describedby="nameHelp" class="form-control" id="binQuantity"
+                                   name="binQuantity" placeholder="Enter Number of Bins" style="width:100%; float:left;"
+                                   type="number" min="0" required pattern="[0-9]*" title="Enter a valid number" />
                             <br/>
                             <div>
                                 <small class="form-text text-muted" id="nameHelp" style="clear:both">Enter Number of
@@ -145,13 +160,12 @@
     </div>
 
     <!-- Bin Inventory Modal -->
-    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="binInventoryModal" role="dialog"
-         tabindex="-1">
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="binInventoryModal" role="dialog" tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="binInvModalLabel">Add Bin Inventory Item</h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button" onclick="resetModal()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -159,15 +173,14 @@
                     <div class="modal-body">
                         <div class="" role="document" style="margin-top:15px;">
                             <div class="">
-                                <label for="binSku-upload-modal-body">Bin Inventory:</label>
+                                <label for="binSku-upload-modal-body" class="font-weight-bold">Bin Inventory:</label>
                                 <div class="modal-body" id="binSku-upload-modal-body" style="padding:0px; margin-bottom:35px">
                                     <div class="binSku-file">
                                         <input class="custom-file-input" id="binSkuFile" required type="file">
-                                        <label class="custom-file-label" for="binSkuFile" id="productFileName">Upload
-                                            CSV
-                                            File</label>
+                                        <label class="custom-file-label" for="binSkuFile" id="binSkuFileName">Upload CSV File
+                                        </label>
                                     </div>
-                                    <a target="_blank" th:href="@{/samples/binSkuSample.csv}" style="float:right; margin-top:5px;">
+                                    <a target="_blank" href="http://127.0.0.1:9090/sample/binSkuSample.csv" style="float:right; margin-top:5px;">
                                         <i class="fa fa-download" aria-hidden="true"></i> Download CSV Sample
                                     </a>
                                 </div>
@@ -175,12 +188,13 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary" id="add-binSku" type="submit">Submit</button>
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                        <a id="error-file-link">
-                            <button class="btn btn-warning" id="download-errors" type="button">Download Errors
-                            </button>
-                        </a>
+                        <button class="btn btn-warning" id="download-errors" type="button" style="visibility:hidden">Display Errors</button>
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button" onclick="resetModal()">Close</button>
+                        <button class="btn btn-primary" id="add-binSku" type="submit">Upload</button>
+
+                        <div id="errorDetails">
+                            <!--CSV errors appear here-->
+                        </div>
                     </div>
                 </form>
             </div>
@@ -192,4 +206,5 @@
 <script th:src="@{/static/bin.js}"></script>
 
 </body>
+
 </html>

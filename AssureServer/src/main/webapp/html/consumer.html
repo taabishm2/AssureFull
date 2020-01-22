@@ -6,101 +6,106 @@
 <body>
 <nav th:replace="snippets.html :: navbar"></nav>
 
+<div style="padding-top: 10px;">
+    <div class="addressbar" style="border-bottom:1px solid #ECECEC; width:90%; margin: auto; height: 25px; font-size: 0.85em; padding-left: 15px; margin-top:3px;">
+        <a th:href="@{/}">Home</a> /
+        Consumers
+    </div>
+</div>
+
 <div class="parent-container">
     <div class="main-header">
+
         <p class="page-header">
-            <span style="font-size: 20px">Consumer Page</span>
+            <span class="h5">Consumer Page</span>
             <br/>
-            <span class="text-muted" style="font-size:0.9em;">Add and View the registered Clients and Customers.</span>
+            <span class="text-muted" style="font-size:0.9em;">Add and View registered Clients and Customers.</span>
         </p>
-        <button class="btn btn-primary" id="refresh-data" style="width:60" type="button">
+
+        <button class="btn btn-primary" data-toggle="tooltip" id="refresh-data" title="Refresh" type="button">
             <i aria-hidden="true" class="fa fa-refresh"></i>
         </button>
-        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
-            <i aria-hidden="true" class="fa fa-plus"></i>
-            &nbspAdd new Consumer
-        </button>
+        <span data-toggle="tooltip" title="Add Consumer">
+            <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
+                <i aria-hidden="true" class="fa fa-plus"></i>
+            </button>
+        </span>
 
         <!--Search Param Form-->
-        <hr style="margin-top:25px">
+        <hr class="mt-4">
         <div id="search-param-div" style="margin-top:15px">
             <form id="search-param-form">
-                <div style="font-size: 1.3em">
+                <div class="mb-3" style="font-size: 1.3em">
                     <i aria-hidden="true" class="fa fa-filter"></i> Filter
                 </div>
                 <div class="row" style="margin-top:10px;">
                     <div class="form-group col-md-4">
-                        <label for="consumerTypeSearch" style="font-weight: bold;">Consumer Type:</label>
-                        <select class="form-control" id="consumerTypeSearch" name="type" required
-                                style="border:0px; border-bottom:1px solid #2B7A78;" title="Select a Consumer Type">
-                            <option disabled hidden selected value="">
-                                Select Customer Type
-                            </option>
+                        <label class="font-weight-bold" for="consumerTypeSearch">Consumer Type:</label>
+                        <select class="form-control" id="consumerTypeSearch" name="type" required style="border:0px; border-bottom:1px solid #2B7A78;" title="Select a Consumer Type">
                             <option value="clients">CLIENT</option>
                             <option value="customers">CUSTOMER</option>
                         </select>
-                        <br>
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group col-md-4">
-                        <button class="btn btn-primary" id="search-button" type="submit">
+                        <label for="search-button">&nbsp;</label>
+                        <br/>
+                        <button class="btn btn-primary" data-toggle="tooltip" id="search-button" title="Search" type="submit">
                             <i aria-hidden="true" class="fa fa-search"></i>
-                            &nbspSearch
                         </button>
                     </div>
                 </div>
             </form>
         </div>
-
-
     </div>
+
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
-         tabindex="-1">
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog" tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Register New Consumer</h5>
                     <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+
                 <form id="consumer-form">
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <label for="consumerName">Name</label>
-                            <input aria-describedby="nameHelp" class="form-control" id="consumerName" name="name"
-                                   pattern=".*\S+.*" placeholder="Enter Name" required title="This field is required"
-                                   type="text">
+                            <label class="font-weight-bold" for="consumerName">Name</label>
+                            <input aria-describedby="nameHelp" class="form-control" id="consumerName" name="name" pattern=".*\S+.*" placeholder="Enter Name" required title="This field is required" type="text">
                             <small class="form-text text-muted" id="nameHelp">Name should be unique.</small>
                         </div>
+
                         <div class="form-group">
-                            <label for="consumerType">Consumer Type:</label>
-                            <select class="form-control" id="consumerType" name="type" required
-                                    title="Select a Consumer Type">
+                            <label class="font-weight-bold" for="consumerType">Consumer Type:</label>
+                            <select class="form-control" id="consumerType" name="type" required title="Select a Consumer Type">
                                 <option disabled hidden selected value="">
-                                    Select an Option
+                                    Select Consumer Type
                                 </option>
-                                <option value="CLIENT">CLIENT</option>
-                                <option value="CUSTOMER">CUSTOMER</option>
+                                <option value="CLIENT">Client</option>
+                                <option value="CUSTOMER">Customer</option>
                             </select>
                             <br>
                         </div>
 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary" id="add-consumer" type="submit">Submit</button>
+                        <button class="btn btn-primary" id="add-consumer" type="submit">Add</button>
                         <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
                     </div>
+
                 </form>
             </div>
         </div>
     </div>
+
     <div class="body-content" style="padding-top:0px; margin-top:0px;">
         <div class="table-display" style="padding-top:0px">
             <table class="table table-sm table-striped" id="consumer-table" style="visibility:hidden">
+
                 <thead>
                 <tr>
                     <th colspan="3">Consumer List</th>
@@ -111,8 +116,9 @@
                     <th scope="col" style="width:130px">Type</th>
                 </tr>
                 </thead>
-                <tbody>
 
+                <tbody>
+                    <!--Consumer Table Rows here-->
                 </tbody>
             </table>
         </div>
@@ -125,4 +131,5 @@
 <script th:src="@{/static/consumer.js}"></script>
 
 </body>
+
 </html>

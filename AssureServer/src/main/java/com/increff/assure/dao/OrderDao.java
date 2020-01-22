@@ -1,5 +1,6 @@
 package com.increff.assure.dao;
 
+import com.increff.assure.pojo.BinSkuPojo;
 import com.increff.assure.pojo.OrderPojo;
 import model.data.OrderData;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Repository
@@ -53,5 +55,21 @@ public class OrderDao extends AbstractDao<OrderPojo> {
         TypedQuery<OrderPojo> typedQuery = entityManager.createQuery(q);
         typedQuery.setParameter(channelIdParam, channelId);
         return typedQuery.getResultList();
+    }
+
+    public List<OrderPojo> getSearch(Long clientId, Long customerId, Long channelId, ZonedDateTime fromDate, ZonedDateTime toDate) {
+        String queryStr = "SELECT c FROM OrderPojo c WHERE (:clientId is null or c.clientId = :clientId) and " +
+                "(:customerId is null or c.customerId = :customerId) and " +
+                "(:channelId is null or c.channelId = :channelId) and " +
+                "(c.createdAt >= :fromDate) and " +
+                "(c.createdAt <= :toDate)";
+
+        TypedQuery<OrderPojo> query = entityManager.createQuery(queryStr, OrderPojo.class);
+        query.setParameter("clientId", clientId);
+        query.setParameter("customerId", customerId);
+        query.setParameter("channelId", channelId);
+        query.setParameter("fromDate", fromDate);
+        query.setParameter("toDate", toDate);
+        return query.getResultList();
     }
 }

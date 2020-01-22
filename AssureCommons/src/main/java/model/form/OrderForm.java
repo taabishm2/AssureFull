@@ -6,8 +6,7 @@ import model.OrderStatus;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.util.List;
 
 @Getter
@@ -22,9 +21,11 @@ public class OrderForm {
     @NotNull
     private Long channelId;
 
-    @NotEmpty
+    @NotNull
+    @Size(min=1, max=255)
     private String channelOrderId;
 
     @NotNull
+    @NotEmpty
     private List<OrderItemForm> orderItemList;
 }

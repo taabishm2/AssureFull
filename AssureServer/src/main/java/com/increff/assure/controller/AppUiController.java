@@ -40,4 +40,7 @@ public class AppUiController extends AbstractUiController {
 	public ModelAndView order() {
 		return mav("order.html");
 	}
+
+	@RequestMapping(value = "/about")
+	public ModelAndView about() {return mav("about.html");}
 }

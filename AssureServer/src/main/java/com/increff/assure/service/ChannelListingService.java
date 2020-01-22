@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ChannelListingService extends AbstractService {
@@ -26,7 +27,7 @@ public class ChannelListingService extends AbstractService {
         Long globalSkuId = listingPojo.getGlobalSkuId();
         String channelSkuId = listingPojo.getChannelSkuId();
 
-        ChannelListingPojo duplicateByChannelAndChannelSku = channelListingDao.selectByChannelAndChannelSku(channelId, channelSkuId);
+        ChannelListingPojo duplicateByChannelAndChannelSku = channelListingDao.selectByChannelIdChannelSkuAndClient(channelId, channelSkuId, listingPojo.getClientId());
         checkNull(duplicateByChannelAndChannelSku, "Channel has already registered the Channel-SKU-ID: " + listingPojo.getChannelSkuId());
 
         ChannelListingPojo duplicateByChannelAndProduct = channelListingDao.selectByChannelAndGlobalSku(channelId, globalSkuId);
@@ -35,10 +36,6 @@ public class ChannelListingService extends AbstractService {
 
     public List<ChannelListingPojo> getAll() {
         return channelListingDao.selectAll();
-    }
-
-    public ChannelListingPojo getByChannelIdAndGlobalSku(Long channelId, Long globalSkuId) {
-        return channelListingDao.selectByChannelAndGlobalSku(channelId, globalSkuId);
     }
 
     public ChannelListingPojo getCheckId(Long id) throws ApiException {
@@ -51,5 +48,17 @@ public class ChannelListingService extends AbstractService {
     public void addList(List<ChannelListingPojo> channelListingPojos) throws ApiException {
         for (ChannelListingPojo pojo : channelListingPojos)
             add(pojo);
+    }
+
+    public ChannelListingPojo getByChannelIdAndGlobalSku(Long channelId, Long globalSkuId) {
+        return channelListingDao.selectByChannelAndGlobalSku(channelId, globalSkuId);
+    }
+
+    public ChannelListingPojo getByChannelChannelSkuAndClient(Long channelId, String channelSkuId, Long clientId) {
+        return channelListingDao.selectByChannelIdChannelSkuAndClient(channelId, channelSkuId, clientId);
+    }
+
+    public List<ChannelListingPojo> getSearch(Long channelId, Long clientId, String channelSkuId, Long globalSkuId) {
+        return channelListingDao.getSearch(channelId, clientId, channelSkuId, globalSkuId);
     }
 }
