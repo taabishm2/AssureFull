@@ -2,6 +2,7 @@ package com.increff.assure.service;
 
 import com.increff.assure.dao.ChannelListingDao;
 import com.increff.assure.pojo.ChannelListingPojo;
+import model.form.ChannelListingSearchForm;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

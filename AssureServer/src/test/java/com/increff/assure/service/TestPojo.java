@@ -41,7 +41,7 @@ public class TestPojo {
         return consumer;
     }
 
-    public static InventoryPojo getConstructInventory(Long globalSku, Long availableQty, Long allocatedQty, Long fulfilledQty) {
+    public static InventoryPojo getInventoryPojo(Long globalSku, Long availableQty, Long allocatedQty, Long fulfilledQty) {
         InventoryPojo inventory = new InventoryPojo();
         inventory.setGlobalSkuId(globalSku);
         inventory.setAvailableQuantity(availableQty);
@@ -50,7 +50,7 @@ public class TestPojo {
         return inventory;
     }
 
-    public static OrderItemPojo getConstructOrderItem(Long globalSku, Long orderId, Long orderedQty, Long allocatedQty, Long fulfilledQty) {
+    public static OrderItemPojo getOrderItemPojo(Long globalSku, Long orderId, Long orderedQty, Long allocatedQty, Long fulfilledQty) {
         OrderItemPojo orderItemPojo = new OrderItemPojo();
         orderItemPojo.setGlobalSkuId(globalSku);
         orderItemPojo.setOrderId(orderId);

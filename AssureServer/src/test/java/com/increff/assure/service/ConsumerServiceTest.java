@@ -64,8 +64,7 @@ public class ConsumerServiceTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testGetCheckClientWithValidTypes
-            () throws ApiException {
+    public void testGetCheckClientWithValidTypes() throws ApiException {
         consumerDao.insert(validClientPojo);
         consumerDao.insert(validCustomerPojo);
 
