@@ -53,4 +53,18 @@ public class ProductMasterDao extends AbstractDao<ProductMasterPojo> {
         typedQuery.setParameter(clientIdParam, clientId);
         return typedQuery.getResultList();
     }
+
+    public List<ProductMasterPojo> selectByClientSku(String clientSkuId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ProductMasterPojo> q = cb.createQuery(ProductMasterPojo.class);
+        Root<ProductMasterPojo> c = q.from(ProductMasterPojo.class);
+        q.select(c);
+        ParameterExpression<String> clientSkuIdParam = cb.parameter(String.class);
+        q.where(
+                cb.equal(c.get("clientSkuId"), clientSkuIdParam)
+        );
+        TypedQuery<ProductMasterPojo> typedQuery = entityManager.createQuery(q);
+        typedQuery.setParameter(clientSkuIdParam, clientSkuId);
+        return typedQuery.getResultList();
+    }
 }

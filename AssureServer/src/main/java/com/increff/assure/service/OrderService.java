@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -22,9 +23,9 @@ public class OrderService extends AbstractService {
         orderDao.insert(orderPojo);
     }
 
-    private void checkDuplicateOrders(OrderPojo order) throws ApiException {
-        OrderPojo matchedPojo = orderDao.selectByChannelAndChannelOrderId(order.getChannelId(), order.getChannelOrderId());
-        checkNull(matchedPojo, "Order with ChannelID & ChannelOrderID pair already exist.");
+    public void checkDuplicateOrders(OrderPojo order) throws ApiException {
+        OrderPojo exists = orderDao.selectByChannelAndChannelOrderId(order.getChannelId(), order.getChannelOrderId());
+        checkNull(exists, "Order with ChannelID & ChannelOrderID pair already exist.");
     }
 
     public List<OrderPojo> getAll() {
@@ -49,5 +50,9 @@ public class OrderService extends AbstractService {
 
     public List<OrderPojo> getByChannel(Long channelId) {
         return orderDao.selectByChannel(channelId);
+    }
+
+    public List<OrderPojo> getSearch(Long clientId, Long customerId, Long channelId, ZonedDateTime fromDate, ZonedDateTime toDate) {
+        return orderDao.getSearch(clientId, customerId, channelId, fromDate, toDate);
     }
 }

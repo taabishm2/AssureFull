@@ -12,7 +12,7 @@ public class XmlGenerateUtil {
     public static void generate(ChannelOrderReceiptData orderItems) {
         try {
             String receiptFileName = orderItems.getOrderId() + ".xml";
-            File file = new File("src//main//resources//output//" + receiptFileName);
+            File file = new File("C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//" + receiptFileName);
             JAXBContext jaxbContext = JAXBContext.newInstance(ChannelOrderReceiptData.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);

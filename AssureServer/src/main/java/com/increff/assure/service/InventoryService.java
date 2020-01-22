@@ -31,16 +31,6 @@ public class InventoryService extends AbstractService {
         return inventoryDao.selectByGlobalSku(globalSkuId);
     }
 
-    public List<InventoryPojo> getAll() {
-        return inventoryDao.selectAll();
-    }
-
-    public InventoryPojo getCheckId(Long id) throws ApiException {
-        InventoryPojo inventoryPojo = inventoryDao.select(id);
-        checkNotNull(inventoryPojo, "Inventory Entry (ID:" + id + ") does not exist");
-        return inventoryPojo;
-    }
-
     @Transactional(rollbackFor = ApiException.class)
     public void allocateAvailableItems(Long globalSkuId, Long allocatedQuantity) throws ApiException {
         InventoryPojo inventoryItem = getByGlobalSku(globalSkuId);
@@ -52,7 +42,7 @@ public class InventoryService extends AbstractService {
 
     public void fulfillInInventory(Long globalSkuId, Long allocatedOrderItemQuantity) {
         InventoryPojo inventoryPojo = getByGlobalSku(globalSkuId);
-        inventoryPojo.setAllocatedQuantity(inventoryPojo.getAvailableQuantity() - allocatedOrderItemQuantity);
+        inventoryPojo.setAllocatedQuantity(inventoryPojo.getAllocatedQuantity() - allocatedOrderItemQuantity);
         inventoryPojo.setFulfilledQuantity(inventoryPojo.getFulfilledQuantity() + allocatedOrderItemQuantity);
     }
 }

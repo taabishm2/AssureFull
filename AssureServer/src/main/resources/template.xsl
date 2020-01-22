@@ -25,7 +25,7 @@
                     </fo:block>
 
                     <fo:block font-size="10pt" font-weight="bold" space-after="5mm">Order Creation Time:
-                        <xsl:value-of select="OrderCreationTime"/>
+                        <xsl:value-of select="orderCreationTime"/>
                     </fo:block>
 
                     <fo:block font-size="10pt" font-weight="bold" space-after="8mm">

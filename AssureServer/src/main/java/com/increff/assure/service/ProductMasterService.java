@@ -22,8 +22,7 @@ public class ProductMasterService extends AbstractService {
     }
 
     private void checkIfProductExists(Long clientId, String clientSkuId) throws ApiException {
-        ProductMasterPojo exists = productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId);
-        checkNull(exists, "Duplicate ClientSKUs present.");
+        checkNull(productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId), "Duplicate Product present");
     }
 
     public ProductMasterPojo getCheckId(Long id) throws ApiException {
@@ -44,8 +43,7 @@ public class ProductMasterService extends AbstractService {
 
     @Transactional(rollbackFor = ApiException.class)
     public void update(Long clientId, String clientSkuId, ProductUpdateForm productForm) throws ApiException {
-        ProductMasterPojo productMaster = productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId);
-        copySourceToDestination(productMaster, productForm);
+        copySourceToDestination(productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId), productForm);
     }
 
     public Long getClientIdOfProduct(Long globalSkuId) throws ApiException {
@@ -56,6 +54,10 @@ public class ProductMasterService extends AbstractService {
         ProductMasterPojo exists = productMasterDao.selectByClientIdAndClientSku(clientId, clientSkuId);
         checkNotNull(exists, "Product with ClientID:"+clientId+" ClientSKUId:"+clientSkuId+" doesn't exist.");
         return exists;
+    }
+
+    public List<ProductMasterPojo> getByClientSku(String clientSkuId) {
+        return productMasterDao.selectByClientSku(clientSkuId);
     }
 
     public List<ProductMasterPojo> getByClientId(Long clientId) {

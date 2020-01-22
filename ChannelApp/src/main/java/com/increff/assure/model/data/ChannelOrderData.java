@@ -6,6 +6,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChannelAppOrderData extends ChannelAppOrderForm {
+public class ChannelOrderData extends ChannelAppOrderForm {
     private Long id;
+
+    private String createdAt;
 }

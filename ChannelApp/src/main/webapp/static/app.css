@@ -2,23 +2,37 @@ html {
   position: relative;
   min-height: 100%;
 }
+
 body {
   margin-bottom: 60px;
 }
+
 .footer {
   position: absolute;
   bottom: 0;
   color: #17252A;
   width: 100%;
   font-size: 0.9em;
-  background-color: #F7F9FB;
+  background-color: #a81638;
   text-align:center;
   padding: 6px;
 }
 
-.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus, .btn-primary:active:focus{
-    background-color: #2B7A78 !important;
-    border-color: #2B7A78;
+.btn-primary, .btn-primary:visited{
+    background-color: #a81638 !important;
+    border-color: #a81638;
+}
+
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:active:focus{
+    background-color: #c4274c !important;
+    border-color: #c4274c;
+}
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
 }
 
 .nav-item {
@@ -63,7 +77,6 @@ label.error {
   height:100%;
   left:0px;
   z-index:10000;
-  background-image:url(tp.png); /* required by MSIE to prevent actions on lower z-index elements */
 }
 
 #alertBox {
@@ -158,27 +171,24 @@ code {
   height:79px;
 }
 
-/* The snackbar - position it at the bottom and in the middle of the screen */
 #snackbar {
-  visibility: hidden; /* Hidden by default. Visible on click */
-  min-width: 250px; /* Set a default minimum width */
-  margin-left: -125px; /* Divide value of min-width by 2 */
-  background-color: #4BB543; /* Black background color */
-  color: #fff; /* White text color */
-  text-align: center; /* Centered text */
-  border-radius: 2px; /* Rounded borders */
-  padding: 16px; /* Padding */
-  position: fixed; /* Sit on top of the screen */
-  z-index: 1; /* Add a z-index if needed */
-  right: 2%; /* Center the snackbar */
-  bottom: 2%; /* 30px from the bottom */
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #4BB543;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  right: 2%;
+  top: 2%;
+  z-index: 10005 !important;
 }
 
-/* Show the snackbar when clicking on a button (class added with JavaScript) */
 #snackbar.show {
-  visibility: visible; /* Show the snackbar */
-  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
-  However, delay the fade out process for 2.5 seconds */
+  visibility: visible;
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
@@ -186,7 +196,6 @@ code {
 .important {
   background-color:#F5FCC8;
   padding:2px;
-
 }
 
 #order-entry{
@@ -206,25 +215,35 @@ code {
   display: block;
 }
 
+table {
+    word-break: break-word;
+}
+
+th {
+  position: sticky;
+  top: 0px;  /* 0px if you don't have a navbar, but something is required */
+  background: white;
+}
+
 /* Animations to fade the snackbar in and out */
 @-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {top: 0; opacity: 0;}
+  to {top: 2%; opacity: 1;}
 }
 
 @keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {top: 0; opacity: 0;}
+  to {top: 2%; opacity: 1;}
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {top: 2%; opacity: 1;}
+  to {top: 0; opacity: 0;}
 }
 
 @keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {top: 2%; opacity: 1;}
+  to {top: 0; opacity: 0;}
 }
 
 @media (max-width: 600px)

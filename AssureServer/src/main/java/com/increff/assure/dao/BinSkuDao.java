@@ -61,7 +61,6 @@ public class BinSkuDao extends AbstractDao<BinSkuPojo> {
     }
 
     public List<BinSkuPojo> getSearchByBinAndProduct(Long binId, Long globalSkuId) {
-
         String queryStr = "SELECT c FROM BinSkuPojo c WHERE (:binId is null or c.binId = :binId) and (:globalSkuId is null or c.globalSkuId = :globalSkuId)";
 
         TypedQuery<BinSkuPojo> query = entityManager.createQuery(queryStr, BinSkuPojo.class);

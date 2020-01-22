@@ -6,21 +6,31 @@
 <body>
 <nav th:replace="snippets.html :: navbar"></nav>
 
+<div style="padding-top: 10px;">
+    <div class="addressbar" style="border-bottom:1px solid #ECECEC; width:90%; margin: auto; height: 25px; font-size: 0.85em; padding-left: 15px; margin-top:3px;">
+        <a th:href="@{/}">Home</a> /
+        Channels
+    </div>
+</div>
+
 <div class="parent-container">
     <div class="main-header">
         <p class="page-header">
-            <span style="font-size: 20px">Channel Page</span>
+            <span class="h5">Channel Page</span>
             <br/>
-            <span class="text-muted" style="font-size:0.9em;">Add and View the registered Clients and Customers.</span>
+            <span class="text-muted" style="font-size:0.9em;">Add and View the registered Channels</span>
         </p>
-        <button class="btn btn-primary" id="refresh-data" style="width:60" type="button">
+
+        <button class="btn btn-primary" id="refresh-data" data-toggle="tooltip" title="Refresh" type="button">
             <i aria-hidden="true" class="fa fa-refresh"></i>
         </button>
-        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
-            <i aria-hidden="true" class="fa fa-plus"></i>
-            &nbspAdd new Channel
-        </button>
+        <span data-toggle="tooltip" title="Add Channel">
+            <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
+                <i aria-hidden="true" class="fa fa-plus"></i>
+            </button>
+        </span>
     </div>
+
     <!-- Modal -->
     <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
          tabindex="-1">
@@ -36,14 +46,15 @@
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <label for="channelName">Name</label>
+                            <label for="channelName" class="font-weight-bold">Name:</label>
                             <input aria-describedby="nameHelp" class="form-control" id="channelName" name="name"
                                    pattern=".*\S+.*" placeholder="Enter Name" required title="This field is required"
                                    type="text">
                             <small class="form-text text-muted" id="nameHelp">Name should be unique.</small>
                         </div>
+
                         <div class="form-group">
-                            <label for="invoiceType">Channel Type:</label>
+                            <label for="invoiceType" class="font-weight-bold">Channel Type:</label>
                             <select class="form-control" id="invoiceType" name="invoiceType" required
                                     title="Select a Channel Type">
                                 <option disabled hidden selected value="">
@@ -64,6 +75,7 @@
             </div>
         </div>
     </div>
+
     <div class="body-content">
         <div class="table-display">
             <table class="table table-sm table-striped" id="channel-table">
@@ -79,12 +91,11 @@
                 </tr>
                 </thead>
                 <tbody>
-
+                    <!--Channel details here-->
                 </tbody>
             </table>
         </div>
     </div>
-
 </div>
 
 <footer th:replace="snippets.html :: footer"></footer>

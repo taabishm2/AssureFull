@@ -11,11 +11,10 @@ import javax.validation.constraints.Size;
 @Setter
 public class ChannelListingForm {
     @NotNull
+    @Size(min=1, max=255)
     private String clientSkuId;
 
-    @Size(min=1)
-    private String channelSkuId;
-
     @NotNull
-    private Long clientId;
+    @Size(min=1, max=255)
+    private String channelSkuId;
 }

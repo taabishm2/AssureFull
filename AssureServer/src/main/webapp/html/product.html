@@ -4,45 +4,54 @@
 <head th:replace="snippets.html :: page_head"></head>
 
 <body>
+
 <nav th:replace="snippets.html :: navbar"></nav>
+
+<div style="padding-top: 10px;">
+    <div class="addressbar" style="border-bottom:1px solid #ECECEC; width:90%; margin: auto; height: 25px; font-size: 0.85em; padding-left: 15px; margin-top:3px;">
+        <a th:href="@{/}">Home</a> /
+        Products
+    </div>
+</div>
 
 <div class="parent-container">
     <div class="main-header">
+
         <p class="page-header">
-            <span style="font-size: 20px">Products Page</span>
+            <span class="h5">Products Page</span>
             <br/>
             <span class="text-muted" style="font-size:0.9em;">Add, Display & Edit Product Details.</span>
         </p>
-        <button class="btn btn-primary" id="refresh-data" style="width:60" type="button">
+
+        <button class="btn btn-primary" id="refresh-data" type="button" data-toggle="tooltip" title="Refresh">
             <i aria-hidden="true" class="fa fa-refresh"></i>
         </button>
-        <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
-            <i aria-hidden="true" class="fa fa-plus" ></i>
-            &nbspAdd Product List
-        </button>
-        <div style="margin-top:8px;">
-        <form id="productDisplayForm">
-            <select class="form-control" id="clientIdSelect" name="clientId" required
-                    title="Select a Client" style="width:30%; float:left; margin-right:5px;">
-                <option disabled hidden selected value="">
-                    Select a Client
-                </option>
-            </select>
-            <button class="btn btn-primary" type="submit" style="float:left">
-                <i aria-hidden="true" class="fa fa-list-ul"></i>
-                &nbspList Products
+        <span data-toggle="tooltip" title="Add Product Master">
+            <button class="btn btn-primary" data-target="#exampleModal" data-toggle="modal" type="button">
+                <i aria-hidden="true" class="fa fa-plus"></i>
             </button>
-        </form>
+        </span>
+
+        <div style="margin-top:8px;">
+            <form id="productDisplayForm">
+                <select class="form-control" id="clientIdSelect" name="clientId" required style="width:30%; float:left; margin-right:5px;" title="Select a Client">
+                    <option disabled hidden selected value="">
+                        Select a Client
+                    </option>
+                </select>
+                <button class="btn btn-primary" style="float:left" type="submit">
+                    <i aria-hidden="true" class="fa fa-list-ul"></i> &nbspList Client Products
+                </button>
+            </form>
         </div>
     </div>
-    <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog"
-         tabindex="-1">
+
+    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog" tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Add a Product</h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button" onclick="resetModal()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -50,9 +59,8 @@
                     <div class="modal-body">
 
                         <div class="form-group" id="client-dropdown">
-                            <label for="clientId">Client:</label>
-                            <select class="form-control" id="clientId" name="clientId" required
-                                    title="Select a Client">
+                            <label for="clientId" class="font-weight-bold">Client:</label>
+                            <select class="form-control" id="clientId" name="clientId" required title="Select a Client">
                                 <option disabled hidden selected value="">
                                     Select a Client
                                 </option>
@@ -60,31 +68,33 @@
 
                             <div class="" role="document" style="margin-top:15px;">
                                 <div class="">
-                                    <label for="product-upload-modal-body">Product Master:</label>
+                                    <label for="product-upload-modal-body" class="font-weight-bold">Product Master:</label>
                                     <div class="modal-body" id="product-upload-modal-body" style="padding:0px; margin-bottom:35px">
                                         <div class="product-file">
                                             <input class="custom-file-input" id="productFile" required type="file">
-                                            <label class="custom-file-label" for="productFile" id="productFileName">Upload
-                                                CSV
-                                                File</label>
+                                            <label class="custom-file-label" for="productFile" id="productFileName">Upload CSV File
+                                            </label>
                                         </div>
-                                        <a target="_blank" th:href="@{/samples/productCsvSample.csv}" style="float:right; margin-top:5px;">
-                                            <i class="fa fa-download" aria-hidden="true"></i> Download CSV Sample
+                                        <a style="float:right; margin-top:5px;" target="_blank" href="http://127.0.0.1:9090/sample/productCsvSample.csv">
+                                            <i aria-hidden="true" class="fa fa-download"></i> Download CSV Sample
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                    </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-warning" id="download-errors" type="button" style="visibility:hidden">Display Errors
+                        </button>
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button" onclick="resetModal()">Close</button>
                         <button class="btn btn-primary" id="process-data" type="submit">Upload</button>
-                        <a id="error-file-link">
-                            <button class="btn btn-warning" id="download-errors" type="button">Download Errors
-                            </button>
-                        </a>
+
+                        <div id="errorDetails">
+                            <!--CSV errors appear here-->
+                        </div>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -132,30 +142,25 @@
                         <div class="form-group" style="width: 100%; margin-top:5px;">
                             <div class="col-sm-3 col-form-label" style="text-align:right;">Name</div>
                             <div class="col-sm-9">
-                                <input class="form-control" name="name" placeholder="Enter Name" required
-                                       style="float:left; width:100%" type="text">
+                                <input class="form-control" name="name" placeholder="Enter Name" required style="float:left; width:100%" type="text">
                             </div>
                         </div>
                         <div class="form-group" style="width: 100%; margin-top:5px;">
                             <div class="col-sm-3 col-form-label" style="text-align:right">Brand ID</div>
                             <div class="col-sm-9">
-                                <input class="form-control" name="brandId" placeholder="Enter Brand ID" required
-                                       style="float:left; width:100%" type="text">
+                                <input class="form-control" name="brandId" placeholder="Enter Brand ID" required style="float:left; width:100%" type="text">
                             </div>
                         </div>
                         <div class="form-group" style="width: 100%; margin-top:5px;">
                             <div class="col-sm-3 col-form-label" style="text-align:right">MRP</div>
                             <div class="col-sm-9">
-                                <input class="form-control" name="mrp" pattern="[0-9]*" placeholder="Enter MRP"
-                                       required style="float:left; width:100%" title="Enter a Valid MRP"
-                                       type="text">
+                                <input class="form-control" name="mrp" pattern="[0-9]*" placeholder="Enter MRP" required style="float:left; width:100%" title="Enter a Valid MRP" type="text">
                             </div>
                         </div>
                         <div class="form-group" style="width: 100%; margin-top:5px;">
                             <div class="col-sm-3 col-form-label" style="text-align:right">Description</div>
                             <div class="col-sm-9">
-                                <input class="form-control" name="description" placeholder="Enter Description"
-                                       required style="float:left; width:100%" type="text">
+                                <input class="form-control" name="description" placeholder="Enter Description" required style="float:left; width:100%" type="text">
                             </div>
                         </div>
                     </div>
@@ -172,4 +177,5 @@
 <footer th:replace="snippets.html :: footer"></footer>
 <script th:src="@{/static/product.js}"></script>
 </body>
+
 </html>

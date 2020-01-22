@@ -6,37 +6,32 @@ import com.increff.assure.pojo.OrderItemPojo;
 import com.increff.assure.pojo.OrderPojo;
 import com.increff.assure.pojo.ProductMasterPojo;
 import com.increff.assure.service.*;
-import com.increff.assure.util.CheckValid;
+import com.increff.assure.util.FileWriteUtil;
 import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
 import model.ConsumerType;
 import model.InvoiceType;
 import model.OrderStatus;
+import model.data.MessageData;
 import model.data.OrderData;
 import model.data.OrderItemReceiptData;
 import model.data.OrderReceiptData;
-import model.form.OrderForm;
-import model.form.OrderItemForm;
-import model.form.OrderItemValidationForm;
-import model.form.OrderValidationForm;
+import model.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import static com.increff.assure.util.ConvertUtil.convert;
 
 @Service
-public class OrderDto extends AbstractService {
+public class OrderDto extends AbstractDto {
     @Autowired
     private OrderService orderService;
     @Autowired
@@ -60,13 +55,24 @@ public class OrderDto extends AbstractService {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(OrderForm orderForm) throws ApiException {
-        CheckValid.validate(orderForm);
+        checkValid(orderForm);
+
         OrderPojo orderPojo = convert(orderForm, OrderPojo.class);
         validateOrder(orderPojo);
-
         orderService.add(orderPojo);
 
         addOrderItemsForOrder(orderForm.getOrderItemList(), orderPojo.getId(), orderPojo.getClientId());
+    }
+
+    @Transactional(rollbackFor = ApiException.class)
+    public void add(ChannelOrderForm orderForm) throws ApiException {
+        checkValid(orderForm);
+
+        OrderPojo orderPojo = convert(orderForm, OrderPojo.class);
+        validateOrder(orderPojo);
+        orderService.add(orderPojo);
+
+        addChannelOrderItemsForOrder(orderForm.getOrderItemList(), orderForm.getChannelId(), orderPojo.getId(), orderPojo.getClientId());
     }
 
     private void validateOrder(OrderPojo orderPojo) throws ApiException {
@@ -77,13 +83,20 @@ public class OrderDto extends AbstractService {
             if (!consumerService.getCheckId(orderPojo.getCustomerId()).getType().equals(ConsumerType.CUSTOMER))
                 throw new ApiException("Invalid CustomerID");
 
+        orderService.checkDuplicateOrders(orderPojo);
         channelService.getCheckId(orderPojo.getChannelId());
     }
 
-    @Transactional(rollbackFor = ApiException.class)
+    private void addChannelOrderItemsForOrder(List<ChannelOrderItemForm> orderItemFormList, Long channelId, Long orderId, Long clientId) throws ApiException {
+        List<OrderItemPojo> orderItemList = convertFormToPojo(orderItemFormList, channelId, orderId, clientId);
+        for (OrderItemPojo orderItem : orderItemList)
+            validateOrderItem(orderItem, clientId);
+
+        orderItemService.addList(orderItemList);
+    }
+
     private void addOrderItemsForOrder(List<OrderItemForm> orderItemFormList, Long orderId, Long clientId) throws ApiException {
-        List<OrderItemPojo> orderItemList = convert(orderItemFormList, OrderItemPojo.class);
-        orderItemList.forEach(orderItem -> orderItem.setOrderId(orderId));
+        List<OrderItemPojo> orderItemList = convertFormToPojo(orderItemFormList, orderId, clientId);
         for (OrderItemPojo orderItem : orderItemList)
             validateOrderItem(orderItem, clientId);
 
@@ -91,7 +104,7 @@ public class OrderDto extends AbstractService {
     }
 
     @Transactional(readOnly = true)
-    private void validateOrderItem(OrderItemPojo orderItemPojo, Long clientId) throws ApiException {
+    public void validateOrderItem(OrderItemPojo orderItemPojo, Long clientId) throws ApiException {
         productService.getCheckId(orderItemPojo.getGlobalSkuId());
 
         if (!clientId.equals(productService.getClientIdOfProduct(orderItemPojo.getGlobalSkuId())))
@@ -100,24 +113,18 @@ public class OrderDto extends AbstractService {
 
     @Transactional(readOnly = true)
     public OrderData get(Long id) throws ApiException {
-        return convertOrderPojoToOrderData(orderService.getCheckId(id));
-    }
-
-    private OrderData convertOrderPojoToOrderData(OrderPojo order) throws ApiException {
-        OrderData orderData = convert(order, OrderData.class);
-        orderData.setOrderItemList(convert(orderItemService.getByOrderId(order.getId()), OrderItemForm.class));
-        return orderData;
+        return convertPojoToData(orderService.getCheckId(id));
     }
 
     @Transactional(readOnly = true)
     public List<OrderData> getAll() throws ApiException {
-        return convertOrderPojoToOrderData(orderService.getAll());
+        return convertPojoToData(orderService.getAll());
     }
 
-    private List<OrderData> convertOrderPojoToOrderData(List<OrderPojo> orderPojoList) throws ApiException {
+    private List<OrderData> convertPojoToData(List<OrderPojo> orderPojoList) throws ApiException {
         List<OrderData> orderDataList = new ArrayList<>();
         for (OrderPojo pojo : orderPojoList)
-            orderDataList.add(convertOrderPojoToOrderData(pojo));
+            orderDataList.add(convertPojoToData(pojo));
         return orderDataList;
     }
 
@@ -182,16 +189,15 @@ public class OrderDto extends AbstractService {
         if (order.getStatus().equals(OrderStatus.CREATED))
             throw new ApiException("Order is not Allocated");
 
-        File f = new File("C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//" + orderId + ".pdf");
-        if (f.exists() && !f.isDirectory())
+        if (order.getStatus().equals(OrderStatus.FULFILLED))
             return;
 
         if (channelService.getCheckId(order.getChannelId()).getInvoiceType().equals(InvoiceType.SELF)) {
             generateInvoicePdf(order);
-            fulfillOrderItems(orderId);
         } else {
             clientWrapper.fetchInvoiceFromChannel(createOrderInvoice(order));
         }
+        fulfillOrderItems(orderId);
 
         order.setStatus(OrderStatus.FULFILLED);
     }
@@ -220,19 +226,22 @@ public class OrderDto extends AbstractService {
         orderInvoice.setChannelOrderId(order.getChannelOrderId());
         orderInvoice.setClientDetails(consumerService.getCheckId(order.getClientId()).getName());
         orderInvoice.setCustomerDetails(consumerService.getCheckId(order.getCustomerId()).getName());
-        orderInvoice.setOrderCreationTime(order.getCreatedAt().toString());
+        orderInvoice.setOrderCreationTime(order.getCreatedAt().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss")));
 
         List<OrderItemReceiptData> orderItems = new ArrayList<>();
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(order.getId())) {
             OrderItemReceiptData orderItemReceipt = new OrderItemReceiptData();
 
-            orderItemReceipt.setClientSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(), orderItem.getGlobalSkuId()).getChannelSkuId());
+            orderItemReceipt.setClientSkuId(productService.getCheckId(orderItem.getGlobalSkuId()).getClientSkuId());
             orderItemReceipt.setOrderItemId(orderItem.getId());
             orderItemReceipt.setQuantity(orderItem.getAllocatedQuantity());
 
             ProductMasterPojo product = productMasterService.getCheckId(orderItem.getGlobalSkuId());
             orderItemReceipt.setMrp(product.getMrp());
             orderItemReceipt.setTotal((long) (orderItem.getAllocatedQuantity() * product.getMrp()));
+
+            if (!channelService.getCheckId(order.getChannelId()).getName().equals("INTERNAL"))
+                orderItemReceipt.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(), product.getId()).getChannelSkuId());
 
             orderItems.add(orderItemReceipt);
         }
@@ -247,6 +256,130 @@ public class OrderDto extends AbstractService {
 
     public List<OrderData> getByChannel(Long channelId) throws ApiException {
         channelService.getCheckId(channelId);
-        return convert(orderService.getByChannel(channelId), OrderData.class);
+        return convertPojoToData(orderService.getByChannel(channelId));
+    }
+
+    public void validateList(List<OrderItemForm> formList, Long clientId, Long channelId) throws ApiException {
+        consumerService.getCheckClient(clientId);
+        channelService.getCheckId(channelId);
+
+        List<MessageData> errorMessages = new ArrayList<>();
+        HashSet<String> clientSkus = new HashSet<>();
+        for (int i = 0; i < formList.size(); i++) {
+            try {
+                OrderItemForm form = formList.get(i);
+                checkValid((form));
+
+                if (clientSkus.contains(form.getClientSkuId()))
+                    throw new ApiException("Duplicate Client SKU");
+                else
+                    clientSkus.add(form.getClientSkuId());
+
+                Long globalSkuId = productService.getByClientAndClientSku(clientId, form.getClientSkuId()).getId();
+
+                if (form.getOrderedQuantity() <= 0)
+                    throw new ApiException("Quantity must be positive");
+
+                if (!channelService.getCheckId(channelId).getName().equals("INTERNAL"))
+                    checkNotNull(channelListingService.getByChannelIdAndGlobalSku(channelId, globalSkuId), "Channel does not provide the mentioned Product");
+
+                checkNotNull(inventoryService.getByGlobalSku(globalSkuId), "Product not in Inventory");
+                if (form.getOrderedQuantity() > inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity())
+                    throw new ApiException("Insufficient Stock. " + inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity() + " items left");
+
+            } catch (ApiException e) {
+                MessageData errorMessage = new MessageData();
+                errorMessage.setMessage("Error in Line: " + i + ": " + e.getMessage() + "\n");
+                errorMessages.add(errorMessage);
+            }
+        }
+
+        if (errorMessages.size() != 0)
+            throw new ApiException(FileWriteUtil.writeErrorsToFile("orderError" + formList.hashCode(), errorMessages));
+    }
+
+    public List<OrderData> getSearch(OrderSearchForm form) throws ApiException {
+        if (Objects.nonNull(form.getClientId()))
+            consumerService.getCheckClient(form.getClientId());
+
+        if (Objects.nonNull(form.getCustomerId()))
+            consumerService.getCheckCustomer(form.getCustomerId());
+
+        if (Objects.nonNull(form.getChannelId()))
+            channelService.getCheckId(form.getChannelId());
+
+        checkDateFilters(form.getFromDate(), form.getToDate());
+
+        ZonedDateTime fromDateObject = form.getFromDate();
+        ZonedDateTime toDateObject = form.getToDate();
+
+        if (Objects.isNull(fromDateObject) && Objects.isNull(toDateObject)) {
+            toDateObject = ZonedDateTime.now();
+            fromDateObject = toDateObject.minusMonths(1L);
+        }
+        else if (Objects.isNull(fromDateObject) ^ Objects.isNull(toDateObject)) {
+            if (Objects.nonNull(fromDateObject)) {
+                toDateObject = fromDateObject.plusMonths(1L);
+            } else {
+                fromDateObject = toDateObject.minusMonths(1L);
+            }
+        }
+
+        fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"));
+        toDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"));
+
+        System.out.println("FROM:"+fromDateObject.toString());
+        System.out.println("TO  :"+toDateObject.toString());
+
+        return convertPojoToData(orderService.getSearch(form.getClientId(),
+                form.getCustomerId(), form.getChannelId(), fromDateObject, toDateObject));
+    }
+
+    private void checkDateFilters(ZonedDateTime fromDate, ZonedDateTime toDate) throws ApiException {
+        if (Objects.nonNull(fromDate))
+            if (fromDate.isAfter(ZonedDateTime.now()))
+                throw new ApiException("Invalid \"From\" Date");
+
+        if (Objects.nonNull(toDate))
+            if (fromDate.isAfter(ZonedDateTime.now()))
+                throw new ApiException("Invalid \"To\" Date");
+
+        if (Objects.nonNull(fromDate) && Objects.nonNull(toDate))
+            if (fromDate.isAfter(toDate))
+                throw new ApiException("\"From\" date cannot be after \"To\" date");
+    }
+
+    private List<OrderItemPojo> convertFormToPojo(List<ChannelOrderItemForm> orderItemFormList, Long channelId, Long orderId, Long clientId) {
+        List<OrderItemPojo> orderItemList = new ArrayList<>();
+        for (ChannelOrderItemForm form : orderItemFormList) {
+            OrderItemPojo pojo = new OrderItemPojo();
+            pojo.setOrderId(orderId);
+            pojo.setGlobalSkuId(channelListingService.getByChannelChannelSkuAndClient(channelId, form.getChannelSkuId(), clientId).getGlobalSkuId());
+            pojo.setOrderedQuantity(form.getOrderedQuantity());
+            orderItemList.add(pojo);
+        }
+        return orderItemList;
+    }
+
+    private List<OrderItemPojo> convertFormToPojo(List<OrderItemForm> orderItemFormList, Long orderId, Long clientId) throws ApiException {
+        List<OrderItemPojo> orderItemList = new ArrayList<>();
+        for (OrderItemForm form : orderItemFormList) {
+            OrderItemPojo pojo = new OrderItemPojo();
+            pojo.setOrderId(orderId);
+            pojo.setGlobalSkuId(productMasterService.getByClientAndClientSku(clientId, form.getClientSkuId()).getId());
+            pojo.setOrderedQuantity(form.getOrderedQuantity());
+            orderItemList.add(pojo);
+        }
+        return orderItemList;
+    }
+
+    private OrderData convertPojoToData(OrderPojo order) throws ApiException {
+        OrderData orderData = convert(order, OrderData.class);
+        orderData.setOrderItemList(convert(orderItemService.getByOrderId(order.getId()), OrderItemForm.class));
+        orderData.setDateCreated(order.getCreatedAt());
+        orderData.setClientName(consumerService.getCheckId(order.getClientId()).getName());
+        orderData.setCustomerName(consumerService.getCheckId(order.getCustomerId()).getName());
+        orderData.setChannelName(channelService.getCheckId(order.getChannelId()).getName());
+        return orderData;
     }
 }

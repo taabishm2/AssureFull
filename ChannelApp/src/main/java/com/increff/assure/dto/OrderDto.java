@@ -1,19 +1,16 @@
 package com.increff.assure.dto;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.increff.assure.model.data.ChannelOrderData;
 import com.increff.assure.model.data.ChannelOrderReceiptData;
-import com.increff.assure.model.data.ChannelAppOrderData;
-import com.increff.assure.model.form.ChannelAppOrderForm;
 import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ClientWrapper;
 import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
-import model.data.ChannelData;
-import model.data.ConsumerData;
-import model.data.OrderReceiptData;
-import model.form.OrderForm;
+import model.data.*;
+import model.form.ChannelOrderForm;
 import model.form.OrderItemValidationForm;
 import model.form.OrderValidationForm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,42 +19,45 @@ import java.util.List;
 
 @Service
 public class OrderDto {
+    @Autowired
+    private ClientWrapper clientWrapper;
 
-    public void add(@RequestBody ChannelAppOrderForm orderForm) throws ApiException {
-        OrderForm serverOrderForm = ClientWrapper.convert(orderForm);
-        ClientWrapper.hitAddOrderApi(serverOrderForm);
+    public void add(@RequestBody ChannelOrderForm orderForm) throws ApiException {
+        clientWrapper.addOrder(orderForm);
     }
 
-    public ChannelAppOrderData get(@PathVariable Long id) throws ApiException {
-        return ClientWrapper.hitGetOrderApi(id);
+    public ChannelOrderData get(@PathVariable Long id) throws ApiException {
+        return clientWrapper.getOrder(id);
     }
 
     public void generateReceipt(OrderReceiptData orderReceiptData) throws ApiException {
+        ChannelOrderReceiptData orderReceipt = clientWrapper.convert(orderReceiptData);
 
-        ChannelOrderReceiptData orderReceipt = ClientWrapper.convert(orderReceiptData);
         XmlGenerateUtil.generate(orderReceipt);
         PdfGenerateUtil.generate(orderReceipt.getOrderId());
-
-        ClientWrapper.sendOrderInvoice(orderReceipt.getOrderId());
     }
 
-    public void validateOrder(OrderValidationForm validationForm) throws ApiException {
-        ClientWrapper.hitOrderValidationApi(validationForm);
+    public void validateOrderForm(OrderValidationForm validationForm) throws ApiException {
+        clientWrapper.validateOrder(validationForm);
     }
 
     public void validateOrderItemForm(OrderItemValidationForm validationForm) throws ApiException {
-        ClientWrapper.hitOrderItemValidationApi(validationForm);
-    }
-
-    public List<ChannelAppOrderData> getAll(Long channelId) throws ApiException {
-        return ClientWrapper.hitGetOrdersByChannelApi(channelId);
+        clientWrapper.validateOrderItem(validationForm);
     }
 
     public List<ConsumerData> getAllClients() {
-        return ClientWrapper.hitGetClientsApi();
+        return clientWrapper.getClients();
     }
 
     public List<ChannelData> getAllChannels() {
-        return ClientWrapper.hitGetChannelsApi();
+        return clientWrapper.getChannels();
+    }
+
+    public List<OrderData> getByChannel(Long channelId) throws ApiException {
+        return clientWrapper.getOrdersByChannel(channelId);
+    }
+
+    public List<OrderItemData> getByOrderId(Long orderId) {
+        return clientWrapper.getOrderItems(orderId);
     }
 }

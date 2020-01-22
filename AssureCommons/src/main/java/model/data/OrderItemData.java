@@ -8,4 +8,10 @@ import model.form.OrderItemForm;
 @Setter
 public class OrderItemData extends OrderItemForm {
     private Long id;
+
+    private Long allocatedQuantity;
+
+    private Long fulfilledQuantity;
+
+    private String channelSkuId;
 }

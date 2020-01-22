@@ -2,13 +2,11 @@ package com.increff.assure.model.form;
 
 import lombok.Getter;
 import lombok.Setter;
-import model.OrderStatus;
 import model.form.OrderItemForm;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Getter
@@ -23,9 +21,11 @@ public class ChannelAppOrderForm {
     @NotNull
     private Long channelId;
 
-    @NotEmpty
+    @NotNull
+    @Size(min=1, max=255)
     private String channelOrderId;
 
     @NotNull
-    private List<OrderItemForm> orderItemList;
+    @NotEmpty
+    private List<ChannelOrderItemForm> orderItemList;
 }

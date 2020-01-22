@@ -2,7 +2,6 @@ package model.data;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @XmlRootElement
@@ -11,7 +10,7 @@ public class OrderReceiptData {
     Long orderId;
     String channelName;
     String channelOrderId;
-    String OrderCreationTime;
+    String orderCreationTime;
     String clientDetails;
     String customerDetails;
 
@@ -45,12 +44,12 @@ public class OrderReceiptData {
     }
 
     public String getOrderCreationTime() {
-        return OrderCreationTime;
+        return orderCreationTime;
     }
 
     @XmlElement
     public void setOrderCreationTime(String orderCreationTime) {
-        OrderCreationTime = orderCreationTime;
+        this.orderCreationTime = orderCreationTime;
     }
 
     public String getClientDetails() {

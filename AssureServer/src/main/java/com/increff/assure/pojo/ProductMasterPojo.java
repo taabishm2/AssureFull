@@ -13,8 +13,9 @@ import javax.validation.constraints.NotNull;
         uniqueConstraints = {@UniqueConstraint(columnNames = {"clientId","clientSkuId"})}
 )
 public class ProductMasterPojo extends BaseEntity{
+    @TableGenerator(name = "Address_pGen", table = "ID_pGEN", pkColumnName = "GEN_pNAME", valueColumnName = "GEN_pVAL", pkColumnValue = "Addr_pGen", initialValue = 10000, allocationSize = 100)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "Address_pGen")
     private Long id;
 
     @NotNull

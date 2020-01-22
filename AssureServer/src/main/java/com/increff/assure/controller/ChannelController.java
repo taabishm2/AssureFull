@@ -21,15 +21,8 @@ public class ChannelController {
 
     @ApiOperation(value = "Add a Channel")
     @RequestMapping(path = "/api/channel", method = RequestMethod.POST)
-    public void add(@Valid @RequestBody ChannelForm form) throws ApiException {
-        channelDto.initializeInternalChannel();
+    public void add(@RequestBody ChannelForm form) throws ApiException {
         channelDto.add(form);
-    }
-
-    @ApiOperation(value = "Get a channel by ID")
-    @RequestMapping(path = "/api/channel/{id}", method = RequestMethod.GET)
-    public ChannelData get(@PathVariable Long id) throws ApiException {
-        return channelDto.get(id);
     }
 
     @ApiOperation(value = "Get list of all channels")

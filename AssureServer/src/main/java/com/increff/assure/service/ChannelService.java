@@ -2,6 +2,7 @@ package com.increff.assure.service;
 
 import com.increff.assure.dao.ChannelDao;
 import com.increff.assure.pojo.ChannelPojo;
+import model.InvoiceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,13 @@ public class ChannelService extends AbstractService {
 
     @Transactional(rollbackFor = ApiException.class)
     public void add(ChannelPojo channelPojo) throws ApiException {
-        checkDuplicateChannelName(channelPojo.getName());
+        checkDuplicate(channelPojo.getName(), channelPojo.getInvoiceType());
 
         channelDao.insert(channelPojo);
     }
 
-    public void checkDuplicateChannelName(String channelName) throws ApiException {
-        ChannelPojo duplicateChannel = channelDao.selectByName(channelName);
+    public void checkDuplicate(String channelName, InvoiceType type) throws ApiException {
+        ChannelPojo duplicateChannel = channelDao.selectByNameAndType(channelName, type);
         checkNull(duplicateChannel, "Channel (NAME:" + channelName + ") already exists.");
     }
 

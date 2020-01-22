@@ -1,21 +1,15 @@
 package com.increff.assure.service;
 
-import com.increff.assure.dao.ChannelDao;
 import com.increff.assure.dao.ChannelListingDao;
-import com.increff.assure.dao.ConsumerDao;
-import com.increff.assure.dao.ProductMasterDao;
 import com.increff.assure.pojo.ChannelListingPojo;
-import com.increff.assure.pojo.ChannelPojo;
-import com.increff.assure.pojo.ConsumerPojo;
-import com.increff.assure.pojo.ProductMasterPojo;
-import model.ConsumerType;
-import model.InvoiceType;
-import org.junit.Before;
+import model.form.ChannelListingSearchForm;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class ChannelListingServiceTest extends AbstractUnitTest {
 
@@ -23,62 +17,101 @@ public class ChannelListingServiceTest extends AbstractUnitTest {
     ChannelListingService channelListingService;
     @Autowired
     ChannelListingDao channelListingDao;
-    @Autowired
-    ConsumerDao consumerDao;
-    @Autowired
-    ProductMasterDao productMasterDao;
-    @Autowired
-    ChannelDao channelDao;
 
-    private ConsumerPojo consumerPojo;
-    private ProductMasterPojo productMasterPojo;
-    private ChannelPojo channelPojo;
-    private ChannelListingPojo channelListingPojo;
+    @Test
+    public void testAddValidEntry() throws ApiException {
+        channelListingService.add(TestPojo.getChannelListingPojo(123L, 987L, "ChannelSKU", 567L));
+        assertEquals(1, channelListingDao.selectAll().size());
 
-    @Before
-    public void init() {
-        consumerPojo = PojoConstructor.getConstructConsumer("PUMA", ConsumerType.CLIENT);
-        productMasterPojo = PojoConstructor.getConstructProduct("PUMAX", consumerPojo.getId(), "BrandID", 200D, "SKUID", "Descriiption");
-        channelPojo = PojoConstructor.getConstructChannel("FLIPKART", InvoiceType.CHANNEL);
-
-        consumerDao.insert(consumerPojo);
-        productMasterDao.insert(productMasterPojo);
-        channelDao.insert(channelPojo);
-
-        channelListingPojo = PojoConstructor.getConstructChannelListing(productMasterPojo.getId(), channelPojo.getId(), "ChannelSKU");
+        channelListingService.add(TestPojo.getChannelListingPojo(1253L, 987L, "ChannelSKU1", 567L));
+        assertEquals(2, channelListingDao.selectAll().size());
     }
 
     @Test
-    public void testAdd() throws ApiException {
-        int initialCount = channelListingDao.selectAll().size();
-        channelListingService.add(channelListingPojo);
-        assertEquals(1, channelListingDao.selectAll().size() - initialCount);
-
+    public void testAddDuplicateChannelClientAndChannelSku() {
+        channelListingDao.insert(TestPojo.getChannelListingPojo(123L, 987L, "ChannelSKU", 567L));
         try {
-            channelListingService.add(PojoConstructor.getConstructChannelListing(123L, channelPojo.getId(), "ChannelSKU"));
-            fail("Duplicate Channel & Channel ID inserted");
+            channelListingService.add(TestPojo.getChannelListingPojo(456L, 987L, "ChannelSKU", 567L));
+            fail("Duplicate Channel & Channel SKU inserted for same Client");
         } catch (ApiException e) {
-            assertEquals("Channel has already registered the Channel-SKU-ID: ChannelSKU", e.getMessage());
-        }
-
-        try {
-            channelListingService.add(PojoConstructor.getConstructChannelListing(productMasterPojo.getId(), channelPojo.getId(), "ChannelSKUNew"));
-            fail("Duplicate Channel & Channel ID inserted");
-        } catch (ApiException e) {
-            assertEquals("ChannelID " + channelPojo.getId() + " and GSKU " + productMasterPojo.getId() + " pair already exists", e.getMessage());
+            assertTrue(true);
         }
     }
 
     @Test
-    public void testGetCheckId() throws ApiException {
-        channelListingService.add(channelListingPojo);
-        assertEquals(channelListingService.getCheckId(channelListingPojo.getId()), channelListingPojo);
+    public void testAddDuplicateChannelAndGsku() {
+        channelListingDao.insert(TestPojo.getChannelListingPojo(123L, 987L, "CSKU1", 567L));
+        try {
+            channelListingService.add(TestPojo.getChannelListingPojo(123L, 987L, "CSKU2", 567L));
+            fail("Duplicate Product for same Channel Present");
+        } catch (ApiException e) {
+            assertTrue(true);
+        }
+    }
 
+    @Test
+    public void testGetAllWithEmptyTable() {
+        assertEquals(0, channelListingService.getAll().size());
+    }
+
+    @Test
+    public void testGetAll() {
+        channelListingDao.insert(TestPojo.getChannelListingPojo(123L, 987L, "CSKU1", 567L));
+        assertEquals(1, channelListingService.getAll().size());
+
+        channelListingDao.insert(TestPojo.getChannelListingPojo(125L, 985L, "CSKU2", 567L));
+        assertEquals(2, channelListingService.getAll().size());
+    }
+
+    @Test
+    public void testGetCheckIdWithValidId() throws ApiException {
+        ChannelListingPojo listingPojo = TestPojo.getChannelListingPojo(123L, 987L, "CSKU1", 567L);
+        channelListingDao.insert(listingPojo);
+
+        assertEquals(channelListingService.getCheckId(listingPojo.getId()), listingPojo);
+    }
+
+    @Test
+    public void testGetCheckIdWithInvalidId() {
         try {
             channelListingService.getCheckId(1234L);
             fail("Invalid Channel ID validated");
         } catch (ApiException e) {
-            assertEquals("Channel Listing (ID:1234) does not exist.", e.getMessage());
+            assertTrue(true);
         }
+    }
+
+    @Test
+    public void testAddList() throws ApiException {
+        List<ChannelListingPojo> listingPojos = new ArrayList<>();
+        for (long i = 0L; i < 5L; i++)
+            listingPojos.add(TestPojo.getChannelListingPojo(i, i * 10, "CSKU" + i, i + 123));
+
+        channelListingService.addList(listingPojos);
+        assertEquals(5, channelListingDao.selectAll().size());
+    }
+
+    @Test
+    public void testGetByChannelIdAndGlobalSkuWithValidInputs() {
+        ChannelListingPojo channelListing = TestPojo.getChannelListingPojo(123L, 987L, "CSKU1", 567L);
+        channelListingDao.insert(channelListing);
+        assertEquals(channelListing, channelListingService.getByChannelIdAndGlobalSku(987L, 123L));
+    }
+
+    @Test
+    public void testGetByChannelIdAndGlobalSkuWithInvalidInputs() {
+        assertNull(channelListingService.getByChannelIdAndGlobalSku(111L, 222L));
+    }
+
+    @Test
+    public void testGetByChannelChannelSkuAndClientWithValidInputs() {
+        ChannelListingPojo channelListing = TestPojo.getChannelListingPojo(123L, 987L, "CSKU1", 567L);
+        channelListingDao.insert(channelListing);
+        assertEquals(channelListing, channelListingService.getByChannelChannelSkuAndClient(987L, "CSKU1", 567L));
+    }
+
+    @Test
+    public void testGetByChannelChannelSkuAndClientWithInvalidInputs() {
+        assertNull(channelListingService.getByChannelChannelSkuAndClient(8888L,"JSDF" ,23322L));
     }
 }

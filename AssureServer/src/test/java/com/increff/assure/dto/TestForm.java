@@ -7,12 +7,12 @@ import model.form.*;
 
 import java.util.List;
 
-public class FormConstructor {
+public class TestForm {
     public static BinPojo getConstructBin() {
         return new BinPojo();
     }
 
-    public static BinSkuForm getConstructBinSku(Long globalSku, Long binId, Long quantity) {
+    public static BinSkuForm getBinSkuForm(Long globalSku, Long binId, Long quantity) {
         BinSkuForm binSkuForm = new BinSkuForm();
         binSkuForm.setGlobalSkuId(globalSku);
         binSkuForm.setBinId(binId);
@@ -20,7 +20,7 @@ public class FormConstructor {
         return binSkuForm;
     }
 
-    public static ChannelListingPojo getConstructChannelListing(Long globalSku, Long channelId, String channelSkuId) {
+    public static ChannelListingPojo getChannelListingPojo(Long globalSku, Long channelId, String channelSkuId) {
         ChannelListingPojo channelListing = new ChannelListingPojo();
         channelListing.setGlobalSkuId(globalSku);
         channelListing.setChannelId(channelId);
@@ -28,14 +28,14 @@ public class FormConstructor {
         return channelListing;
     }
 
-    public static ChannelForm getConstructChannel(String name, InvoiceType type) {
+    public static ChannelForm getChannelForm(String name, InvoiceType type) {
         ChannelForm channel = new ChannelForm();
         channel.setName(name);
         channel.setInvoiceType(type);
         return channel;
     }
 
-    public static ConsumerForm getConstructConsumer(String name, ConsumerType type) {
+    public static ConsumerForm getConsumerForm(String name, ConsumerType type) {
         ConsumerForm consumer = new ConsumerForm();
         consumer.setName(name);
         consumer.setType(type);
@@ -51,9 +51,9 @@ public class FormConstructor {
         return inventory;
     }
 
-    public static OrderItemForm getConstructOrderItem(Long globalSku, Long orderedQty) {
+    public static OrderItemForm getConstructOrderItem(String clientSku, Long orderedQty) {
         OrderItemForm orderItemPojo = new OrderItemForm();
-        orderItemPojo.setGlobalSkuId(globalSku);
+        orderItemPojo.setClientSkuId(clientSku);
         orderItemPojo.setOrderedQuantity(orderedQty);
         return orderItemPojo;
     }
@@ -68,7 +68,7 @@ public class FormConstructor {
         return order;
     }
 
-    public static ProductMasterForm getConstructProduct(String name, Long clientId, String brandId, Double mrp, String clientSkuId, String description) {
+    public static ProductMasterForm getProductForm(String name, String brandId, Double mrp, String clientSkuId, String description) {
         ProductMasterForm product = new ProductMasterForm();
         product.setName(name);
         product.setBrandId(brandId);
@@ -76,5 +76,12 @@ public class FormConstructor {
         product.setClientSkuId(clientSkuId);
         product.setDescription(description);
         return product;
+    }
+
+    public static ChannelListingForm getChannelListingForm(String clientSkuId, String channelSkuId) {
+        ChannelListingForm listingForm = new ChannelListingForm();
+        listingForm.setClientSkuId(clientSkuId);
+        listingForm.setChannelSkuId(channelSkuId);
+        return listingForm;
     }
 }
