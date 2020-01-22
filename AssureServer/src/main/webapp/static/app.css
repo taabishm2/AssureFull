@@ -216,6 +216,7 @@ th {
 	top: 0px;
 	/* 0px if you don't have a navbar, but something is required */
 	background: white;
+	z-index: 100;
 }
 /* Animations to fade the snackbar in and out */
 

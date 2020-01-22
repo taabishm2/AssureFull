@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -25,11 +28,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Configuration
 @EnableWebMvc
 @EnableSwagger2
 public class ControllerConfig extends WebMvcConfigurerAdapter {
+    //private ObjectMapper mapper;
 
     public static final String PACKAGE_CONTROLLER = "com.increff.assure.controller";
 
@@ -87,11 +92,26 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
+    @Autowired
     public ObjectMapper objectMapper() {
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         javaTimeModule.addSerializer(ZonedDateTime.class,
                 new ZonedDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")));
-        return Jackson2ObjectMapperBuilder.json().featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // ISODate
+        ObjectMapper objMapper = Jackson2ObjectMapperBuilder.json().featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // ISODate
                 .modules(javaTimeModule).build();
+        return objMapper;
+    }
+
+
+    public MappingJackson2HttpMessageConverter customJackson2HttpMessageConverter(ObjectMapper mapper) {
+        MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
+        jsonConverter.setObjectMapper(mapper);
+        return jsonConverter;
+    }
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(customJackson2HttpMessageConverter(objectMapper()));
+        super.configureMessageConverters(converters);
     }
 }

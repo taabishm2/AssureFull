@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySources;
 
 @Configuration
 @ComponentScan("com.increff.assure")
-@PropertySources({ @PropertySource(value = "file:./channel.properties", ignoreResourceNotFound = true) })
+@PropertySources({ @PropertySource(value = "file:./channel.properties") })
 public class SpringConfig {
 
 }

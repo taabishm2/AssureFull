@@ -4,14 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.increff.assure.model.data.ChannelOrderItemReceiptData;
 import com.increff.assure.model.data.ChannelOrderReceiptData;
-import com.increff.assure.model.data.ChannelAppOrderData;
+import com.increff.assure.model.data.ChannelOrderData;
 import com.increff.assure.model.form.ChannelAppOrderForm;
 import com.increff.assure.util.ConvertUtil;
 import model.data.*;
 import model.form.ChannelOrderForm;
-import model.form.OrderForm;
 import model.form.OrderItemValidationForm;
 import model.form.OrderValidationForm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -21,14 +21,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.increff.assure.util.ConvertUtil.*;
-
 @Component
 public class ClientWrapper {
-    @Value("${assure.server.url}")
-    private static String assureServerUrl;
+    @Autowired
+    RestTemplate restTemplate;
 
-    public static void hitAddOrderApi(ChannelOrderForm orderForm) throws ApiException {
+    @Value("${assure.server.url}")
+    private String assureServerUrl;
+
+    public void addOrder(ChannelOrderForm orderForm) throws ApiException {
         ObjectMapper mapper = new ObjectMapper();
 
         String jsonStr;
@@ -42,26 +43,24 @@ public class ClientWrapper {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        System.out.println("Sending request: "+jsonStr);
         HttpEntity<String> request = new HttpEntity<>(jsonStr, headers);
         restTemplate.postForObject(assureServerUrl + "/api/order/channel", request, String.class);
-        System.out.println("Request Completed");
     }
 
-    public static ChannelAppOrderData hitGetOrderApi(Long id) {
+    public ChannelOrderData getOrder(Long id) {
         RestTemplate restTemplate = new RestTemplate();
         String fooResourceUrl = assureServerUrl +  "/api/order";
-        return restTemplate.getForEntity(fooResourceUrl + "/" + id, ChannelAppOrderData.class).getBody();
+        return restTemplate.getForEntity(fooResourceUrl + "/" + id, ChannelOrderData.class).getBody();
     }
 
-    public static void sendOrderInvoice(Long orderId) {
+    public void sendOrderInvoice(Long orderId) {
     }
 
-    public static ChannelOrderForm convert(ChannelAppOrderForm channelOrderForm) throws ApiException {
+    public ChannelOrderForm convert(ChannelAppOrderForm channelOrderForm) throws ApiException {
         return ConvertUtil.convert(channelOrderForm, ChannelOrderForm.class);
     }
 
-    public static ChannelOrderReceiptData convert(OrderReceiptData orderReceiptData) throws ApiException {
+    public ChannelOrderReceiptData convert(OrderReceiptData orderReceiptData) throws ApiException {
         ChannelOrderReceiptData channelInvoice = ConvertUtil.convert(orderReceiptData, ChannelOrderReceiptData.class);
         List<ChannelOrderItemReceiptData> channelInvoiceItemList = new ArrayList<>();
         for(OrderItemReceiptData invoiceItem:orderReceiptData.getOrderItems()) {
@@ -73,7 +72,7 @@ public class ClientWrapper {
         return channelInvoice;
     }
 
-    public static void hitOrderValidationApi(OrderValidationForm validationForm) throws ApiException {
+    public void validateOrder(OrderValidationForm validationForm) throws ApiException {
         ObjectMapper mapper = new ObjectMapper();
 
         String jsonStr;
@@ -91,7 +90,7 @@ public class ClientWrapper {
         restTemplate.postForObject(assureServerUrl + "/api/order/validate", request, String.class);
     }
 
-    public static void hitOrderItemValidationApi(OrderItemValidationForm validationForm) throws ApiException {
+    public void validateOrderItem(OrderItemValidationForm validationForm) throws ApiException {
         ObjectMapper mapper = new ObjectMapper();
 
         String jsonStr;
@@ -109,9 +108,9 @@ public class ClientWrapper {
         restTemplate.postForObject(assureServerUrl + "/api/orderitem/channel/validate", request, String.class);
     }
 
-    public static List<OrderData> hitGetOrdersByChannelApi(Long channelId) throws ApiException {
+    public List<OrderData> getOrdersByChannel(Long channelId) throws ApiException {
         String urlGETList = assureServerUrl + "/api/order/channel/"+channelId;
-        RestTemplate restTemplate = new RestTemplate();
+        System.out.println("SERVER:"+urlGETList);
         ResponseEntity<OrderData[]> responseEntity = restTemplate.getForEntity(urlGETList, OrderData[].class);
         OrderData[] objects = responseEntity.getBody();
         MediaType contentType = responseEntity.getHeaders().getContentType();
@@ -120,7 +119,7 @@ public class ClientWrapper {
         return ConvertUtil.convert(orderDataList, OrderData.class);
     }
 
-    public static List<ConsumerData> hitGetClientsApi() {
+    public List<ConsumerData> getClients() {
         String urlGETList = assureServerUrl + "/api/consumer/clients";
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<ConsumerData[]> responseEntity = restTemplate.getForEntity(urlGETList, ConsumerData[].class);
@@ -130,7 +129,7 @@ public class ClientWrapper {
         return Arrays.asList(objects);
     }
 
-    public static List<ChannelData> hitGetChannelsApi() {
+    public List<ChannelData> getChannels() {
         String urlGETList = assureServerUrl + "/api/channel";
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<ChannelData[]> responseEntity = restTemplate.getForEntity(urlGETList, ChannelData[].class);
@@ -140,7 +139,7 @@ public class ClientWrapper {
         return Arrays.asList(objects);
     }
 
-    public static List<OrderItemData> hitGetOrderItemsApi(Long orderId) {
+    public List<OrderItemData> getOrderItems(Long orderId) {
         String urlGETList = assureServerUrl + "/api/orderItem/orderId/"+orderId;
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<OrderItemData[]> responseEntity = restTemplate.getForEntity(urlGETList, OrderItemData[].class);
