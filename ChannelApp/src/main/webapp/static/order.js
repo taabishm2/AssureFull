@@ -58,9 +58,7 @@ function toggleOrderModifyToCreate() {
 
 function validateOrder(event) {
     var parsedJson = JSON.parse(toJson($("#order-form")));
-    console.log("XX:",sessionStorage.getItem('channelId'));
     parsedJson['channelId'] = sessionStorage.getItem('channelId');
-    console.log("XX:",sessionStorage.getItem('channelId'));
     parsedJson['customerId'] = '1';
 
     json = JSON.stringify(parsedJson);

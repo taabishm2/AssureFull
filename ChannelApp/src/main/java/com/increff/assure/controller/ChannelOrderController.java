@@ -30,7 +30,6 @@ public class ChannelOrderController {
         orderDto.add(form);
     }
 
-
     @ApiOperation(value = "Gets all Orders for a Channel")
     @RequestMapping(path = "/api/order/channel/{channelId}", method = RequestMethod.GET)
     public List<OrderData>  getByChannel(@PathVariable Long channelId) throws ApiException {
