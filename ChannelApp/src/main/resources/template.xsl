@@ -14,6 +14,9 @@
             <fo:page-sequence master-reference="simpleA4">
                 <fo:flow flow-name="xsl-region-body">
 
+                    <fo:block font-size="8pt" font-weight="bold" space-after="0mm" border-width="1mm">
+                        Channel Generated Invoice
+                    </fo:block>
                     <fo:block font-size="16pt" font-weight="bold" space-after="0mm" border-width="1mm">Order ID:
                         <xsl:value-of select="orderId"/>
                     </fo:block>

@@ -34,7 +34,6 @@ import java.util.List;
 @EnableWebMvc
 @EnableSwagger2
 public class ControllerConfig extends WebMvcConfigurerAdapter {
-    //private ObjectMapper mapper;
 
     public static final String PACKAGE_CONTROLLER = "com.increff.assure.controller";
 

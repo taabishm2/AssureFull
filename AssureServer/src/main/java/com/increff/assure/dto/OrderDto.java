@@ -6,6 +6,7 @@ import com.increff.assure.pojo.OrderItemPojo;
 import com.increff.assure.pojo.OrderPojo;
 import com.increff.assure.pojo.ProductMasterPojo;
 import com.increff.assure.service.*;
+import com.increff.assure.util.DateUtil;
 import com.increff.assure.util.PdfGenerateUtil;
 import com.increff.assure.util.XmlGenerateUtil;
 import model.ConsumerType;
@@ -77,7 +78,6 @@ public class OrderDto extends AbstractDto {
         if (!consumerService.getCheckId(orderPojo.getClientId()).getType().equals(ConsumerType.CLIENT))
             throw new ApiException("Invalid ClientID");
 
-        //TODO: if (channelService.getCheckId(orderPojo.getChannelId()).getInvoiceType().equals(InvoiceType.SELF))
         if (!consumerService.getCheckId(orderPojo.getCustomerId()).getType().equals(ConsumerType.CUSTOMER))
             throw new ApiException("Invalid CustomerID");
 
@@ -310,7 +310,7 @@ public class OrderDto extends AbstractDto {
         if (Objects.nonNull(form.getChannelId()))
             channelService.getCheckId(form.getChannelId());
 
-        checkDateFilters(form.getFromDate(), form.getToDate());
+        DateUtil.checkDateFilters(form.getFromDate(), form.getToDate());
 
         ZonedDateTime fromDateObject = form.getFromDate();
         ZonedDateTime toDateObject = form.getToDate();
@@ -326,28 +326,8 @@ public class OrderDto extends AbstractDto {
             }
         }
 
-        fromDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"));
-        toDateObject.format(DateTimeFormatter.ofPattern("YYYY-mm-dd HH:mm:ss"));
-
-        System.out.println("FROM:" + fromDateObject.toString());
-        System.out.println("TO  :" + toDateObject.toString());
-
         return convertPojoToData(orderService.getSearch(form.getClientId(),
                 form.getCustomerId(), form.getChannelId(), fromDateObject, toDateObject));
-    }
-
-    private void checkDateFilters(ZonedDateTime fromDate, ZonedDateTime toDate) throws ApiException {
-        if (Objects.nonNull(fromDate))
-            if (fromDate.isAfter(ZonedDateTime.now()))
-                throw new ApiException("Invalid \"From\" Date");
-
-        if (Objects.nonNull(toDate))
-            if (fromDate.isAfter(ZonedDateTime.now()))
-                throw new ApiException("Invalid \"To\" Date");
-
-        if (Objects.nonNull(fromDate) && Objects.nonNull(toDate))
-            if (fromDate.isAfter(toDate))
-                throw new ApiException("\"From\" date cannot be after \"To\" date");
     }
 
     private List<OrderItemPojo> convertFormToPojo(List<ChannelOrderItemForm> orderItemFormList, Long channelId, Long orderId, Long clientId) {

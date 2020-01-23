@@ -30,11 +30,6 @@ public class ChannelOrderController {
         orderDto.add(form);
     }
 
-    @ApiOperation(value = "Gets an Order by ID")
-    @RequestMapping(path = "/api/order/{id}", method = RequestMethod.GET)
-    public ChannelOrderData get(@PathVariable Long id) throws ApiException {
-        return orderDto.get(id);
-    }
 
     @ApiOperation(value = "Gets all Orders for a Channel")
     @RequestMapping(path = "/api/order/channel/{channelId}", method = RequestMethod.GET)

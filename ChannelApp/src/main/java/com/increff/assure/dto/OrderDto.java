@@ -26,10 +26,6 @@ public class OrderDto {
         clientWrapper.addOrder(orderForm);
     }
 
-    public ChannelOrderData get(@PathVariable Long id) throws ApiException {
-        return clientWrapper.getOrder(id);
-    }
-
     public void generateReceipt(OrderReceiptData orderReceiptData) throws ApiException {
         ChannelOrderReceiptData orderReceipt = clientWrapper.convert(orderReceiptData);
 

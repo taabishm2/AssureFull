@@ -45,14 +45,7 @@ public class ClientWrapper {
         restTemplate.postForObject(assureServerUrl + "/api/order/channel", getHttpRequest(orderForm), String.class);
     }
 
-    public ChannelOrderData getOrder(Long id) {
-        return restTemplate.getForEntity(assureServerUrl +  "/api/order/" + id, ChannelOrderData.class).getBody();
-    }
-
-    public ChannelOrderForm convert(ChannelAppOrderForm channelOrderForm) throws ApiException {
-        return ConvertUtil.convert(channelOrderForm, ChannelOrderForm.class);
-    }
-
+    //TODO: Add channel identifier on invoices
     public ChannelOrderReceiptData convert(OrderReceiptData orderReceiptData) throws ApiException {
         ChannelOrderReceiptData channelInvoice = ConvertUtil.convert(orderReceiptData, ChannelOrderReceiptData.class);
         List<ChannelOrderItemReceiptData> channelInvoiceItemList = new ArrayList<>();
