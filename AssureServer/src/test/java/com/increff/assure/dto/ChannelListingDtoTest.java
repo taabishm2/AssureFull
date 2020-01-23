@@ -6,6 +6,7 @@ import com.increff.assure.dao.ConsumerDao;
 import com.increff.assure.dao.ProductMasterDao;
 import com.increff.assure.pojo.ChannelPojo;
 import com.increff.assure.pojo.ConsumerPojo;
+import com.increff.assure.pojo.ProductMasterPojo;
 import com.increff.assure.service.ApiException;
 import model.ConsumerType;
 import model.InvoiceType;
@@ -154,7 +155,7 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         }
     }
 
-/*    @Test
+    @Test
     public void testGetSearchByClientIdWithValidClient() throws ApiException {
         ConsumerPojo clientA = TestPojo.getConsumerPojo("A", ConsumerType.CLIENT);
         ConsumerPojo clientB = TestPojo.getConsumerPojo("B", ConsumerType.CLIENT);
@@ -163,9 +164,21 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         consumerDao.insert(clientB);
         consumerDao.insert(clientC);
 
-        listingDao.insert(TestPojo.getChannelListingPojo(123L, 987L, "CSKU1", clientA.getId()));
-        listingDao.insert(TestPojo.getChannelListingPojo(456L, 145L, "CSKU2", clientB.getId()));
-        listingDao.insert(TestPojo.getChannelListingPojo(888L, 145L, "CSKU3", clientB.getId()));
+        ProductMasterPojo productA = TestPojo.getProductPojo("A", clientA.getId(), "BIA", 100D, "CLSKU1", "DE1");
+        ProductMasterPojo productB = TestPojo.getProductPojo("B", clientB.getId(), "BIB", 100D, "CLSKU2", "DE1");
+        ProductMasterPojo productC = TestPojo.getProductPojo("C", clientB.getId(), "BIC", 100D, "CLSKU3", "DE1");
+        productDao.insert(productA);
+        productDao.insert(productB);
+        productDao.insert(productC);
+
+        ChannelPojo channelA = TestPojo.getChannelPojo("A", InvoiceType.SELF);
+        ChannelPojo channelB = TestPojo.getChannelPojo("B", InvoiceType.SELF);
+        channelDao.insert(channelA);
+        channelDao.insert(channelB);
+
+        listingDao.insert(TestPojo.getChannelListingPojo(productA.getId(), channelA.getId(), "CSKU1", clientA.getId()));
+        listingDao.insert(TestPojo.getChannelListingPojo(productB.getId(), channelB.getId(), "CSKU2", clientB.getId()));
+        listingDao.insert(TestPojo.getChannelListingPojo(productC.getId(), channelB.getId(), "CSKU3", clientB.getId()));
 
         ChannelListingSearchForm form = new ChannelListingSearchForm();
         form.setClientId(clientA.getId());
@@ -195,16 +208,21 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         consumerDao.insert(clientB);
         consumerDao.insert(clientC);
 
+        ProductMasterPojo productA = TestPojo.getProductPojo("A", clientA.getId(), "BIA", 100D, "CLSKU1", "DE1");
+        ProductMasterPojo productB = TestPojo.getProductPojo("B", clientB.getId(), "BIB", 100D, "CLSKU2", "DE1");
+        ProductMasterPojo productC = TestPojo.getProductPojo("C", clientB.getId(), "BIC", 100D, "CLSKU3", "DE1");
+        productDao.insert(productA);
+        productDao.insert(productB);
+        productDao.insert(productC);
+
         ChannelPojo channelA = TestPojo.getChannelPojo("A", InvoiceType.SELF);
-        ChannelPojo channelB = TestPojo.getChannelPojo("B", InvoiceType.CHANNEL);
-        ChannelPojo channelC = TestPojo.getChannelPojo("C",InvoiceType.SELF);
+        ChannelPojo channelB = TestPojo.getChannelPojo("B", InvoiceType.SELF);
         channelDao.insert(channelA);
         channelDao.insert(channelB);
-        channelDao.insert(channelC);
 
-        listingDao.insert(com.increff.assure.service.TestPojo.getChannelListingPojo(123L, channelA.getId(), "CSKU1", clientA.getId()));
-        listingDao.insert(com.increff.assure.service.TestPojo.getChannelListingPojo(456L, channelB.getId(), "CSKU2", clientB.getId()));
-        listingDao.insert(com.increff.assure.service.TestPojo.getChannelListingPojo(888L, channelB.getId(), "CSKU3", clientC.getId()));
+        listingDao.insert(TestPojo.getChannelListingPojo(productA.getId(), channelA.getId(), "CSKU1", clientA.getId()));
+        listingDao.insert(TestPojo.getChannelListingPojo(productB.getId(), channelB.getId(), "CSKU2", clientB.getId()));
+        listingDao.insert(TestPojo.getChannelListingPojo(productC.getId(), channelB.getId(), "CSKU3", clientB.getId()));
 
         ChannelListingSearchForm form = new ChannelListingSearchForm();
         form.setClientId(clientA.getId());
@@ -222,16 +240,30 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
 
     @Test
     public void testGetSearchByClientIdWithValidChannelId() throws ApiException {
+        ConsumerPojo clientA = TestPojo.getConsumerPojo("A", ConsumerType.CLIENT);
+        ConsumerPojo clientB = TestPojo.getConsumerPojo("B", ConsumerType.CLIENT);
+        ConsumerPojo clientC = TestPojo.getConsumerPojo("C", ConsumerType.CLIENT);
+        consumerDao.insert(clientA);
+        consumerDao.insert(clientB);
+        consumerDao.insert(clientC);
+
+        ProductMasterPojo productA = TestPojo.getProductPojo("A", clientA.getId(), "BIA", 100D, "CLSKU1", "DE1");
+        ProductMasterPojo productB = TestPojo.getProductPojo("B", clientB.getId(), "BIB", 100D, "CLSKU2", "DE1");
+        ProductMasterPojo productC = TestPojo.getProductPojo("C", clientB.getId(), "BIC", 100D, "CLSKU3", "DE1");
+        productDao.insert(productA);
+        productDao.insert(productB);
+        productDao.insert(productC);
+
         ChannelPojo channelA = TestPojo.getChannelPojo("A", InvoiceType.SELF);
-        ChannelPojo channelB = TestPojo.getChannelPojo("B", InvoiceType.CHANNEL);
-        ChannelPojo channelC = TestPojo.getChannelPojo("C",InvoiceType.SELF);
+        ChannelPojo channelB = TestPojo.getChannelPojo("B", InvoiceType.SELF);
+        ChannelPojo channelC = TestPojo.getChannelPojo("C", InvoiceType.SELF);
         channelDao.insert(channelA);
         channelDao.insert(channelB);
         channelDao.insert(channelC);
 
-        listingDao.insert(com.increff.assure.service.TestPojo.getChannelListingPojo(123L, channelA.getId(), "CSKU1", 444L));
-        listingDao.insert(com.increff.assure.service.TestPojo.getChannelListingPojo(456L, channelB.getId(), "CSKU2", 555L));
-        listingDao.insert(com.increff.assure.service.TestPojo.getChannelListingPojo(888L, channelB.getId(), "CSKU3", 666L));
+        listingDao.insert(TestPojo.getChannelListingPojo(productA.getId(), channelA.getId(), "CSKU1", clientA.getId()));
+        listingDao.insert(TestPojo.getChannelListingPojo(productB.getId(), channelB.getId(), "CSKU2", clientB.getId()));
+        listingDao.insert(TestPojo.getChannelListingPojo(productC.getId(), channelB.getId(), "CSKU3", clientB.getId()));
 
         ChannelListingSearchForm form = new ChannelListingSearchForm();
         form.setChannelId(channelA.getId());
@@ -249,6 +281,6 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         form.setChannelId(channelC.getId());
         searchResults = listingDto.getSearch(form);
         assertEquals(0, searchResults.size());
-    }*/
+    }
 
 }

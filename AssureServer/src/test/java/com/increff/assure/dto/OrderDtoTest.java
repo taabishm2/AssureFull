@@ -229,8 +229,8 @@ public class OrderDtoTest extends AbstractUnitTest {
     public void testAddForExternalChannelWIthValidChannelListing() throws ApiException {
         nikeOrderForm.setChannelId(channelFlipkart.getId());
         orderDto.add(nikeOrderForm);
+
         assertEquals(1, orderDao.selectAll().size());
-        assertNotNull(orderDao.selectByChannelAndChannelOrderId(channelFlipkart.getId(),"CSKUNIKE"));
         pumaOrderForm.setChannelId(channelSnapdeal.getId());
    }
 
@@ -270,6 +270,7 @@ public class OrderDtoTest extends AbstractUnitTest {
 
     @Test
     public void testRunAllocation() throws ApiException {
+        listingDao.insert(TestPojo.getChannelListingPojo(productNike.getId(), channelSnapdeal.getId(), "CSKU-NIKE", clientNike.getId()));
         orderDto.add(pumaOrderForm);
         orderDto.add(nikeOrderForm);
 

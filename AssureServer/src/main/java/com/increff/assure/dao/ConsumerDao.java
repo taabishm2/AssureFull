@@ -5,8 +5,6 @@ import model.ConsumerType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,16 +16,13 @@ import java.util.Objects;
 
 @Repository
 public class ConsumerDao extends AbstractDao<ConsumerPojo> {
-    @PersistenceContext
-    private EntityManager entityManager;
-
     ConsumerDao() {
         super(ConsumerPojo.class);
     }
 
     @Transactional(readOnly = true)
     public ConsumerPojo selectByNameAndType(String name, ConsumerType type) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaBuilder cb = entityManager().getCriteriaBuilder();
         CriteriaQuery<ConsumerPojo> q = cb.createQuery(ConsumerPojo.class);
         Root<ConsumerPojo> c = q.from(ConsumerPojo.class);
         q.select(c);
@@ -37,7 +32,7 @@ public class ConsumerDao extends AbstractDao<ConsumerPojo> {
                 cb.equal(c.get("name"), nameParam),
                 cb.equal(c.get("type"), typeParam)
         );
-        TypedQuery<ConsumerPojo> typedQuery = entityManager.createQuery(q);
+        TypedQuery<ConsumerPojo> typedQuery = entityManager().createQuery(q);
         typedQuery.setParameter(nameParam, name);
         typedQuery.setParameter(typeParam, type);
         return getSingle(typedQuery);
@@ -45,7 +40,7 @@ public class ConsumerDao extends AbstractDao<ConsumerPojo> {
 
     @Transactional(readOnly = true)
     public List<ConsumerPojo> selectAll(ConsumerType type) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaBuilder cb = entityManager().getCriteriaBuilder();
         CriteriaQuery<ConsumerPojo> q = cb.createQuery(ConsumerPojo.class);
         Root<ConsumerPojo> c = q.from(ConsumerPojo.class);
         q.select(c);
@@ -53,7 +48,7 @@ public class ConsumerDao extends AbstractDao<ConsumerPojo> {
         q.where(
                 cb.equal(c.get("type"), typeParam)
         );
-        TypedQuery<ConsumerPojo> typedQuery = entityManager.createQuery(q);
+        TypedQuery<ConsumerPojo> typedQuery = entityManager().createQuery(q);
         typedQuery.setParameter(typeParam, type);
         List<ConsumerPojo> resultList = typedQuery.getResultList();
         if (Objects.isNull(resultList))
