@@ -136,7 +136,7 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
                 throws IOException {
             return ZonedDateTime.parse(
                     jsonParser.getText(),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+                    DateTimeFormatter.ISO_OFFSET_DATE_TIME
             );
         }
     }

@@ -63,10 +63,10 @@ public class OrderItemDtoTest extends AbstractUnitTest {
         channelListingPojo = TestPojo.getChannelListingPojo(productA.getId(),testChannel.getId(),"CHSKUA", testClient.getId());
         channelListingDao.insert(channelListingPojo);
 
-        inventoryPojo = TestPojo.getConstructInventory(productA.getId(), 50L, 0L, 0L);
+        inventoryPojo = TestPojo.getInventoryPojo(productA.getId(), 50L, 0L, 0L);
         inventoryDao.insert(inventoryPojo);
 
-        orderItemPojo = TestPojo.getConstructOrderItem(productA.getId(),orderPojo.getId(),10L,0L,0L);
+        orderItemPojo = TestPojo.getOrderItemPojo(productA.getId(),orderPojo.getId(),10L,0L,0L);
     }
 
     @Test

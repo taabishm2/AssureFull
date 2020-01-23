@@ -4,20 +4,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.increff.assure.dao.*;
 import com.increff.assure.pojo.*;
 import com.increff.assure.service.ApiException;
+import com.increff.assure.service.ClientWrapper;
 import model.ConsumerType;
 import model.InvoiceType;
 import model.OrderStatus;
+import model.data.OrderReceiptData;
+import model.form.ChannelOrderItemForm;
 import model.form.OrderForm;
 import model.form.OrderItemForm;
-import org.hibernate.criterion.Order;
+import model.form.OrderValidationForm;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 
 public class OrderDtoTest extends AbstractUnitTest {
 
@@ -37,11 +42,18 @@ public class OrderDtoTest extends AbstractUnitTest {
     BinSkuDao binSkuDao;
     @Autowired
     InventoryDao inventoryDao;
+    @Autowired
+    OrderItemDao orderItemDao;
+    @Autowired
+    ChannelListingDao listingDao;
+    @Mock
+    ClientWrapper mockClientWrapper;
 
     private ConsumerPojo clientPuma;
     private ConsumerPojo clientNike;
     private ConsumerPojo customer;
     private ChannelPojo channelSnapdeal;
+    private ChannelPojo channelFlipkart;
     private ProductMasterPojo productPuma;
     private ProductMasterPojo productPumaA;
     private ProductMasterPojo productNike;
@@ -52,6 +64,8 @@ public class OrderDtoTest extends AbstractUnitTest {
 
     @Before
     public void init() {
+        MockitoAnnotations.initMocks(this);
+
         clientPuma = TestPojo.getConsumerPojo("PUMA", ConsumerType.CLIENT);
         clientNike = TestPojo.getConsumerPojo("NIKE", ConsumerType.CLIENT);
         customer = TestPojo.getConsumerPojo("Customer NameZ", ConsumerType.CUSTOMER);
@@ -94,12 +108,20 @@ public class OrderDtoTest extends AbstractUnitTest {
         binSkuDao.insert(TestPojo.getBinSkuPojo(productPumaA.getId(), bin4.getId(), 11L));
         binSkuDao.insert(TestPojo.getBinSkuPojo(productNike.getId(), bin4.getId(), 20L));
 
-        inventoryDao.insert(TestPojo.getConstructInventory(productPuma.getId(), 31L, 0L, 0L));
-        inventoryDao.insert(TestPojo.getConstructInventory(productPumaA.getId(), 26L, 0L, 0L));
-        inventoryDao.insert(TestPojo.getConstructInventory(productNike.getId(), 46L, 0L, 0L));
+        inventoryDao.insert(TestPojo.getInventoryPojo(productPuma.getId(), 31L, 0L, 0L));
+        inventoryDao.insert(TestPojo.getInventoryPojo(productPumaA.getId(), 26L, 0L, 0L));
+        inventoryDao.insert(TestPojo.getInventoryPojo(productNike.getId(), 46L, 0L, 0L));
 
         channelSnapdeal = TestPojo.getChannelPojo("SNAPDEAL", InvoiceType.SELF);
+        channelFlipkart = TestPojo.getChannelPojo("FLIPKART", InvoiceType.CHANNEL);
         channelDao.insert(channelSnapdeal);
+        channelDao.insert(channelFlipkart);
+
+        listingDao.insert(TestPojo.getChannelListingPojo(productPuma.getId(), channelSnapdeal.getId(), "CSKU-PUMA", clientPuma.getId()));
+        listingDao.insert(TestPojo.getChannelListingPojo(productPumaA.getId(), channelSnapdeal.getId(), "CSKU-PUMA-A", clientPuma.getId()));
+
+        listingDao.insert(TestPojo.getChannelListingPojo(productPuma.getId(), channelFlipkart.getId(), "CSKUPUMA", clientPuma.getId()));
+        listingDao.insert(TestPojo.getChannelListingPojo(productNike.getId(), channelFlipkart.getId(), "CSKUNIKE", clientNike.getId()));
 
         List<OrderItemForm> pumaOrderItemFormList = new ArrayList<>();
         pumaOrderItemFormList.add(TestForm.getConstructOrderItem(productPuma.getClientSkuId(), 15L));
@@ -204,6 +226,27 @@ public class OrderDtoTest extends AbstractUnitTest {
     }
 
     @Test
+    public void testAddForExternalChannelWIthValidChannelListing() throws ApiException {
+        nikeOrderForm.setChannelId(channelFlipkart.getId());
+        orderDto.add(nikeOrderForm);
+        assertEquals(1, orderDao.selectAll().size());
+        assertNotNull(orderDao.selectByChannelAndChannelOrderId(channelFlipkart.getId(),"CSKUNIKE"));
+        pumaOrderForm.setChannelId(channelSnapdeal.getId());
+   }
+
+    @Test
+    public void testAddForExternalChannelWithInvalidChannelListing() throws ApiException {
+        pumaOrderForm.setChannelId(channelFlipkart.getId());
+        try{
+            orderDto.add(pumaOrderForm);
+            fail("Items in order are not registered for Channel");
+        }catch (ApiException e){
+            assertTrue(true);
+            pumaOrderForm.setChannelId(channelSnapdeal.getId());
+        }
+    }
+
+    @Test
     public void testGet() throws ApiException {
         OrderPojo order = TestPojo.getOrderPojo(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "ABCL", OrderStatus.CREATED);
         orderDao.insert(order);
@@ -295,5 +338,171 @@ public class OrderDtoTest extends AbstractUnitTest {
 
         orderDto.fulfillOrder(orderPojo.getId());
         assertEquals(OrderStatus.FULFILLED, orderPojo.getStatus());
+    }
+
+    @Test
+    public void testFulfillOrderForChannelInvoiceType() throws JsonProcessingException, ApiException {
+        orderDto.setClientWrapper(mockClientWrapper);
+
+        ChannelPojo channelPojo = TestPojo.getChannelPojo("INTERNAL", InvoiceType.CHANNEL);
+        channelDao.insert(channelPojo);
+        consumerDao.insert(clientPuma);
+        consumerDao.insert(customer);
+
+        ProductMasterPojo productPojo = TestPojo.getProductPojo("A",clientPuma.getId(),"SF",3D,"CSKUiA","Des");
+        productDao.insert(productPojo);
+
+        OrderPojo order = TestPojo.getOrderPojo(customer.getId(), clientPuma.getId(), channelPojo.getId(), "CA", OrderStatus.ALLOCATED);
+        orderDao.insert(order);
+
+        OrderItemPojo orderItem = TestPojo.getOrderItemPojo(productPojo.getId(), order.getId(), 15L, 15L, 0L);
+        orderItemDao.insert(orderItem);
+        InventoryPojo inventoryPojo = TestPojo.getInventoryPojo(productPojo.getId(),100L, 30L, 10L);
+        inventoryDao.insert(inventoryPojo);
+
+
+
+        Mockito.doNothing().when(mockClientWrapper).fetchInvoiceFromChannel(Mockito.any(OrderReceiptData.class));
+
+        orderDto.fulfillOrder(order.getId());
+
+        assertEquals(OrderStatus.FULFILLED, order.getStatus());
+        assertEquals(15, (long) orderItem.getOrderedQuantity());
+        assertEquals(0, (long) orderItem.getAllocatedQuantity());
+        assertEquals(15, (long) orderItem.getFulfilledQuantity());
+
+        assertEquals(100, (long) inventoryPojo.getAvailableQuantity());
+        assertEquals(15, (long) inventoryPojo.getAllocatedQuantity());
+        assertEquals(25, (long) inventoryPojo.getFulfilledQuantity());
+    }
+
+    @Test
+    public void testValidateOrderFormForValidOrder() throws ApiException {
+        orderDto.validateOrderForm(TestForm.getOrderValidationForm(channelSnapdeal.getId(), clientPuma.getId(), customer.getId(), "COID1"));
+    }
+
+    @Test
+    public void testValidateOrderFormForInvalidClientCustomerAndChannel() throws ApiException {
+        try {
+            orderDto.validateOrderForm(TestForm.getOrderValidationForm(channelSnapdeal.getId(), 131L, customer.getId(), "COID1"));
+            orderDto.validateOrderForm(TestForm.getOrderValidationForm(channelSnapdeal.getId(), clientPuma.getId(), 543L, "COID1"));
+            orderDto.validateOrderForm(TestForm.getOrderValidationForm(323L, clientPuma.getId(), customer.getId(), "COID1"));
+            fail("Failed to validate fields correctly");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testValidateOrderFormForDuplicateOrder() throws ApiException {
+        orderDao.insert(TestPojo.getOrderPojo(customer.getId(), clientPuma.getId(), channelSnapdeal.getId(), "COID1", OrderStatus.CREATED));
+
+        try {
+            orderDto.validateOrderForm(TestForm.getOrderValidationForm(channelSnapdeal.getId(), clientPuma.getId(), customer.getId(), "COID1"));
+            fail("Duplicate Order Validated");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testValidateListWithValidList() throws ApiException {
+        List<OrderItemForm> formList = new ArrayList<>();
+        formList.add(TestForm.getOrderItemForm(productPuma.getClientSkuId(), 2L));
+        formList.add(TestForm.getOrderItemForm(productPumaA.getClientSkuId(), 3L));
+
+        orderDto.validateList(formList, clientPuma.getId(), channelSnapdeal.getId());
+    }
+
+    @Test
+    public void testValidateListWithInvalidClient(){
+        List<OrderItemForm> formList = new ArrayList<>();
+        formList.add(TestForm.getOrderItemForm(productPuma.getClientSkuId(), 2L));
+
+        try {
+            orderDto.validateList(formList, 45L, channelSnapdeal.getId());
+            fail("Invalid Client validated");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testValidateListWithInvalidChannel(){
+        List<OrderItemForm> formList = new ArrayList<>();
+        formList.add(TestForm.getOrderItemForm(productPuma.getClientSkuId(), 2L));
+
+        try {
+            orderDto.validateList(formList, clientPuma.getId(), 23L);
+            fail("Invalid Channel validated");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testValidateListWithDuplicateClientSku(){
+        List<OrderItemForm> formList = new ArrayList<>();
+        formList.add(TestForm.getOrderItemForm(productPuma.getClientSkuId(), 2L));
+        formList.add(TestForm.getOrderItemForm(productPuma.getClientSkuId(), 5L));
+
+        try {
+            orderDto.validateList(formList, clientPuma.getId(), 23L);
+            fail("Duplicate Products in form list");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testValidateListWithInvalidClientClientSkuPair(){
+        List<OrderItemForm> formList = new ArrayList<>();
+        formList.add(TestForm.getOrderItemForm("CSKU-TEST", 2L));
+
+        try {
+            orderDto.validateList(formList, clientPuma.getId(), channelSnapdeal.getId());
+            fail("Client, ClientSKU pair is invalid");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testValidateListWithInvalidQuantity(){
+        List<OrderItemForm> formList = new ArrayList<>();
+        formList.add(TestForm.getOrderItemForm(productPuma.getClientSkuId(), -2L));
+
+        try {
+            orderDto.validateList(formList, clientPuma.getId(), channelSnapdeal.getId());
+            fail("Quantity is invalid");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testValidateListWithInvalidChannelAndProductPair(){
+        List<OrderItemForm> formList = new ArrayList<>();
+        formList.add(TestForm.getOrderItemForm(productPumaA.getClientSkuId(), 2L));
+
+        try {
+            orderDto.validateList(formList, clientPuma.getId(), channelFlipkart.getId());
+            fail("Listing does not exist");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testValidateListWithInsufficientProductCountPresent(){
+        List<OrderItemForm> formList = new ArrayList<>();
+        formList.add(TestForm.getOrderItemForm(productPuma.getClientSkuId(), 2000L));
+
+        try {
+            orderDto.validateList(formList, clientPuma.getId(), channelSnapdeal.getId());
+            fail("Insufficient quantity available");
+        }catch (ApiException e){
+            assertTrue(true);
+        }
     }
 }

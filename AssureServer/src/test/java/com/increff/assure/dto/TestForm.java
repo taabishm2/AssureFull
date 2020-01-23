@@ -28,6 +28,23 @@ public class TestForm {
         return channelListing;
     }
 
+    public static ChannelOrderForm getChannelOrderForm(Long clientId, Long customerId, Long channelId, String channelOrderId, List<ChannelOrderItemForm> orderItemList){
+        ChannelOrderForm form = new ChannelOrderForm();
+        form.setClientId(clientId);
+        form.setCustomerId(customerId);
+        form.setChannelId(channelId);
+        form.setChannelOrderId(channelOrderId);
+        form.setOrderItemList(orderItemList);
+        return form;
+    }
+
+    public static ChannelOrderItemForm getChannelOrderItemForm(String channelSkuId, Long orderedQuantity){
+        ChannelOrderItemForm form = new ChannelOrderItemForm();
+        form.setChannelSkuId(channelSkuId);
+        form.setOrderedQuantity(orderedQuantity);
+        return form;
+    }
+
     public static ChannelForm getChannelForm(String name, InvoiceType type) {
         ChannelForm channel = new ChannelForm();
         channel.setName(name);
@@ -83,5 +100,21 @@ public class TestForm {
         listingForm.setClientSkuId(clientSkuId);
         listingForm.setChannelSkuId(channelSkuId);
         return listingForm;
+    }
+
+    public static OrderValidationForm getOrderValidationForm(Long channelId, Long clientId, Long customerId, String channelOrderId) {
+        OrderValidationForm form = new OrderValidationForm();
+        form.setChannelId(channelId);
+        form.setClientId(clientId);
+        form.setCustomerId(customerId);
+        form.setChannelOrderId(channelOrderId);
+        return form;
+    }
+
+    public static OrderItemForm getOrderItemForm(String clientSkuId, Long orderedQuantity) {
+        OrderItemForm form = new OrderItemForm();
+        form.setClientSkuId(clientSkuId);
+        form.setOrderedQuantity(orderedQuantity);
+        return form;
     }
 }
