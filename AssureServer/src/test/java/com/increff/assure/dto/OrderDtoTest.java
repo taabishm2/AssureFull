@@ -361,8 +361,6 @@ public class OrderDtoTest extends AbstractUnitTest {
         InventoryPojo inventoryPojo = TestPojo.getInventoryPojo(productPojo.getId(),100L, 30L, 10L);
         inventoryDao.insert(inventoryPojo);
 
-
-
         Mockito.doNothing().when(mockClientWrapper).fetchInvoiceFromChannel(Mockito.any(OrderReceiptData.class));
 
         orderDto.fulfillOrder(order.getId());
