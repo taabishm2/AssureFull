@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<channelOrderReceiptData>
+    <channelName>SNAPDEAL</channelName>
+    <channelOrderId>jdssdf</channelOrderId>
+    <clientDetails>PUMA</clientDetails>
+    <customerDetails>CHANNEL CUSTOMER</customerDetails>
+    <orderCreationTime>01/22/2020 11:24:04</orderCreationTime>
+    <orderId>22</orderId>
+    <orderItems>
+        <channelSkuId>SNAP.pumaA</channelSkuId>
+        <mrp>1234.0</mrp>
+        <orderItemId>27</orderItemId>
+        <quantity>1</quantity>
+        <total>1234</total>
+    </orderItems>
+</channelOrderReceiptData>
