@@ -9,7 +9,7 @@ import java.io.File;
 
 public class XmlGenerateUtil {
 
-    public static void generate(ChannelOrderReceiptData orderItems) {
+    public static File generate(ChannelOrderReceiptData orderItems) {
         try {
             String receiptFileName = orderItems.getOrderId() + ".xml";
             File file = new File("C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//" + receiptFileName);
@@ -17,8 +17,10 @@ public class XmlGenerateUtil {
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             jaxbMarshaller.marshal(orderItems, file);
+            return file;
         } catch (JAXBException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }

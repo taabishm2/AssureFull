@@ -98,7 +98,7 @@
                                 <div class="form-group col-md-12">
                                     <label for="clientId" class="font-weight-bold">Client:</label>
                                     <select class="form-control" id="clientId" name="clientId" required
-                                            title="Select a Client">
+                                            title="Select a Client" onChange="saveClient(this);">
                                         <option disabled hidden selected value="">
                                             Select a Client
                                         </option>
@@ -116,9 +116,15 @@
                     </div>
                     <div id="order-item-entry">
                         <form id="order-item-form">
-                            <div class="modal-header">
+                            <div>
                                 <h6 class="modal-title">Add Order Items</h6>
                             </div>
+                            <hr />
+                            <div id="validated-order-details" class="row" style="margin-top:15px;">
+                                <div class="col-md-12">Client: <span id="order-details-client" class="font-weight-bold"></span></div>
+                                <div class="col-md-12">Channel Order ID: <span id="order-details-channel-order-id" class="font-weight-bold"></span></div>
+                            </div>
+                            <hr />
                             <div class="form-group row" style="margin-top:20px">
                                 <div class="col-md-6">
                                     <label for="channelSkuId" class="font-weight-bold">Channel SKU:</label>

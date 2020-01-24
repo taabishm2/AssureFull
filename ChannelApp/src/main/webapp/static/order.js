@@ -56,6 +56,10 @@ function toggleOrderModifyToCreate() {
     sessionStorage.setItem('orderItems', JSON.stringify([]));
 }
 
+function saveClient(sel) {
+  sessionStorage.setItem("orderingClient", sel.options[sel.selectedIndex].text);
+}
+
 function validateOrder(event) {
     var parsedJson = JSON.parse(toJson($("#order-form")));
     parsedJson['channelId'] = sessionStorage.getItem('channelId');
@@ -73,6 +77,8 @@ function validateOrder(event) {
         },
         success: function(response) {
             getOrderList();
+            document.getElementById('order-details-client').innerHTML = sessionStorage.getItem("orderingClient");
+            document.getElementById('order-details-channel-order-id').innerHTML = JSON.parse(json)['channelOrderId'];
 
             sessionStorage.setItem("orderIdentifier", json);
             toggleOrderCreateToModify();
@@ -196,8 +202,7 @@ function displayOrderList(data) {
         var allocateButtonHtml = '<button style="margin-right:2px;" id="allocbutton' + e.id + '" class="btn btn-primary btn-sm" onclick="allocateOrder(' + e.id + ')"><i class="fa fa-link"></i>&nbspAllocate</button>';
         var invoiceButtonHtml = '<button style="margin-right:2px;" id="invoicebutton' + e.id + '" class="btn btn-primary btn-sm" onclick="invoiceOrder(' + e.id + ')"><i class="fa fa-print"></i>&nbspInvoice</button>';
 
-            console.log(e.dateCreated);
-            var dateCreated = new Date(Date.parse(e.dateCreated));
+            var dateCreated = new Date(Date.parse(e.createdAt));
         	var row = '<tr>'
         	+ '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>'
         	+ '<td>' + dateCreated.getDate()+'/'+dateCreated.getMonth()+1+'/'+dateCreated.getFullYear()+' '+dateCreated.getHours()+':'+dateCreated.getMinutes()+':'+dateCreated.getSeconds() + '</td>'+

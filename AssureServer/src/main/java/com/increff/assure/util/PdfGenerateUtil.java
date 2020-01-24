@@ -23,24 +23,23 @@ public class PdfGenerateUtil {
         OUTPUT_DIR = "C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//";
     }
 
-    public static void generate(Long orderId) throws ApiException {
+    public static void generate(File file, Long fileId) throws ApiException {
         PdfGenerateUtil fOPPdfDemo = new PdfGenerateUtil();
         try {
-            fOPPdfDemo.convertToPDF(orderId);
+            fOPPdfDemo.convertToPDF(file, fileId);
         } catch (Exception e) {
             throw new ApiException("Couldn't generate Invoice PDF:" + e.getMessage());
         }
     }
 
-    public void convertToPDF(Long orderId) throws IOException, FOPException, TransformerException {
+    public void convertToPDF(File file, Long fileId) throws IOException, FOPException, TransformerException {
         File xsltFile = new File(RESOURCES_DIR + "//template.xsl");
-        String xmlSourceName = "//" + orderId + ".xml";
-        StreamSource xmlSource = new StreamSource(new File(OUTPUT_DIR + xmlSourceName));
+        StreamSource xmlSource = new StreamSource(file);
         FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
         OutputStream out;
-        out = new java.io.FileOutputStream(OUTPUT_DIR + orderId + ".pdf");
+        out = new java.io.FileOutputStream(OUTPUT_DIR + fileId + ".pdf");
 
         try {
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);

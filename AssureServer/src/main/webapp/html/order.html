@@ -167,7 +167,6 @@
         </div>
     </div>
 
-
     <!-- Order Modal -->
     <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="orderModal" role="dialog"
          tabindex="-1">
@@ -188,7 +187,7 @@
                                 <div class="form-group col-md-6">
                                     <label for="clientId">Client:</label>
                                     <select class="form-control" id="clientId" name="clientId" required
-                                            title="Select a Client">
+                                            title="Select a Client" onChange="saveClient(this);">
                                         <option disabled hidden selected value="">
                                             Select a Client
                                         </option>
@@ -197,7 +196,7 @@
                                 <div class="form-group col-md-6">
                                     <label for="customerId">Customer:</label>
                                     <select class="form-control" id="customerId" name="customerId" required
-                                            title="Select a Customer">
+                                            title="Select a Customer" onChange="saveCustomer(this);">
                                         <option disabled hidden selected value="">
                                             Select a Customer
                                         </option>

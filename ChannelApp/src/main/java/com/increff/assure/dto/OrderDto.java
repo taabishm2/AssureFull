@@ -28,9 +28,7 @@ public class OrderDto {
 
     public void generateReceipt(OrderReceiptData orderReceiptData) throws ApiException {
         ChannelOrderReceiptData orderReceipt = clientWrapper.convert(orderReceiptData);
-
-        XmlGenerateUtil.generate(orderReceipt);
-        PdfGenerateUtil.generate(orderReceipt.getOrderId());
+        PdfGenerateUtil.generate(XmlGenerateUtil.generate(orderReceipt), orderReceipt.getOrderId());
     }
 
     public void validateOrderForm(OrderValidationForm validationForm) throws ApiException {

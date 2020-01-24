@@ -14280,3 +14280,8 @@ Caused by: java.io.FileNotFoundException: class path resource [com/increff/assur
 	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:197)
 	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:166)
 	... 36 more
+2020-01-24 16:55:10 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-24 16:55:10 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-24 16:55:10 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-24 16:55:10 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-24 16:55:10 INFO  FOUserAgent:83 - Rendered page #1.

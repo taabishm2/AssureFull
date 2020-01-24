@@ -52,22 +52,6 @@ public class ChannelDto extends AbstractDto {
         return convert(channelService.getAll(), ChannelData.class);
     }
 
-    private ChannelListingData convertPojoToData(ChannelListingPojo channelListingPojo) throws ApiException {
-        ChannelListingData listingData = convert(channelListingPojo, ChannelListingData.class);
-        listingData.setClientSkuId(productService.getCheckId(channelListingPojo.getGlobalSkuId()).getClientSkuId());
-        listingData.setChannelName(channelService.getCheckId(channelListingPojo.getChannelId()).getName());
-        listingData.setClientName(consumerService.getCheckId(channelListingPojo.getClientId()).getName());
-        return listingData;
-    }
-
-    private List<ChannelListingData> convertPojoToData(List<ChannelListingPojo> listingPojoList) throws ApiException {
-        List<ChannelListingData> listingData = new ArrayList<>();
-        for (ChannelListingPojo listingPojo : listingPojoList) {
-            listingData.add(convertPojoToData(listingPojo));
-        }
-        return listingData;
-    }
-
     public void addList(List<ChannelListingForm> formList, Long channelId, Long clientId) throws ApiException {
         channelService.getCheckId(channelId);
         consumerService.getCheckClient(clientId);
@@ -80,15 +64,6 @@ public class ChannelDto extends AbstractDto {
             channelListingPojos.add(convertFormToPojo(listingForm, channelId, clientId));
         }
         channelListingService.addList(channelListingPojos);
-    }
-
-    private ChannelListingPojo convertFormToPojo(ChannelListingForm listingForm, Long channelId, Long clientId) throws ApiException {
-        ChannelListingPojo listingPojo = ConvertUtil.convert(listingForm, ChannelListingPojo.class);
-        listingPojo.setChannelId(channelId);
-        listingPojo.setClientId(clientId);
-        listingPojo.setGlobalSkuId(productService.getByClientAndClientSku(clientId, listingForm.getClientSkuId()).getId());
-
-        return listingPojo;
     }
 
     public void validateFormList(List<ChannelListingForm> formList, Long channelId, Long clientId) throws ApiException {
@@ -140,5 +115,30 @@ public class ChannelDto extends AbstractDto {
             searchResults.addAll(convertPojoToData(channelListingService.getSearch(form.getChannelId(), form.getClientId(),
                     form.getChannelSkuId(), product.getId())));
         return searchResults;
+    }
+
+    private ChannelListingPojo convertFormToPojo(ChannelListingForm listingForm, Long channelId, Long clientId) throws ApiException {
+        ChannelListingPojo listingPojo = ConvertUtil.convert(listingForm, ChannelListingPojo.class);
+        listingPojo.setChannelId(channelId);
+        listingPojo.setClientId(clientId);
+        listingPojo.setGlobalSkuId(productService.getByClientAndClientSku(clientId, listingForm.getClientSkuId()).getId());
+
+        return listingPojo;
+    }
+
+    private ChannelListingData convertPojoToData(ChannelListingPojo channelListingPojo) throws ApiException {
+        ChannelListingData listingData = convert(channelListingPojo, ChannelListingData.class);
+        listingData.setClientSkuId(productService.getCheckId(channelListingPojo.getGlobalSkuId()).getClientSkuId());
+        listingData.setChannelName(channelService.getCheckId(channelListingPojo.getChannelId()).getName());
+        listingData.setClientName(consumerService.getCheckId(channelListingPojo.getClientId()).getName());
+        return listingData;
+    }
+
+    private List<ChannelListingData> convertPojoToData(List<ChannelListingPojo> listingPojoList) throws ApiException {
+        List<ChannelListingData> listingData = new ArrayList<>();
+        for (ChannelListingPojo listingPojo : listingPojoList) {
+            listingData.add(convertPojoToData(listingPojo));
+        }
+        return listingData;
     }
 }

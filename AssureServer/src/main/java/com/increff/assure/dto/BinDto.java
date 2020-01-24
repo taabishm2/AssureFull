@@ -74,19 +74,6 @@ public class BinDto extends AbstractDto {
         return convert(binSkuService.getAll(), BinSkuData.class);
     }
 
-    private void validateProductAndBin(BinSkuForm binSkuForm) throws ApiException {
-        productService.getCheckId(binSkuForm.getGlobalSkuId());
-        binService.getCheckId(binSkuForm.getBinId());
-    }
-
-    private void addOrUpdateInventory(BinSkuPojo binSkuPojo) {
-        InventoryPojo inventoryPojo = new InventoryPojo();
-        inventoryPojo.setAvailableQuantity(binSkuPojo.getQuantity());
-        inventoryPojo.setGlobalSkuId(binSkuPojo.getGlobalSkuId());
-
-        inventoryService.addOrUpdate(inventoryPojo);
-    }
-
     @Transactional(readOnly = true)
     public List<BinSkuData> getSearchByBinAndProduct(Long binId, Long globalSkuId) throws ApiException {
         if (Objects.nonNull(binId))
@@ -108,7 +95,6 @@ public class BinDto extends AbstractDto {
                 BinSkuForm form = formList.get(index);
                 checkValid(form);
                 validateProductAndBin(form);
-
                 checkFalse(binSkuSet.contains(form.getBinId() + "," + form.getGlobalSkuId()),"Duplicate Bin, Product Entry");
                 binSkuSet.add(form.getBinId() + "," + form.getGlobalSkuId());
 
@@ -116,8 +102,19 @@ public class BinDto extends AbstractDto {
                 errorDetailString.append("Error in Line: ").append(index + 1).append(": ").append(e.getMessage()).append("<br \\>");
             }
         }
+        checkFalse(errorDetailString.length() > 0, errorDetailString.toString());
+    }
 
-        if (errorDetailString.length() > 0)
-            throw new ApiException(errorDetailString.toString());
+    private void validateProductAndBin(BinSkuForm binSkuForm) throws ApiException {
+        productService.getCheckId(binSkuForm.getGlobalSkuId());
+        binService.getCheckId(binSkuForm.getBinId());
+    }
+
+    private void addOrUpdateInventory(BinSkuPojo binSkuPojo) {
+        InventoryPojo inventoryPojo = new InventoryPojo();
+        inventoryPojo.setAvailableQuantity(binSkuPojo.getQuantity());
+        inventoryPojo.setGlobalSkuId(binSkuPojo.getGlobalSkuId());
+
+        inventoryService.addOrUpdate(inventoryPojo);
     }
 }

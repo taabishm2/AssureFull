@@ -52,15 +52,22 @@ function validateOrder(event) {
             sessionStorage.setItem("orderIdentifier", JSON.stringify(parsedJson));
             toggleOrderCreateToModify();
 
-            console.log(json['clientId']);
-            document.getElementById('order-details-client').innerHTML = document.getElementById('clientId').innerHTML;
-            document.getElementById('order-details-customer').innerHTML = json['customerId'];
-            document.getElementById('order-details-channel-order-id').innerHTML = json['channelId'];
+            document.getElementById('order-details-client').innerHTML = sessionStorage.getItem("orderingClient");
+            document.getElementById('order-details-customer').innerHTML = sessionStorage.getItem("orderingCustomer");
+            document.getElementById('order-details-channel-order-id').innerHTML = JSON.parse(json)['channelOrderId'];
             getSuccessSnackbar("Success");
         },
         error: handleAjaxError
     });
     return false;
+}
+
+function saveClient(sel) {
+  sessionStorage.setItem("orderingClient", sel.options[sel.selectedIndex].text);
+}
+
+function saveCustomer(sel) {
+  sessionStorage.setItem("orderingCustomer", sel.options[sel.selectedIndex].text);
 }
 
 function processData() {
@@ -225,7 +232,7 @@ function displayOrderList(data) {
         var invoiceButtonHtml = '<button style="margin-right:2px;" id="invoicebutton' + e.id + '" class="btn btn-primary btn-sm" onclick="invoiceOrder(' + e.id + ',\'' + e.channelName + '\')"><i class="fa fa-print"></i>&nbspInvoice</button>';
 
         console.log(e.dateCreated);
-        var dateCreated = new Date(Date.parse(e.dateCreated));
+        var dateCreated = new Date(Date.parse(e.createdAt));
         var row = '<tr>' +
             '<td style="text-align:center; font-weight: bold;">' + e.id + '</td>' +
             '<td>' + dateCreated.getDate() + '/' + dateCreated.getMonth() + 1 + '/' + dateCreated.getFullYear() + ' ' + dateCreated.getHours() + ':' + dateCreated.getMinutes() + ':' + dateCreated.getSeconds() + '</td>' +
