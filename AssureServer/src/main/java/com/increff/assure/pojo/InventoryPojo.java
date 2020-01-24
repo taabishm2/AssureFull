@@ -24,8 +24,8 @@ public class InventoryPojo extends BaseEntity{
     private Long availableQuantity;
 
     @NotNull
-    private Long allocatedQuantity;
+    private Long allocatedQuantity = 0L;
 
     @NotNull
-    private Long fulfilledQuantity;
+    private Long fulfilledQuantity = 0L;
 }
