@@ -1,6 +1,6 @@
 function getChannelListingUrl() {
     var baseUrl = $("meta[name=baseUrl]").attr("content")
-    return baseUrl + "/api/channelListing";
+    return baseUrl + "/api/channel/channelListing";
 }
 
 function getChannelNamesUrl() {

@@ -11,7 +11,6 @@ import com.increff.assure.service.ApiException;
 import model.ConsumerType;
 import model.InvoiceType;
 import model.data.ChannelListingData;
-import model.data.ProductMasterData;
 import model.form.ChannelListingForm;
 import model.form.ChannelListingSearchForm;
 import org.junit.Before;
@@ -26,7 +25,7 @@ import static org.junit.Assert.*;
 public class ChannelListingDtoTest extends AbstractUnitTest {
 
     @Autowired
-    ChannelListingDto listingDto;
+    ChannelDto channelDto;
     @Autowired
     ChannelListingDao listingDao;
     @Autowired
@@ -56,7 +55,7 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
             formList.add(TestForm.getChannelListingForm("CL SKU" + i, "CH SKU" + i));
         }
 
-        listingDto.addList(formList, testChannelA.getId(), testClient.getId());
+        channelDto.addList(formList, testChannelA.getId(), testClient.getId());
         assertEquals(5, listingDao.selectAll().size());
     }
 
@@ -67,8 +66,8 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
             formList.add(TestForm.getChannelListingForm("CL SKU" + i, "CH SKU" + i));
 
         try{
-            listingDto.addList(formList, 123L, testClient.getId());
-            listingDto.addList(formList, testChannelA.getId(), 456L);
+            channelDto.addList(formList, 123L, testClient.getId());
+            channelDto.addList(formList, testChannelA.getId(), 456L);
             fail("Invalid Client/Channel Validated");
         }catch(ApiException e){
             assertTrue(true);
@@ -84,7 +83,7 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         formList.add(TestForm.getChannelListingForm("ABC SKU", "DEF SKU"));
 
         try{
-            listingDto.addList(formList, testChannelA.getId(), testClient.getId());
+            channelDto.addList(formList, testChannelA.getId(), testClient.getId());
             fail("Invalid form fields validated");
         }catch(ApiException e){
             assertTrue(true);
@@ -97,7 +96,7 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         for (int i = 0; i < 5; i++)
             formList.add(TestForm.getChannelListingForm("CL SKU" + i, "CH SKU" + i));
 
-        listingDto.validateFormList(formList, testChannelA.getId(), testClient.getId());
+        channelDto.validateFormList(formList, testChannelA.getId(), testClient.getId());
     }
 
     @Test
@@ -107,7 +106,7 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
             formList.add(TestForm.getChannelListingForm("CL SKU" + i, "CH SKU" + i));
 
         try{
-            listingDto.validateFormList(formList, 123L, 456L);
+            channelDto.validateFormList(formList, 123L, 456L);
             fail("Invalid Client Channel details validated");
         }catch (ApiException e){
             assertTrue(true);
@@ -124,7 +123,7 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         formList.add(TestForm.getChannelListingForm("ABC DEF", "PQR SKU"));
 
         try{
-            listingDto.validateFormList(formList, testChannelA.getId(), testClient.getId());
+            channelDto.validateFormList(formList, testChannelA.getId(), testClient.getId());
             fail("Invalid form fields validated");
         } catch(ApiException e){
             assertTrue(true);
@@ -136,7 +135,7 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         ChannelListingSearchForm form = new ChannelListingSearchForm();
         form.setClientId(345L);
         try{
-            listingDto.getSearch(form);
+            channelDto.getSearch(form);
             fail("Invalid ID allowed to be searched");
         }catch (ApiException e){
             assertTrue(true);
@@ -148,7 +147,7 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         ChannelListingSearchForm form = new ChannelListingSearchForm();
         form.setChannelId(345L);
         try{
-            listingDto.getSearch(form);
+            channelDto.getSearch(form);
             fail("Invalid ID allowed to be searched");
         }catch (ApiException e){
             assertTrue(true);
@@ -186,16 +185,16 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         form.setChannelSkuId("");
         form.setClientSkuId("");
 
-        List<ChannelListingData> searchResults = listingDto.getSearch(form);
+        List<ChannelListingData> searchResults = channelDto.getSearch(form);
         assertEquals(1, searchResults.size());
         assertEquals("CSKU1", searchResults.get(0).getChannelSkuId());
 
         form.setClientId(clientB.getId());
-        searchResults = listingDto.getSearch(form);
+        searchResults = channelDto.getSearch(form);
         assertEquals(2, searchResults.size());
 
         form.setClientId(clientC.getId());
-        searchResults = listingDto.getSearch(form);
+        searchResults = channelDto.getSearch(form);
         assertEquals(0, searchResults.size());
     }
 
@@ -230,12 +229,12 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         form.setChannelSkuId("");
         form.setClientSkuId("");
 
-        assertEquals(1, listingDto.getSearch(form).size());
-        assertEquals("CSKU1", listingDto.getSearch(form).get(0).getChannelSkuId());
+        assertEquals(1, channelDto.getSearch(form).size());
+        assertEquals("CSKU1", channelDto.getSearch(form).get(0).getChannelSkuId());
 
         form.setClientId(clientA.getId());
         form.setChannelId(channelB.getId());
-        assertEquals(0, listingDto.getSearch(form).size());
+        assertEquals(0, channelDto.getSearch(form).size());
     }
 
     @Test
@@ -270,16 +269,16 @@ public class ChannelListingDtoTest extends AbstractUnitTest {
         form.setChannelSkuId("");
         form.setClientSkuId("");
 
-        List<ChannelListingData> searchResults = listingDto.getSearch(form);
+        List<ChannelListingData> searchResults = channelDto.getSearch(form);
         assertEquals(1, searchResults.size());
         assertEquals("CSKU1", searchResults.get(0).getChannelSkuId());
 
         form.setChannelId(channelB.getId());
-        searchResults = listingDto.getSearch(form);
+        searchResults = channelDto.getSearch(form);
         assertEquals(2, searchResults.size());
 
         form.setChannelId(channelC.getId());
-        searchResults = listingDto.getSearch(form);
+        searchResults = channelDto.getSearch(form);
         assertEquals(0, searchResults.size());
     }
 

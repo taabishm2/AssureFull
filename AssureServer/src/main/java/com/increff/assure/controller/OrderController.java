@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import model.data.BinSkuData;
 import model.data.OrderData;
+import model.data.OrderItemData;
 import model.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -85,5 +86,17 @@ public class OrderController {
     @RequestMapping(path = "/api/order/search", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<OrderData> getSearch(@RequestBody OrderSearchForm form) throws ApiException {
         return orderDto.getSearch(form);
+    }
+
+    @ApiOperation(value = "Validate Channel Order Details")
+    @RequestMapping(path = "/api/order/orderitem/channel/validate", method = RequestMethod.POST)
+    public void validateChannelOrderItem(@RequestBody OrderItemValidationForm validationForm) throws ApiException {
+        orderDto.validateChannelOrderItemForm(validationForm);
+    }
+
+    @ApiOperation(value = "Gets list of all Order-Items")
+    @RequestMapping(path = "/api/order/orderItem/orderId/{orderId}", method = RequestMethod.GET)
+    public List<OrderItemData> getAll(@PathVariable Long orderId) throws ApiException {
+        return orderDto.getByOrderId(orderId);
     }
 }

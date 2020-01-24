@@ -1,10 +1,7 @@
 package com.increff.assure.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.increff.assure.pojo.BinSkuPojo;
-import com.increff.assure.pojo.OrderItemPojo;
-import com.increff.assure.pojo.OrderPojo;
-import com.increff.assure.pojo.ProductMasterPojo;
+import com.increff.assure.pojo.*;
 import com.increff.assure.service.*;
 import com.increff.assure.util.DateUtil;
 import com.increff.assure.util.PdfGenerateUtil;
@@ -13,6 +10,7 @@ import model.ConsumerType;
 import model.InvoiceType;
 import model.OrderStatus;
 import model.data.OrderData;
+import model.data.OrderItemData;
 import model.data.OrderItemReceiptData;
 import model.data.OrderReceiptData;
 import model.form.*;
@@ -338,6 +336,39 @@ public class OrderDto extends AbstractDto {
         orderData.setCustomerName(consumerService.getName(order.getCustomerId()));
         orderData.setChannelName(channelService.getName(order.getChannelId()));
         return orderData;
+    }
+
+    public List<OrderItemData> getByOrderId(Long orderId) throws ApiException {
+        List<OrderItemData> orderItemDataList = new ArrayList<>();
+
+        for (OrderItemPojo pojo : orderItemService.getByOrderId(orderId)) {
+            OrderItemData orderData = convert(pojo, OrderItemData.class);
+            orderData.setClientSkuId(productService.getCheckId(pojo.getGlobalSkuId()).getClientSkuId());
+
+            if (!channelService.getCheckId(orderService.getCheckId(orderId).getChannelId()).getName().equals("INTERNAL"))
+                orderData.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(orderService.getCheckId(orderId).getChannelId(), pojo.getGlobalSkuId()).getChannelSkuId());
+
+            orderItemDataList.add(orderData);
+        }
+        return orderItemDataList;
+    }
+
+    public void validateChannelOrderItemForm(OrderItemValidationForm validationForm) throws ApiException {
+        checkValid(validationForm);
+
+        ChannelListingPojo listing = channelListingService.getByChannelChannelSkuAndClient(validationForm.getChannelId(), validationForm.getChannelSkuId(), validationForm.getClientId());
+        if (Objects.isNull(listing))
+            throw new ApiException("Channel listing does not exist");
+        Long globalSkuId = listing.getGlobalSkuId();
+
+        productService.getCheckId(globalSkuId);
+
+        if (Objects.isNull(inventoryService.getByGlobalSku(globalSkuId)))
+            throw new ApiException("Product Not in Inventory");
+
+        if (validationForm.getOrderedQuantity() > inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity())
+            throw new ApiException("Insufficient Stock" + inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity() + " items left");
+
     }
 
     public void setClientWrapper(ClientWrapper clientWrapper) {

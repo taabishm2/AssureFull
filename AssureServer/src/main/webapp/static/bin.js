@@ -5,7 +5,7 @@ function getBinApiUrl() {
 
 function getBinSkuApiUrl() {
     var baseUrl = $("meta[name=baseUrl]").attr("content")
-    return baseUrl + "/api/binSku";
+    return baseUrl + "/api/bin/binSku";
 }
 
 function addBin(event) {

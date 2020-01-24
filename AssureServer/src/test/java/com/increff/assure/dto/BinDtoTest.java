@@ -35,8 +35,8 @@ public class BinDtoTest extends AbstractUnitTest {
     }
 
     @Test
-    public void testGetAll() throws ApiException {
-        List<Long> allBinIds = binDto.getAll();
+    public void testGetAll() {
+        List<Long> allBinIds = binDto.getAllBins();
         HashSet<Long> hashSet = new HashSet<>(allBinIds);
         assertEquals(allBinIds.size(), hashSet.size());
     }

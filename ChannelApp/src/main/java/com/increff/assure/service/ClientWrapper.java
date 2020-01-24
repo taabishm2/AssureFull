@@ -61,7 +61,7 @@ public class ClientWrapper {
     }
 
     public void validateOrderItem(OrderItemValidationForm validationForm) throws ApiException {
-        new RestTemplate().postForObject(assureServerUrl + "/api/orderitem/channel/validate", getHttpRequest(validationForm), String.class);
+        new RestTemplate().postForObject(assureServerUrl + "/api/order/orderitem/channel/validate", getHttpRequest(validationForm), String.class);
     }
 
     public List<OrderData> getOrdersByChannel(Long channelId) throws ApiException {
@@ -93,7 +93,7 @@ public class ClientWrapper {
     }
 
     public List<OrderItemData> getOrderItems(Long orderId) {
-        String urlGETList = assureServerUrl + "/api/orderItem/orderId/"+orderId;
+        String urlGETList = assureServerUrl + "/api/order/orderItem/orderId/"+orderId;
 
         ResponseEntity<OrderItemData[]> responseEntity = new RestTemplate().getForEntity(urlGETList, OrderItemData[].class);
         OrderItemData[] objects = responseEntity.getBody();

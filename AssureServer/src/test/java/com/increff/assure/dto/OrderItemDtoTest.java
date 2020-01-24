@@ -17,7 +17,7 @@ import static org.junit.Assert.fail;
 public class OrderItemDtoTest extends AbstractUnitTest {
 
     @Autowired
-    OrderItemDto orderItemDto;
+    OrderDto orderDto;
     @Autowired
     OrderItemDao orderItemDao;
     @Autowired
@@ -79,7 +79,7 @@ public class OrderItemDtoTest extends AbstractUnitTest {
         form.setCustomerId(testCustomer.getId());
         form.setOrderedQuantity(10L);
 
-        orderItemDto.validateChannelOrderItemForm(form);
+        orderDto.validateChannelOrderItemForm(form);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class OrderItemDtoTest extends AbstractUnitTest {
         form.setOrderedQuantity(10L);
 
         try{
-            orderItemDto.validateChannelOrderItemForm(form);
+            orderDto.validateChannelOrderItemForm(form);
             fail("Invalid ChannelSKU ID");
         }catch (ApiException e){
             form.setChannelSkuId("CHSKUA");
@@ -102,7 +102,7 @@ public class OrderItemDtoTest extends AbstractUnitTest {
 
         form.setClientId(testCustomer.getId());
         try{
-            orderItemDto.validateChannelOrderItemForm(form);
+            orderDto.validateChannelOrderItemForm(form);
             fail("Invalid Client/Customer");
         }catch (ApiException e){
             form.setClientId(testClient.getId());
@@ -111,7 +111,7 @@ public class OrderItemDtoTest extends AbstractUnitTest {
 
         form.setOrderedQuantity(500L);
         try{
-            orderItemDto.validateChannelOrderItemForm(form);
+            orderDto.validateChannelOrderItemForm(form);
             fail("Quantity is higher than available");
         }catch (ApiException e){
             assertTrue(true);

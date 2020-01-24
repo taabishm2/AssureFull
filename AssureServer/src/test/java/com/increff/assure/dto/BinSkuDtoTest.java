@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 public class BinSkuDtoTest extends AbstractUnitTest {
 
     @Autowired
-    BinSkuDto binSkuDto;
+    BinDto binDto;
     @Autowired
     BinSkuDao binSkuDao;
     @Autowired
@@ -50,7 +50,7 @@ public class BinSkuDtoTest extends AbstractUnitTest {
 
     @Test
     public void testAddSingleEntry() throws ApiException {
-        binSkuDto.add(binSkuForm);
+        binDto.add(binSkuForm);
         assertEquals(1, binSkuDao.selectAll().size());
         assertEquals(123L, (long) binSkuDao.selectByBinIdAndGlobalSku(bin.getId(), product.getId()).getQuantity());
 
@@ -62,8 +62,8 @@ public class BinSkuDtoTest extends AbstractUnitTest {
 
     @Test
     public void testAddSameProductsToSameBins() throws ApiException {
-        binSkuDto.add(binSkuForm);
-        binSkuDto.add(binSkuForm);
+        binDto.add(binSkuForm);
+        binDto.add(binSkuForm);
 
         InventoryPojo inventory = inventoryDao.selectByGlobalSku(product.getId());
         assertEquals(246L, (long) binSkuDao.selectByBinIdAndGlobalSku(bin.getId(), product.getId()).getQuantity());
@@ -75,7 +75,7 @@ public class BinSkuDtoTest extends AbstractUnitTest {
     @Test
     public void testAddWithInvalidProduct() {
         try {
-            binSkuDto.add(TestForm.getBinSkuForm(9999L, bin.getId(), 123L));
+            binDto.add(TestForm.getBinSkuForm(9999L, bin.getId(), 123L));
             fail("Invalid Product in BinSKU allowed");
         } catch (ApiException e) {
             assertTrue(true);
@@ -85,7 +85,7 @@ public class BinSkuDtoTest extends AbstractUnitTest {
     @Test
     public void testAddWithInvalidBin() {
         try {
-            binSkuDto.add(TestForm.getBinSkuForm(product.getId(), 99L, 123L));
+            binDto.add(TestForm.getBinSkuForm(product.getId(), 99L, 123L));
             fail("Invalid BinID in BinSKU allowed");
         } catch (ApiException e) {
             assertTrue(true);
@@ -95,7 +95,7 @@ public class BinSkuDtoTest extends AbstractUnitTest {
     @Test
     public void testAddWithInvalidQuantity() {
         try {
-            binSkuDto.add(TestForm.getBinSkuForm(product.getId(), bin.getId(), -123L));
+            binDto.add(TestForm.getBinSkuForm(product.getId(), bin.getId(), -123L));
             fail("Invalid Quantity allowed");
         } catch (ApiException e) {
             assertTrue(true);
@@ -107,13 +107,13 @@ public class BinSkuDtoTest extends AbstractUnitTest {
         BinSkuPojo binSkuPojo = TestPojo.getBinSkuPojo(123L, 567L, 100L);
         binSkuDao.insert(binSkuPojo);
 
-        assertEquals(binSkuPojo.getGlobalSkuId(), binSkuDto.get(binSkuPojo.getId()).getGlobalSkuId());
+        assertEquals(binSkuPojo.getGlobalSkuId(), binDto.get(binSkuPojo.getId()).getGlobalSkuId());
     }
 
     @Test
     public void testGetInvalidBinSku() throws ApiException {
         try {
-            binSkuDto.get(8493L);
+            binDto.get(8493L);
             fail("Invalid BinID Selected");
         } catch (ApiException e) {
             assertTrue(true);
@@ -138,7 +138,7 @@ public class BinSkuDtoTest extends AbstractUnitTest {
         formList.add(TestForm.getBinSkuForm(product1.getId(), bin2.getId(), 43L));
         formList.add(TestForm.getBinSkuForm(product2.getId(), bin2.getId(), 25L));
 
-        binSkuDto.addList(formList);
+        binDto.addList(formList);
         assertEquals(4, binSkuDao.selectAll().size());
         assertEquals(2, inventoryDao.selectAll().size());
 
@@ -166,7 +166,7 @@ public class BinSkuDtoTest extends AbstractUnitTest {
         formList.add(TestForm.getBinSkuForm(null, bin1.getId(), 10L));
 
         try {
-            binSkuDto.addList(formList);
+            binDto.addList(formList);
             fail("Field Validation failed on invalid fields");
         } catch (ApiException e) {
             assertTrue(true);
@@ -175,16 +175,16 @@ public class BinSkuDtoTest extends AbstractUnitTest {
 
     @Test
     public void testGetAllWithEmptyTable() throws ApiException {
-        assertEquals(0, binSkuDto.getAll().size());
+        assertEquals(0, binDto.getAllBinSku().size());
     }
 
     @Test
     public void testGetAll() throws ApiException {
         binSkuDao.insert(TestPojo.getBinSkuPojo(123L, 456L, 10L));
-        assertEquals(1, binSkuDto.getAll().size());
+        assertEquals(1, binDto.getAllBinSku().size());
 
         binSkuDao.insert(TestPojo.getBinSkuPojo(456L, 456L, 10L));
-        assertEquals(2, binSkuDto.getAll().size());
+        assertEquals(2, binDto.getAllBinSku().size());
     }
 
     @Test
@@ -204,15 +204,15 @@ public class BinSkuDtoTest extends AbstractUnitTest {
         binSkuDao.insert(TestPojo.getBinSkuPojo(product1.getId(), bin2.getId(), 4L));
         binSkuDao.insert(TestPojo.getBinSkuPojo(product2.getId(), bin1.getId(), 5L));
 
-        assertEquals(4, binSkuDto.getSearchByBinAndProduct(null, null).size());
+        assertEquals(4, binDto.getSearchByBinAndProduct(null, null).size());
 
-        assertEquals(2, binSkuDto.getSearchByBinAndProduct(null, product1.getId()).size());
-        assertEquals(2, binSkuDto.getSearchByBinAndProduct(bin1.getId(), null).size());
+        assertEquals(2, binDto.getSearchByBinAndProduct(null, product1.getId()).size());
+        assertEquals(2, binDto.getSearchByBinAndProduct(bin1.getId(), null).size());
 
-        assertEquals(1, binSkuDto.getSearchByBinAndProduct(bin1.getId(), product2.getId()).size());
+        assertEquals(1, binDto.getSearchByBinAndProduct(bin1.getId(), product2.getId()).size());
 
         try{
-            assertEquals(0, binSkuDto.getSearchByBinAndProduct(999L, 777L).size());
+            assertEquals(0, binDto.getSearchByBinAndProduct(999L, 777L).size());
             fail("Bin and Product does not exist");
         } catch (ApiException e){
             assertTrue(true);
@@ -237,7 +237,7 @@ public class BinSkuDtoTest extends AbstractUnitTest {
         formList.add(TestForm.getBinSkuForm(product1.getId(), bin2.getId(), 43L));
         formList.add(TestForm.getBinSkuForm(product2.getId(), bin2.getId(), 25L));
 
-        binSkuDto.validateFormList(formList);
+        binDto.validateFormList(formList);
     }
 
     @Test
@@ -253,7 +253,7 @@ public class BinSkuDtoTest extends AbstractUnitTest {
         formList.add(TestForm.getBinSkuForm(product1.getId(), bin1.getId(), 42L));
 
         try {
-            binSkuDto.validateFormList(formList);
+            binDto.validateFormList(formList);
             fail("Duplicate BinSku entries");
         } catch (ApiException e) {
             assertTrue(true);

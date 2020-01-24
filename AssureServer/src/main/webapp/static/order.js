@@ -5,7 +5,7 @@ function getOrderApiUrl() {
 
 function getOrderItemApiUrl() {
     var baseUrl = $("meta[name=baseUrl]").attr("content");
-    return baseUrl + "/api/orderItem";
+    return baseUrl + "/api/order/orderItem";
 }
 
 function getClientNamesUrl() {
