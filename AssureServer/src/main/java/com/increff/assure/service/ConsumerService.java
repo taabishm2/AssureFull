@@ -47,4 +47,8 @@ public class ConsumerService extends AbstractService {
     public List<ConsumerPojo> getAll(ConsumerType type) {
         return consumerDao.selectAll(type);
     }
+
+    public String getName(Long clientId) throws ApiException {
+        return getCheckId(clientId).getName();
+    }
 }

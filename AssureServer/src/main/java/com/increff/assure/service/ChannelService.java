@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Service
@@ -34,5 +36,13 @@ public class ChannelService extends AbstractService {
         ChannelPojo channelPojo = channelDao.select(id);
         checkNotNull(channelPojo, "Channel (ID:" + id + ") does not exist");
         return channelPojo;
+    }
+
+    public String getName(Long channelId) throws ApiException {
+        return getCheckId(channelId).getName();
+    }
+
+    public InvoiceType getInvoiceType(Long channelId) throws ApiException {
+        return getCheckId(channelId).getInvoiceType();
     }
 }

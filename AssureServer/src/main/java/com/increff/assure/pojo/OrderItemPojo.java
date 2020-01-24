@@ -27,8 +27,8 @@ public class OrderItemPojo extends BaseEntity{
     private Long orderedQuantity;
 
     @NotNull
-    private Long allocatedQuantity;
+    private Long allocatedQuantity = 0L;
 
     @NotNull
-    private Long fulfilledQuantity;
+    private Long fulfilledQuantity = 0L;
 }

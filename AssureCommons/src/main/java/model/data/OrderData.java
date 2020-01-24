@@ -16,7 +16,7 @@ public class OrderData extends OrderForm {
     private OrderStatus status;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private ZonedDateTime dateCreated;
+    private ZonedDateTime createdAt;
 
     private String clientName;
     private String customerName;

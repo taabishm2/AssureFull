@@ -106,7 +106,7 @@ public class OrderDto extends AbstractDto {
                 "Invalid Client for Product(ID: " + orderItemPojo.getGlobalSkuId() + ").");
 
         Long channelId = orderService.getCheckId(orderItemPojo.getOrderId()).getChannelId();
-        if (!channelService.getCheckId(channelId).getName().equals("INTERNAL"))
+        if (!channelService.getName(channelId).equals("INTERNAL"))
             checkNotNull(channelListingService.getByChannelIdAndGlobalSku(channelId, orderItemPojo.getGlobalSkuId()),
                     "Channel does not provide the mentioned Product");
     }
@@ -188,7 +188,7 @@ public class OrderDto extends AbstractDto {
         if (order.getStatus().equals(OrderStatus.FULFILLED))
             return;
 
-        if (channelService.getCheckId(order.getChannelId()).getInvoiceType().equals(InvoiceType.SELF)) {
+        if (channelService.getInvoiceType(order.getChannelId()).equals(InvoiceType.SELF)) {
             generateInvoicePdf(order);
         } else {
             clientWrapper.fetchInvoiceFromChannel(createOrderInvoice(order));
@@ -218,10 +218,10 @@ public class OrderDto extends AbstractDto {
     private OrderReceiptData createOrderInvoice(OrderPojo order) throws ApiException {
         OrderReceiptData orderInvoice = new OrderReceiptData();
         orderInvoice.setOrderId(order.getId());
-        orderInvoice.setChannelName(channelService.getCheckId(order.getChannelId()).getName());
+        orderInvoice.setChannelName(channelService.getName(order.getChannelId()));
         orderInvoice.setChannelOrderId(order.getChannelOrderId());
-        orderInvoice.setClientDetails(consumerService.getCheckId(order.getClientId()).getName());
-        orderInvoice.setCustomerDetails(consumerService.getCheckId(order.getCustomerId()).getName());
+        orderInvoice.setClientDetails(consumerService.getName(order.getClientId()));
+        orderInvoice.setCustomerDetails(consumerService.getName(order.getCustomerId()));
 
         orderInvoice.setOrderCreationTime(order.getCreatedAt().format(DateTimeFormatter.ofPattern(DateUtil.getDateFormat())));
 
@@ -237,7 +237,7 @@ public class OrderDto extends AbstractDto {
             orderItemReceipt.setMrp(product.getMrp());
             orderItemReceipt.setTotal((long) (orderItem.getAllocatedQuantity() * product.getMrp()));
 
-            if (!channelService.getCheckId(order.getChannelId()).getName().equals("INTERNAL"))
+            if (!channelService.getName(order.getChannelId()).equals("INTERNAL"))
                 orderItemReceipt.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(), product.getId()).getChannelSkuId());
 
             orderItems.add(orderItemReceipt);
@@ -274,7 +274,7 @@ public class OrderDto extends AbstractDto {
                 checkNotNull(inventoryService.getByGlobalSku(globalSkuId), "Product not in Inventory");
                 checkTrue(form.getOrderedQuantity() <= inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity(),
                         "Insufficient Stock. " + inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity() + " items left");
-                if (!channelService.getCheckId(channelId).getName().equals("INTERNAL"))
+                if (!channelService.getName(channelId).equals("INTERNAL"))
                     checkNotNull(channelListingService.getByChannelIdAndGlobalSku(channelId, globalSkuId),
                             "Channel does not provide the mentioned Product");
 
@@ -332,10 +332,11 @@ public class OrderDto extends AbstractDto {
     private OrderData convertPojoToData(OrderPojo order) throws ApiException {
         OrderData orderData = convert(order, OrderData.class);
         orderData.setOrderItemList(convert(orderItemService.getByOrderId(order.getId()), OrderItemForm.class));
-        orderData.setDateCreated(order.getCreatedAt());
-        orderData.setClientName(consumerService.getCheckId(order.getClientId()).getName());
-        orderData.setCustomerName(consumerService.getCheckId(order.getCustomerId()).getName());
-        orderData.setChannelName(channelService.getCheckId(order.getChannelId()).getName());
+        //change  name
+        orderData.setCreatedAt(order.getCreatedAt());
+        orderData.setClientName(consumerService.getName(order.getClientId()));
+        orderData.setCustomerName(consumerService.getName(order.getCustomerId()));
+        orderData.setChannelName(channelService.getName(order.getChannelId()));
         return orderData;
     }
 
