@@ -3,6 +3,7 @@ package com.increff.assure.util;
 import com.increff.assure.service.ApiException;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class DateUtil {
@@ -20,9 +21,12 @@ public class DateUtil {
         if (Objects.nonNull(fromDate) && Objects.nonNull(toDate))
             if (fromDate.isAfter(toDate))
                 throw new ApiException("\"From\" date cannot be after \"To\" date");
+
+        if (ChronoUnit.MONTHS.between(toDate, fromDate) > 1)
+            throw new ApiException("Date range should be lesser than 1 month");
     }
 
-    public static String getDateFormat(){
+    public static String getDateFormat() {
         return dateFormat;
     }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<orderReceiptData>
+    <channelName>INTERNAL</channelName>
+    <channelOrderId>POLOO</channelOrderId>
+    <clientDetails>PUMA</clientDetails>
+    <customerDetails>TABISH</customerDetails>
+    <orderCreationTime>01/22/2020 11:37:46</orderCreationTime>
+    <orderId>23</orderId>
+    <orderItems>
+        <clientSkuId>pumaAsku</clientSkuId>
+        <mrp>1234.0</mrp>
+        <orderItemId>28</orderItemId>
+        <quantity>5</quantity>
+        <total>6170</total>
+    </orderItems>
+</orderReceiptData>
