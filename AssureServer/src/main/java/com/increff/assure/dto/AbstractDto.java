@@ -1,6 +1,7 @@
 package com.increff.assure.dto;
 
 import com.increff.assure.service.ApiException;
+import org.apache.xpath.operations.Bool;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
@@ -27,6 +28,16 @@ public class AbstractDto {
 
     public void checkNotNull(Object object, String message) throws ApiException {
         if (Objects.isNull(object))
+            throw new ApiException(message);
+    }
+
+    public static void checkTrue(Boolean bool, String message) throws ApiException {
+        if(!bool)
+            throw new ApiException(message);
+    }
+
+    public static void checkFalse(Boolean bool, String message) throws ApiException{
+        if(bool)
             throw new ApiException(message);
     }
 }
