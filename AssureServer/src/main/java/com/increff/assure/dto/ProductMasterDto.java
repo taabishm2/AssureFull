@@ -69,9 +69,7 @@ public class ProductMasterDto extends AbstractDto {
                 errorDetailString.append("Error in Line: ").append(index + 1).append(": ").append(e.getMessage()).append("<br \\>");
             }
         }
-
-        if (errorDetailString.length() > 0)
-            throw new ApiException(errorDetailString.toString());
+        checkFalse(errorDetailString.length() > 0, errorDetailString.toString());
     }
 
     private ProductMasterPojo convertFormToPojo(ProductMasterForm productForm, Long clientId) throws ApiException {

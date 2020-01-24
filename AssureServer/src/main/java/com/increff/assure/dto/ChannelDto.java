@@ -78,17 +78,11 @@ public class ChannelDto extends AbstractDto {
             try {
                 ChannelListingForm form = formList.get(index);
                 checkValid(form);
+                checkFalse(channelSkus.contains(form.getChannelSkuId()), "Duplicate Channel SKU present");
+                checkFalse(clientAndClientSkus.contains(clientId + "," + form.getClientSkuId()),"Duplicate Client, ClientSKU present");
 
-                if (channelSkus.contains(form.getChannelSkuId()))
-                    throw new ApiException("Duplicate Channel SKU present");
-                else
-                    channelSkus.add(form.getChannelSkuId());
-
-                if (clientAndClientSkus.contains(clientId + "," + form.getClientSkuId()))
-                    throw new ApiException("Duplicate Client, ClientSKU present");
-                else
-                    clientAndClientSkus.add(clientId + "," + form.getClientSkuId());
-
+                channelSkus.add(form.getChannelSkuId());
+                clientAndClientSkus.add(clientId + "," + form.getClientSkuId());
             } catch (ApiException e) {
                 errorDetailString.append("Error in Line: ").append(index + 1).append(": ").append(e.getMessage()).append("<br \\>");
             }

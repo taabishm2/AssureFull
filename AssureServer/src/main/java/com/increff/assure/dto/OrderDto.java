@@ -239,7 +239,6 @@ public class OrderDto extends AbstractDto {
         return convertPojoToData(orderService.getByChannel(channelId));
     }
 
-    //TODO try to consolidate lines based on functionality
     public void validateList(List<OrderItemForm> formList, Long clientId, Long channelId) throws ApiException {
         consumerService.getCheckClient(clientId);
         channelService.getCheckId(channelId);
@@ -307,18 +306,13 @@ public class OrderDto extends AbstractDto {
         checkValid(validationForm);
 
         ChannelListingPojo listing = channelListingService.getByChannelChannelSkuAndClient(validationForm.getChannelId(), validationForm.getChannelSkuId(), validationForm.getClientId());
-        if (Objects.isNull(listing))
-            throw new ApiException("Channel listing does not exist");
+        checkFalse(Objects.isNull(listing), "Channel listing does not exist");
+
         Long globalSkuId = listing.getGlobalSkuId();
-
         productService.getCheckId(globalSkuId);
-
-        if (Objects.isNull(inventoryService.getByGlobalSku(globalSkuId)))
-            throw new ApiException("Product Not in Inventory");
-
-        if (validationForm.getOrderedQuantity() > inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity())
-            throw new ApiException("Insufficient Stock" + inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity() + " items left");
-
+        checkFalse(Objects.isNull(inventoryService.getByGlobalSku(globalSkuId)), "Product Not in Inventory");
+        checkFalse(validationForm.getOrderedQuantity() > inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity(),
+                "Insufficient Stock" + inventoryService.getByGlobalSku(globalSkuId).getAvailableQuantity() + " items left");
     }
 
     public void setClientWrapper(ClientWrapper clientWrapper) {
