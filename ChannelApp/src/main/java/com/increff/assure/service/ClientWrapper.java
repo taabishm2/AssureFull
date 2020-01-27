@@ -46,12 +46,7 @@ public class ClientWrapper {
 
     public ChannelOrderReceiptData convert(OrderReceiptData orderReceiptData) throws ApiException {
         ChannelOrderReceiptData channelInvoice = ConvertUtil.convert(orderReceiptData, ChannelOrderReceiptData.class);
-        List<ChannelOrderItemReceiptData> channelInvoiceItemList = new ArrayList<>();
-        for(OrderItemReceiptData invoiceItem:orderReceiptData.getOrderItems()) {
-            ChannelOrderItemReceiptData channelInvoiceItem = ConvertUtil.convert(invoiceItem, ChannelOrderItemReceiptData.class);
-            channelInvoiceItem.setChannelSkuId(invoiceItem.getChannelSkuId());
-            channelInvoiceItemList.add(channelInvoiceItem);
-        }
+        List<ChannelOrderItemReceiptData> channelInvoiceItemList = new ArrayList<>(ConvertUtil.convert(orderReceiptData.getOrderItems(), ChannelOrderItemReceiptData.class));
         channelInvoice.setOrderItems(channelInvoiceItemList);
         return channelInvoice;
     }

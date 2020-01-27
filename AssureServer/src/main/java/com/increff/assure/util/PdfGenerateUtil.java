@@ -21,16 +21,16 @@ public class PdfGenerateUtil {
         OUTPUT_DIR = "C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//";
     }
 
-    public static byte[] generate(Document file, Long fileId) throws ApiException {
+    public static byte[] generate(Document file) throws ApiException {
         PdfGenerateUtil fOPPdfDemo = new PdfGenerateUtil();
         try {
-            return fOPPdfDemo.convertToPDF(file, fileId);
+            return fOPPdfDemo.convertToPDF(file);
         } catch (Exception e) {
             throw new ApiException("Couldn't generate Invoice PDF:" + e.getMessage());
         }
     }
 
-    public byte[] convertToPDF(Document doc, Long fileId) throws IOException, FOPException, TransformerException {
+    public byte[] convertToPDF(Document doc) throws IOException, FOPException, TransformerException {
         File xsltFile = new File(RESOURCES_DIR + "//template.xsl");
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Source xmlSource = new DOMSource(doc);
@@ -50,14 +50,9 @@ public class PdfGenerateUtil {
             Transformer transformer = factory.newTransformer(new StreamSource(xsltFile));
             Result res = new SAXResult(fop.getDefaultHandler());
             transformer.transform(xmlStreamSource, res);
-            byte[] arr = out.toByteArray();
-            return arr;
+            return out.toByteArray();
         } finally {
             out.close();
         }
     }
-
-/*    public static void main(String args[]) throws ApiException {
-        generate(54234L);
-    }*/
 }

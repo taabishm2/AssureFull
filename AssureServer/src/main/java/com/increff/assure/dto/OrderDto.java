@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.increff.assure.util.ConvertUtil.convert;
 
@@ -165,16 +162,18 @@ public class OrderDto extends AbstractDto {
     }
 
     @Transactional(rollbackFor = ApiException.class)
-    public byte[] fulfillOrder(Long orderId) throws ApiException, JsonProcessingException {
+    public String fulfillOrder(Long orderId) throws ApiException, JsonProcessingException {
         OrderPojo order = orderService.getCheckId(orderId);
-        byte[] byteOutputArray = new byte[0];
         checkFalse(order.getStatus().equals(OrderStatus.CREATED), "Order is not Allocated");
 
         if(order.getStatus().equals(OrderStatus.ALLOCATED))
             fulfillOrderItems(orderId);
 
-        if (channelService.getInvoiceType(order.getChannelId()).equals(InvoiceType.SELF))
-            return generateInvoicePdf(order);
+        if (channelService.getInvoiceType(order.getChannelId()).equals(InvoiceType.SELF)) {
+            String a = Base64.getEncoder().encodeToString(generateInvoicePdf(order));
+            System.out.println("SELF:"+a);
+            return a;
+        }
 
         return clientWrapper.fetchInvoiceFromChannel(createOrderInvoice(order));
     }
@@ -192,8 +191,8 @@ public class OrderDto extends AbstractDto {
     }
 
     private byte[] generateInvoicePdf(OrderPojo order) throws ApiException {
-        OrderReceiptData orderReceipt = createOrderInvoice(order);;
-        return PdfGenerateUtil.generate(XmlGenerateUtil.generate(orderReceipt), order.getId());
+        OrderReceiptData orderReceipt = createOrderInvoice(order);
+        return PdfGenerateUtil.generate(XmlGenerateUtil.generate(orderReceipt));
     }
 
     private OrderReceiptData createOrderInvoice(OrderPojo order) throws ApiException {
@@ -216,7 +215,7 @@ public class OrderDto extends AbstractDto {
 
             ProductMasterPojo product = productMasterService.getCheckId(orderItem.getGlobalSkuId());
             orderItemReceipt.setMrp(product.getMrp());
-            orderItemReceipt.setTotal((long) (orderItem.getAllocatedQuantity() * product.getMrp()));
+            orderItemReceipt.setTotal((long) (orderItem.getFulfilledQuantity() * product.getMrp()));
 
             if (!channelService.getName(order.getChannelId()).equals("INTERNAL"))
                 orderItemReceipt.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(order.getChannelId(), product.getId()).getChannelSkuId());

@@ -345,6 +345,7 @@ function invoiceOrder(orderId, channelName) {
 }
 
 function base64ToArrayBuffer(base64) {
+    console.log(typeof base64);
     var binaryString = window.atob(base64);
     var binaryLen = binaryString.length;
     var bytes = new Uint8Array(binaryLen);
@@ -352,6 +353,7 @@ function base64ToArrayBuffer(base64) {
        var ascii = binaryString.charCodeAt(i);
        bytes[i] = ascii;
     }
+    console.log(bytes);
     return bytes;
  }
 

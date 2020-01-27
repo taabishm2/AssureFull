@@ -2,8 +2,6 @@ package com.increff.assure.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.increff.assure.dto.OrderDto;
-import com.increff.assure.model.data.ChannelOrderData;
-import com.increff.assure.model.form.ChannelAppOrderForm;
 import com.increff.assure.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,7 +48,7 @@ public class ChannelOrderController {
 
     @ApiOperation(value = "Generate Order Invoice")
     @RequestMapping(path = "/api/order/invoice", method = RequestMethod.POST)
-    public byte[] generateReceipt(@RequestBody OrderReceiptData orderReceiptData) throws ApiException {
+    public ChannelInvoiceResponse generateReceipt(@RequestBody OrderReceiptData orderReceiptData) throws ApiException {
         return orderDto.generateReceipt(orderReceiptData);
     }
 

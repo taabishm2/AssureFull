@@ -7301,3 +7301,154 @@ Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No q
 	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
 	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
 	... 103 more
+2020-01-27 14:30:00 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 14:30:00 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 14:30:00 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 14:30:01 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 14:30:01 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 14:30:18 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 14:30:18 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 14:30:18 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 14:30:18 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 14:30:18 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 14:30:26 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 14:30:26 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 14:30:26 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 14:30:26 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 14:30:26 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 14:58:34 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 14:58:34 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 14:58:34 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 14:58:34 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 14:58:34 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:03:39 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:03:39 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:03:39 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:03:39 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:03:40 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:03:58 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:03:58 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:03:58 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:03:58 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:03:58 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:04:28 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:04:28 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:04:28 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:04:28 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:04:28 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:04:43 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:04:43 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:04:43 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:04:43 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:04:43 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:04:47 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:04:47 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:04:47 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:04:47 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:04:47 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:11:01 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:11:01 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:11:01 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:11:01 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:11:01 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:12:18 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:12:18 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:12:18 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:12:18 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:12:18 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:30:41 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:30:41 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:30:42 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:30:42 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:30:42 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:39:58 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:39:58 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:39:58 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:39:58 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:39:58 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:40:11 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:40:11 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:40:11 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:40:11 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:40:11 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:44:08 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:44:08 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:44:08 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:44:08 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:44:08 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:54:22 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:54:22 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:54:22 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:54:22 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:54:23 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 15:58:40 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 15:58:40 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 15:58:40 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:58:40 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 15:58:40 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 16:10:02 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 16:10:02 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 16:10:03 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 16:10:03 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 16:10:03 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 16:10:03 WARN  ExceptionHandlerExceptionResolver:391 - Failed to invoke @ExceptionHandler method: public com.increff.assure.model.data.MessageData com.increff.assure.controller.AppRestControllerAdvice.handle(java.lang.Throwable)
+org.springframework.web.HttpMediaTypeNotAcceptableException: Could not find acceptable representation
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:200)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.handleReturnValue(RequestResponseBodyMethodProcessor.java:174)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:81)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:132)
+	at org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:384)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:59)
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:136)
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:74)
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1207)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1030)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:980)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:897)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:970)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:872)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:707)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:846)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:760)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1617)
+	at org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter.doFilter(WebSocketUpgradeFilter.java:226)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1604)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:545)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:536)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:235)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1589)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:233)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1296)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:188)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:485)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1559)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:186)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1211)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:221)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:146)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127)
+	at org.eclipse.jetty.server.Server.handle(Server.java:500)
+	at org.eclipse.jetty.server.HttpChannel.lambda$handle$1(HttpChannel.java:386)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:560)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:378)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:268)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:311)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:117)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:782)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:914)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2020-01-27 16:12:25 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 16:12:25 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 16:12:25 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 16:12:25 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 16:12:25 INFO  FOUserAgent:83 - Rendered page #1.
+2020-01-27 16:27:11 WARN  FOUserAgent:94 - Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+2020-01-27 16:27:11 WARN  FOUserAgent:94 - Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+2020-01-27 16:27:12 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 16:27:12 INFO  FOUserAgent:83 - An fo:table  (No context info available) is wider than the available room in inline-progression-dimension. Adjusting end-indent based on overconstrained geometry rules (XSL 1.1, ch. 5.3.4)
+2020-01-27 16:27:12 INFO  FOUserAgent:83 - Rendered page #1.

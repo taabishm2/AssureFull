@@ -2,6 +2,7 @@ package com.increff.assure.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import model.data.ChannelInvoiceResponse;
 import model.data.OrderReceiptData;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class ClientWrapper {
-    public byte[] fetchInvoiceFromChannel(OrderReceiptData orderInvoiceData) throws JsonProcessingException {
+    public String fetchInvoiceFromChannel(OrderReceiptData orderInvoiceData) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String jsonStr = mapper.writeValueAsString(orderInvoiceData);
 
@@ -21,6 +22,7 @@ public class ClientWrapper {
 
         HttpEntity<String> request = new HttpEntity<String>(jsonStr, headers);
 
-        return restTemplate.postForObject("http://localhost:7070/channel/api/order/invoice", request, byte[].class);
+        ChannelInvoiceResponse a = restTemplate.postForObject("http://localhost:7070/channel/api/order/invoice", request, ChannelInvoiceResponse.class);
+        return a.getData();
     }
 }

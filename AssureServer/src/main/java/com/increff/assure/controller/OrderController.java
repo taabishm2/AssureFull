@@ -55,9 +55,8 @@ public class OrderController {
 
     @ApiOperation(value = "Generate Order Invoice")
     @RequestMapping(path = "/api/order/invoice/{id}", method = RequestMethod.POST)
-    public String generateInvoice(@PathVariable Long id, HttpServletResponse response) throws ApiException, IOException {
-        byte[] pdfBytes = orderDto.fulfillOrder(id);
-        return Base64.getEncoder().encodeToString(pdfBytes);
+    public String generateInvoice(@PathVariable Long id) throws ApiException, IOException {
+        return orderDto.fulfillOrder(id);
     }
 
     @ApiOperation(value = "Validate Order Details")

@@ -1,6 +1,5 @@
 package com.increff.assure.dto;
 
-import com.increff.assure.model.data.ChannelOrderData;
 import com.increff.assure.model.data.ChannelOrderReceiptData;
 import com.increff.assure.service.ApiException;
 import com.increff.assure.service.ClientWrapper;
@@ -12,9 +11,9 @@ import model.form.OrderItemValidationForm;
 import model.form.OrderValidationForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -26,9 +25,11 @@ public class OrderDto {
         clientWrapper.addOrder(orderForm);
     }
 
-    public byte[] generateReceipt(OrderReceiptData orderReceiptData) throws ApiException {
+    public ChannelInvoiceResponse generateReceipt(OrderReceiptData orderReceiptData) throws ApiException {
         ChannelOrderReceiptData orderReceipt = clientWrapper.convert(orderReceiptData);
-        return PdfGenerateUtil.generate(XmlGenerateUtil.generate(orderReceipt), orderReceipt.getOrderId());
+        ChannelInvoiceResponse invoice = new ChannelInvoiceResponse();
+        invoice.setData(Base64.getEncoder().encodeToString(PdfGenerateUtil.generate(XmlGenerateUtil.generate(orderReceipt))));
+        return invoice;
     }
 
     public void validateOrderForm(OrderValidationForm validationForm) throws ApiException {
