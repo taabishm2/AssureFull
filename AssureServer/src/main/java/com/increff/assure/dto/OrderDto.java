@@ -165,24 +165,21 @@ public class OrderDto extends AbstractDto {
     }
 
     @Transactional(rollbackFor = ApiException.class)
-    public void fulfillOrder(Long orderId) throws ApiException, JsonProcessingException {
+    public byte[] fulfillOrder(Long orderId) throws ApiException, JsonProcessingException {
         OrderPojo order = orderService.getCheckId(orderId);
+        byte[] byteOutputArray = new byte[0];
         checkFalse(order.getStatus().equals(OrderStatus.CREATED), "Order is not Allocated");
 
-        if (order.getStatus().equals(OrderStatus.FULFILLED))
-            return;
+        if(order.getStatus().equals(OrderStatus.ALLOCATED))
+            fulfillOrderItems(orderId);
 
-        if (channelService.getInvoiceType(order.getChannelId()).equals(InvoiceType.SELF)) {
-            generateInvoicePdf(order);
-        } else {
-            clientWrapper.fetchInvoiceFromChannel(createOrderInvoice(order));
-        }
+        if (channelService.getInvoiceType(order.getChannelId()).equals(InvoiceType.SELF))
+            return generateInvoicePdf(order);
 
-        fulfillOrderItems(orderId);
-        order.setStatus(OrderStatus.FULFILLED);
+        return clientWrapper.fetchInvoiceFromChannel(createOrderInvoice(order));
     }
 
-    private void fulfillOrderItems(Long orderId) {
+    private void fulfillOrderItems(Long orderId) throws ApiException {
         Long allocatedOrderItemQuantity = 0L;
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(orderId)) {
             allocatedOrderItemQuantity = orderItem.getAllocatedQuantity();
@@ -191,11 +188,12 @@ public class OrderDto extends AbstractDto {
 
             inventoryService.fulfillInInventory(orderItem.getGlobalSkuId(), allocatedOrderItemQuantity);
         }
+        orderService.getCheckId(orderId).setStatus(OrderStatus.FULFILLED);
     }
 
-    private void generateInvoicePdf(OrderPojo order) throws ApiException {
+    private byte[] generateInvoicePdf(OrderPojo order) throws ApiException {
         OrderReceiptData orderReceipt = createOrderInvoice(order);;
-        PdfGenerateUtil.generate(XmlGenerateUtil.generate(orderReceipt), order.getId());
+        return PdfGenerateUtil.generate(XmlGenerateUtil.generate(orderReceipt), order.getId());
     }
 
     private OrderReceiptData createOrderInvoice(OrderPojo order) throws ApiException {
@@ -214,7 +212,7 @@ public class OrderDto extends AbstractDto {
 
             orderItemReceipt.setClientSkuId(productService.getCheckId(orderItem.getGlobalSkuId()).getClientSkuId());
             orderItemReceipt.setOrderItemId(orderItem.getId());
-            orderItemReceipt.setQuantity(orderItem.getAllocatedQuantity());
+            orderItemReceipt.setQuantity(orderItem.getFulfilledQuantity());
 
             ProductMasterPojo product = productMasterService.getCheckId(orderItem.getGlobalSkuId());
             orderItemReceipt.setMrp(product.getMrp());

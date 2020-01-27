@@ -50,8 +50,8 @@ public class ChannelOrderController {
 
     @ApiOperation(value = "Generate Order Invoice")
     @RequestMapping(path = "/api/order/invoice", method = RequestMethod.POST)
-    public void generateReceipt(@RequestBody OrderReceiptData orderReceiptData) throws ApiException {
-        orderDto.generateReceipt(orderReceiptData);
+    public byte[] generateReceipt(@RequestBody OrderReceiptData orderReceiptData) throws ApiException {
+        return orderDto.generateReceipt(orderReceiptData);
     }
 
     @ApiOperation(value = "Gets a list of all Clients")

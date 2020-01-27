@@ -1,24 +1,19 @@
 package com.increff.assure.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.increff.assure.dto.OrderDto;
 import com.increff.assure.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import model.data.BinSkuData;
 import model.data.OrderData;
 import model.data.OrderItemData;
 import model.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 
 @Api
@@ -60,8 +55,9 @@ public class OrderController {
 
     @ApiOperation(value = "Generate Order Invoice")
     @RequestMapping(path = "/api/order/invoice/{id}", method = RequestMethod.POST)
-    public void generateInvoice(@PathVariable Long id) throws ApiException, JsonProcessingException {
-        orderDto.fulfillOrder(id);
+    public String generateInvoice(@PathVariable Long id, HttpServletResponse response) throws ApiException, IOException {
+        byte[] pdfBytes = orderDto.fulfillOrder(id);
+        return Base64.getEncoder().encodeToString(pdfBytes);
     }
 
     @ApiOperation(value = "Validate Order Details")

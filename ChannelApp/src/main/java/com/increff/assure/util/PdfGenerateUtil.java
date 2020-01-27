@@ -2,16 +2,14 @@ package com.increff.assure.util;
 
 import com.increff.assure.service.ApiException;
 import org.apache.fop.apps.*;
+import org.w3c.dom.Document;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 
 public class PdfGenerateUtil {
 
@@ -23,31 +21,37 @@ public class PdfGenerateUtil {
         OUTPUT_DIR = "C://Users//Tabish//Documents//Repos//Increff//AssureServer//src//main//resources//output//";
     }
 
-    public static void generate(File file, Long orderId) throws ApiException {
+    public static byte[] generate(Document file, Long orderId) throws ApiException {
         PdfGenerateUtil fOPPdfDemo = new PdfGenerateUtil();
         try {
-            fOPPdfDemo.convertToPDF(file, orderId);
+            return fOPPdfDemo.convertToPDF(file, orderId);
         } catch (Exception e) {
             throw new ApiException("Couldn't generate Invoice PDF:" + e.getMessage());
         }
     }
 
-    public void convertToPDF(File file, Long orderId) throws IOException, FOPException, TransformerException {
+    public byte[] convertToPDF(Document doc, Long orderId) throws IOException, FOPException, TransformerException {
         File xsltFile = new File(RESOURCES_DIR + "//template.xsl");
-        StreamSource xmlSource = new StreamSource(file);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Source xmlSource = new DOMSource(doc);
+        Result outputTarget = new StreamResult(outputStream);
+        TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
+        InputStream is = new ByteArrayInputStream(outputStream.toByteArray());
+        StreamSource xmlStreamSource = new StreamSource(is);
         FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
-        OutputStream out;
-        out = new java.io.FileOutputStream(OUTPUT_DIR + orderId + ".pdf");
+        ByteArrayOutputStream out;
+        out = new ByteArrayOutputStream();
 
         try {
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer(new StreamSource(xsltFile));
             Result res = new SAXResult(fop.getDefaultHandler());
-
-            transformer.transform(xmlSource, res);
+            transformer.transform(xmlStreamSource, res);
+            byte[] arr = out.toByteArray();
+            return arr;
         } finally {
             out.close();
         }

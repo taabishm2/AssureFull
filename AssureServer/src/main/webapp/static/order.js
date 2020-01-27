@@ -336,13 +336,33 @@ function invoiceOrder(orderId, channelName) {
         },
         success: function(response) {
             getSuccessSnackbar("Success");
-            displayDownloadModal(orderId, channelName);
+            saveByteArray(orderId, base64ToArrayBuffer(response));
             getSearchOrderList();
         },
         error: handleAjaxError
     });
     return false;
 }
+
+function base64ToArrayBuffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+       var ascii = binaryString.charCodeAt(i);
+       bytes[i] = ascii;
+    }
+    return bytes;
+ }
+
+ function saveByteArray(reportName, arrayBuffer) {
+     var blob = new Blob([arrayBuffer], {type: "application/pdf"});
+          var link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          var fileName = reportName;
+          link.download = fileName;
+          link.click();
+ };
 
 function displayDownloadModal(orderId, channelName) {
     var destination = 'ChannelApp';
