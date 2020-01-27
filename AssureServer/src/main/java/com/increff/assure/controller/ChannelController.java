@@ -12,8 +12,6 @@ import model.form.ChannelListingSearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import javax.validation.Valid;
 import java.util.List;
 
 @Api
@@ -36,13 +34,15 @@ public class ChannelController {
 
     @ApiOperation(value = "Add a Channel Listings for given Channel and Client")
     @RequestMapping(path = "/api/channel/channelListing/list/{channelId}/{clientId}", method = RequestMethod.POST)
-    public void addList(@PathVariable Long channelId, @PathVariable Long clientId, @RequestBody List<ChannelListingForm> formList) throws ApiException {
+    public void addList(@PathVariable Long channelId, @PathVariable Long clientId,
+                        @RequestBody List<ChannelListingForm> formList) throws ApiException {
         channelDto.addList(formList, channelId, clientId);
     }
 
     @ApiOperation(value = "Validate List of Channel Listings for a Channel")
     @RequestMapping(path = "/api/channel/channelListing/validate/{channelId}/{clientId}", method = RequestMethod.POST)
-    public void validateList(@PathVariable Long channelId, @PathVariable Long clientId, @RequestBody List<ChannelListingForm> formList) throws ApiException {
+    public void validateList(@PathVariable Long channelId, @PathVariable Long clientId,
+                             @RequestBody List<ChannelListingForm> formList) throws ApiException {
         channelDto.validateFormList(formList, channelId, clientId);
     }
 

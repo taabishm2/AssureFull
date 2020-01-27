@@ -24,7 +24,7 @@ public class AppRestControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public MessageData handle(MethodArgumentNotValidException e) {
+    public MessageData handle() {
         MessageData data = new MessageData();
         data.setMessage("Invalid Input");
         return data;

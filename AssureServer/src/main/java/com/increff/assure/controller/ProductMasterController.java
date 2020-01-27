@@ -32,7 +32,8 @@ public class ProductMasterController {
 
     @ApiOperation(value = "Update a product entry")
     @RequestMapping(path = "/api/product/{clientId}/{clientSku}", method = RequestMethod.PUT)
-    public void update(@PathVariable Long clientId, @PathVariable String clientSku, @RequestBody ProductUpdateForm form) throws ApiException {
+    public void update(@PathVariable Long clientId, @PathVariable String clientSku,
+                       @RequestBody ProductUpdateForm form) throws ApiException {
         productMasterDto.update(clientId, clientSku, form);
     }
 

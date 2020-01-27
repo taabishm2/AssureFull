@@ -8,12 +8,9 @@ import model.data.OrderData;
 import model.data.OrderItemData;
 import model.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 @Api
@@ -73,18 +70,19 @@ public class OrderController {
 
     @ApiOperation(value = "Validate Order Details")
     @RequestMapping(path = "/api/order/orderItems/validate/{clientId}/{channelId}", method = RequestMethod.POST)
-    public void validateOrderItems(@PathVariable Long clientId, @PathVariable Long channelId, @RequestBody List<OrderItemForm> validationForm) throws ApiException {
+    public void validateOrderItems(@PathVariable Long clientId, @PathVariable Long channelId,
+                                   @RequestBody List<OrderItemForm> validationForm) throws ApiException {
         orderDto.validateList(validationForm, clientId, channelId);
     }
 
     @ApiOperation(value = "Search Orders")
-    @RequestMapping(path = "/api/order/search", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/api/order/search", method = RequestMethod.POST)
     public List<OrderData> getSearch(@RequestBody OrderSearchForm form) throws ApiException {
         return orderDto.getSearch(form);
     }
 
     @ApiOperation(value = "Validate Channel Order Details")
-    @RequestMapping(path = "/api/order/orderitem/channel/validate", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/order/orderItem/channel/validate", method = RequestMethod.POST)
     public void validateChannelOrderItem(@RequestBody OrderItemValidationForm validationForm) throws ApiException {
         orderDto.validateChannelOrderItemForm(validationForm);
     }
