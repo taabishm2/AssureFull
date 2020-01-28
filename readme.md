@@ -5,7 +5,7 @@ An Order and Inventory Management System
 
 # Description
 Toy Assure is an Order and Inventory Management System that provides the ability for managing of inventory, parties, orders and other related processes.
-The basic entities invloved are
+The basic entities involved are
 + **Consumers**:
 Include Clients & Customers *(buyers & sellers)*.
 + **Products**:
