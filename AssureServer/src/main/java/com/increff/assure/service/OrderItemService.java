@@ -16,8 +16,6 @@ public class OrderItemService extends AbstractService {
     @Transactional(rollbackFor = ApiException.class)
     public void add(OrderItemPojo orderItemPojo) throws ApiException {
         checkDuplicate(orderItemPojo);
-        orderItemPojo.setAllocatedQuantity(0L);
-        orderItemPojo.setFulfilledQuantity(0L);
         orderItemDao.insert(orderItemPojo);
     }
 

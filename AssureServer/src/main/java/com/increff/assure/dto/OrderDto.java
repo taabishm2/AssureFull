@@ -73,7 +73,6 @@ public class OrderDto extends AbstractDto {
         List<OrderItemPojo> orderItemList = convertFormToPojo(orderItemFormList, orderId, clientId);
         for (OrderItemPojo orderItem : orderItemList)
             validateOrderItem(orderItem);
-
         orderItemService.addList(orderItemList);
     }
 
@@ -81,7 +80,6 @@ public class OrderDto extends AbstractDto {
         List<OrderItemPojo> orderItemList = convertFormToPojo(orderItemFormList, channelId, orderId, clientId);
         for (OrderItemPojo orderItem : orderItemList)
             validateOrderItem(orderItem);
-
         orderItemService.addList(orderItemList);
     }
 
@@ -91,7 +89,7 @@ public class OrderDto extends AbstractDto {
 
         Long clientId = orderService.getCheckId(orderItemPojo.getOrderId()).getClientId();
         checkTrue(clientId.equals(productService.getClientIdOfProduct(orderItemPojo.getGlobalSkuId())),
-                "Invalid Client for Product(ID: " + orderItemPojo.getGlobalSkuId() + ").");
+                "Invalid Client for Product(ID: " + orderItemPojo.getGlobalSkuId() + ")");
 
         Long channelId = orderService.getCheckId(orderItemPojo.getOrderId()).getChannelId();
         if (!channelService.getName(channelId).equals("INTERNAL"))
@@ -122,7 +120,7 @@ public class OrderDto extends AbstractDto {
         checkFalse(orderService.getCheckId(orderId).getStatus().equals(OrderStatus.ALLOCATED), "Order is already ALLOCATED");
         checkFalse(orderService.getCheckId(orderId).getStatus().equals(OrderStatus.FULFILLED), "Cannot Allocate FULFILLED Order");
 
-        Long globalSkuOfOrderItem, orderedQuantity, allocatedOrderItemQuantity;
+        long globalSkuOfOrderItem, orderedQuantity, allocatedOrderItemQuantity;
 
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(orderId)) {
             globalSkuOfOrderItem = orderItem.getGlobalSkuId();
@@ -146,7 +144,6 @@ public class OrderDto extends AbstractDto {
     @Transactional(rollbackFor = ApiException.class)
     public Long allocateFromAllBins(Long globalSku, Long quantityToAllocate) {
         Long remainingQuantityToAllocate = quantityToAllocate;
-
         List<BinSkuPojo> allBinSkus = binSkuService.selectBinsByGlobalSku(globalSku);
         sortByQuantity(allBinSkus);
 
@@ -166,20 +163,17 @@ public class OrderDto extends AbstractDto {
         OrderPojo order = orderService.getCheckId(orderId);
         checkFalse(order.getStatus().equals(OrderStatus.CREATED), "Order is not Allocated");
 
-        if(order.getStatus().equals(OrderStatus.ALLOCATED))
+        if (order.getStatus().equals(OrderStatus.ALLOCATED))
             fulfillOrderItems(orderId);
 
-        if (channelService.getInvoiceType(order.getChannelId()).equals(InvoiceType.SELF)) {
-            String a = Base64.getEncoder().encodeToString(generateInvoicePdf(order));
-            System.out.println("SELF:"+a);
-            return a;
-        }
+        if (channelService.getInvoiceType(order.getChannelId()).equals(InvoiceType.SELF))
+            return Base64.getEncoder().encodeToString(generateInvoicePdf(order));
 
         return clientWrapper.fetchInvoiceFromChannel(createOrderInvoice(order));
     }
 
     private void fulfillOrderItems(Long orderId) throws ApiException {
-        Long allocatedOrderItemQuantity = 0L;
+        Long allocatedOrderItemQuantity;
         for (OrderItemPojo orderItem : orderItemService.getByOrderId(orderId)) {
             allocatedOrderItemQuantity = orderItem.getAllocatedQuantity();
             orderItem.setFulfilledQuantity(orderItem.getFulfilledQuantity() + allocatedOrderItemQuantity);
@@ -202,7 +196,6 @@ public class OrderDto extends AbstractDto {
         orderInvoice.setChannelOrderId(order.getChannelOrderId());
         orderInvoice.setClientDetails(consumerService.getName(order.getClientId()));
         orderInvoice.setCustomerDetails(consumerService.getName(order.getCustomerId()));
-
         orderInvoice.setOrderCreationTime(order.getCreatedAt().format(DateTimeFormatter.ofPattern(DateUtil.getDateFormat())));
 
         List<OrderItemReceiptData> orderItems = new ArrayList<>();
@@ -222,7 +215,6 @@ public class OrderDto extends AbstractDto {
 
             orderItems.add(orderItemReceipt);
         }
-
         orderInvoice.setOrderItems(orderItems);
         return orderInvoice;
     }
@@ -262,7 +254,6 @@ public class OrderDto extends AbstractDto {
                 errorDetailString.append("Error in Line: ").append(index + 1).append(": ").append(e.getMessage()).append("<br \\>");
             }
         }
-
         if (errorDetailString.length() > 0)
             throw new ApiException(errorDetailString.toString());
     }
@@ -270,10 +261,8 @@ public class OrderDto extends AbstractDto {
     public List<OrderData> getSearch(OrderSearchForm form) throws ApiException {
         if (Objects.nonNull(form.getClientId()))
             consumerService.getCheckClient(form.getClientId());
-
         if (Objects.nonNull(form.getCustomerId()))
             consumerService.getCheckCustomer(form.getCustomerId());
-
         if (Objects.nonNull(form.getChannelId()))
             channelService.getCheckId(form.getChannelId());
 
@@ -292,7 +281,8 @@ public class OrderDto extends AbstractDto {
             orderData.setClientSkuId(productService.getCheckId(pojo.getGlobalSkuId()).getClientSkuId());
 
             if (!channelService.getCheckId(orderService.getCheckId(orderId).getChannelId()).getName().equals("INTERNAL"))
-                orderData.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(orderService.getCheckId(orderId).getChannelId(), pojo.getGlobalSkuId()).getChannelSkuId());
+                orderData.setChannelSkuId(channelListingService.getByChannelIdAndGlobalSku(orderService.getCheckId(orderId).
+                        getChannelId(), pojo.getGlobalSkuId()).getChannelSkuId());
 
             orderItemDataList.add(orderData);
         }
@@ -302,7 +292,8 @@ public class OrderDto extends AbstractDto {
     public void validateChannelOrderItemForm(OrderItemValidationForm validationForm) throws ApiException {
         checkValid(validationForm);
 
-        ChannelListingPojo listing = channelListingService.getByChannelChannelSkuAndClient(validationForm.getChannelId(), validationForm.getChannelSkuId(), validationForm.getClientId());
+        ChannelListingPojo listing = channelListingService.getByChannelChannelSkuAndClient(validationForm.getChannelId(),
+                validationForm.getChannelSkuId(), validationForm.getClientId());
         checkFalse(Objects.isNull(listing), "Channel listing does not exist");
 
         Long globalSkuId = listing.getGlobalSkuId();

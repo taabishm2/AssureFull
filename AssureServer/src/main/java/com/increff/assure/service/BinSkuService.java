@@ -2,11 +2,10 @@ package com.increff.assure.service;
 
 import com.increff.assure.dao.BinSkuDao;
 import com.increff.assure.pojo.BinSkuPojo;
-import model.data.BinSkuData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -42,7 +41,7 @@ public class BinSkuService extends AbstractService {
 
     @Transactional(rollbackFor = ApiException.class)
     public Long removeFromBin(BinSkuPojo targetBin, Long requiredQuantity) {
-        Long deduction = 0L;
+        Long deduction;
         deduction = min(targetBin.getQuantity(), requiredQuantity);
         targetBin.setQuantity(targetBin.getQuantity() - deduction);
 

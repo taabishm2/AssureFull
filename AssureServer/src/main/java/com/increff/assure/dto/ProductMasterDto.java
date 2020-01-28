@@ -27,7 +27,6 @@ public class ProductMasterDto extends AbstractDto {
     public void addList(List<ProductMasterForm> productFormList, Long clientId) throws ApiException {
         consumerService.getCheckClient(clientId);
         List<ProductMasterPojo> productMasterPojoList = new ArrayList<>();
-
         for (ProductMasterForm productForm : productFormList) {
             NormalizeUtil.normalize(productForm);
             checkValid(productForm);
@@ -61,7 +60,6 @@ public class ProductMasterDto extends AbstractDto {
     public void validateFormList(List<ProductMasterForm> formList, Long clientId) throws ApiException {
         consumerService.getCheckClient(clientId);
         StringBuilder errorDetailString = new StringBuilder();
-
         for (int index = 0; index < formList.size(); index++) {
             try {
                 checkValid((formList.get(index)));

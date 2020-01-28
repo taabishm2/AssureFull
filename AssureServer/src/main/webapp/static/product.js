@@ -78,8 +78,6 @@ function readFileDataCallback(results) {
 }
 
 function uploadRows() {
-    updateUploadDialog();
-
     var formList = [];
     var processCount;
     for (processCount = 0; processCount < fileData.length; processCount++) {

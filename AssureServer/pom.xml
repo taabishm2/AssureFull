@@ -20,7 +20,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
 
         <!-- Project dependency Versions -->
-        <spring.version>4.3.6.RELEASE</spring.version>
         <swagger.version>2.4.0</swagger.version>
         <jackson.version>2.9.8</jackson.version>
         <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
@@ -68,7 +67,7 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>${swagger.version}</version>
-        </dependency>
+        </dependency>T
 
         <!-- Swagger UI -->
         <dependency>
@@ -225,7 +224,7 @@
         <dependency>
             <groupId>com.increff</groupId>
             <artifactId>AssureCommons</artifactId>
-            <version>1.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->

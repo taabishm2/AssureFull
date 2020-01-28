@@ -5,7 +5,9 @@ import com.increff.assure.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import model.data.ConsumerData;
+import model.form.ConsumerForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +19,12 @@ import java.util.List;
 public class ConsumerController {
     @Autowired
     ConsumerDto consumerDto;
+
+    @ApiOperation(value = "Add a Consumer")
+    @RequestMapping(path = "/api/consumer", method = RequestMethod.POST)
+    public void add(@RequestBody ConsumerForm consumerForm) throws ApiException {
+        consumerDto.add(consumerForm);
+    }
 
     @ApiOperation(value = "Gets list of all Consumers")
     @RequestMapping(path = "/api/consumer", method = RequestMethod.GET)

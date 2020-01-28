@@ -47,7 +47,6 @@ public class BinDto extends AbstractDto {
 
         BinSkuPojo binSkuPojo = convert(binSkuForm, BinSkuPojo.class);
         binSkuService.addOrUpdate(binSkuPojo);
-
         addOrUpdateInventory(binSkuPojo);
     }
 
@@ -59,7 +58,6 @@ public class BinDto extends AbstractDto {
     @Transactional(rollbackFor = ApiException.class)
     public void addList(List<BinSkuForm> formList) throws ApiException {
         checkValid(formList);
-
         for (BinSkuForm form : formList) {
             validateProductAndBin(form);
 
@@ -78,7 +76,6 @@ public class BinDto extends AbstractDto {
     public List<BinSkuData> getSearchByBinAndProduct(Long binId, Long globalSkuId) throws ApiException {
         if (Objects.nonNull(binId))
             binService.getCheckId(binId);
-
         if (Objects.nonNull(globalSkuId))
             productService.getCheckId(globalSkuId);
 
@@ -96,8 +93,8 @@ public class BinDto extends AbstractDto {
                 checkValid(form);
                 validateProductAndBin(form);
                 checkFalse(binSkuSet.contains(form.getBinId() + "," + form.getGlobalSkuId()),"Duplicate Bin, Product Entry");
-                binSkuSet.add(form.getBinId() + "," + form.getGlobalSkuId());
 
+                binSkuSet.add(form.getBinId() + "," + form.getGlobalSkuId());
             } catch (ApiException e) {
                 errorDetailString.append("Error in Line: ").append(index + 1).append(": ").append(e.getMessage()).append("<br \\>");
             }

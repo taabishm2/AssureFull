@@ -14,7 +14,6 @@ public class BinService extends AbstractService {
     @Autowired
     private BinDao binDao;
 
-    //Returns List of IDs of newly created Bins
     @Transactional(rollbackFor = ApiException.class)
     public ArrayList<Long> addBins(int numberOfBins) {
         ArrayList<Long> newBinIds = new ArrayList<>();
@@ -32,7 +31,7 @@ public class BinService extends AbstractService {
 
     public BinPojo getCheckId(Long binId) throws ApiException {
         BinPojo binPojo = binDao.select(binId);
-        checkNotNull(binPojo, "Bin (ID:" + binId + ") does not exist.");
+        checkNotNull(binPojo, "Bin (ID:" + binId + ") does not exist");
         return binPojo;
     }
 }
