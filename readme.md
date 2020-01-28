@@ -1,14 +1,9 @@
-#Toy Assure
+# Toy Assure
 ![](https://i.ibb.co/30139VR/nextscm-squarelogo-1500222803446.png)
-![](https://img.shields.io/github/forks/pandao/editor.md.svg) ![](https://img.shields.io/github/issues/pandao/editor.md.svg)
 
-**Table of Contents**
+An Order and Inventory Management System
 
-[TOCM]
-
-[TOC]
-
-#Description
+# Description
 Toy Assure is an Order and Inventory Management System that provides the ability for managing of inventory, parties, orders and other related processes.
 The basic entities invloved are
 + **Consumers**:
@@ -20,19 +15,19 @@ The smallest available unit of space in a warehouse is called the storage bin. I
 + **Channels**:
 Channels act as intermediary parties that provide a platform for Clients to place Orders for Products
 
-#Process Flow
+# Process Flow
 The overall flow for the various processes is demonstrated below:
-##Flow Diagram
+## Flow Diagram
 ![](https://i.ibb.co/31t3pX4/Untitled-Diagram.png)
 
-##Product and Inventory Management Flow
+## Product and Inventory Management Flow
 Products and their details are registered and can then be assigned in desired quantites into pre-created Bins. This makes them a part of the inventory.
 ![](https://i.ibb.co/N65J8QV/Untitled-Diagram-1.png)
 ***NOTE:*** Channels need to register the products they provide via the provision of a Channel Listing. Channel Listings are created over existing products to provide a mapping for the channels to specify these products during Order Placement.
 
 ***NOTE:*** Orders placed internally through the Assure Server UI are placed via a default INTERNAL channel. This INTERNAL channel does not require Channel Listings
 
-##Order Creation Flow
+## Order Creation Flow
 Orders may be placed either internally *(via the Assure Server UI)* or through a registered Channel Entity *(via the Channel Module UI)*.
 
 An Order represents a requirement of Products provided by a specific **Client** to a specific **Customer**, placed through a specific **Channel** and assigned a unique **Order-ID**.
@@ -50,20 +45,20 @@ For Orders which have been allocated completely, invoice can be generated as a P
 
 ![](https://i.ibb.co/8zqgzC7/Untitled-Diagram-2.png)
 
-#Installation
+# Installation
 1. Clone the repository to your machine *(MySQL should be installed)*.
 2. In the ```assure.properties``` file, specify your MySQL username and password.
 3. Build the project via ```mvn clean install -U```
 4. Run the Assure Server module. By default, it is hosted on ```localhost:6060/assure```
 5. Run the Channel App module.  By default it is hosted on ```localhost:7070/assure/order```
 
-#Tech Stack Details
+# Tech Stack Details
 The languages, frameworks and libraries. used in the project are:
 + **Java** (core language)
 + **MySQL** (RDBMS)
 + **HTML, CSS, JS, AJAX, Bootstrap** (front end)
 + **Git** (version control)
-<hr>
+---
 + **Spring MVC** (application framework)
 + **Maven** (project management, )
 + **Hibernate** (ORM)
@@ -75,7 +70,7 @@ The languages, frameworks and libraries. used in the project are:
 + **PapaParse** (CSV Parsing)
 
 
-#Miscellaneous Features
+# Miscellaneous Features
 + **Timezone handling** is done at the front-end, server and database level. This allows the Front-end, Server and Database to be at arbitrary timezones.
 + **CSV upload** functionality is present for uploading details in bulk. Validation of the CSV is done at the back end and errors are displayed line-wise within the CSV. CSV samples are provided at every point where a CSV upload might be done.
 + **Search Params** are provided in most UI pages to filter details based on various params including dates, names, IDs and other relevant details.
