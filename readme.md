@@ -24,6 +24,7 @@ The overall flow for the various processes is demonstrated below:
 Products and their details are registered and can then be assigned in desired quantities into pre-created Bins. This makes them a part of the inventory.
 
 ![](https://i.ibb.co/N65J8QV/Untitled-Diagram-1.png)
+
 ***NOTE:*** Channels need to register the products they provide via the provision of a Channel Listing. Channel Listings are created over existing products to provide a mapping for the channels to specify these products during Order Placement.
 
 ***NOTE:*** Orders placed internally through the Assure Server UI are placed via a default INTERNAL channel. This INTERNAL channel does not require Channel Listings
